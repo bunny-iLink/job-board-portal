@@ -1,8 +1,6 @@
 import mongoose from "mongoose";
 
 export const applicationSchema = new mongoose.Schema({
-    id: { type: String, required: true, unique: true },
-    jobId: { type: String, required: true },
     userId: { type: String, required: true },
     employer: { type: String, required: true },
     status: { type: String, default: 'pending' },

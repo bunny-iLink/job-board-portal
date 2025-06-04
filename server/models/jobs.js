@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 
 export const jobsSchema = new mongoose.Schema({ 
-    id: { type: String, required: true, unique: true },
     title: { type: String, required: true },
     employerId: { type: String, required: true },
     employerName: { type: String, required: true },
