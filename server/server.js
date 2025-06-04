@@ -2,13 +2,12 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import morgan from 'morgan';
-import pkg_connection from './database/connection.js'
+import { connect } from './database/connection.js'
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import pkg_router from './router/router.js';
-const { connect } = pkg_connection;
-const { router } = pkg_router; 
+import router from './router/router.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, '.env') });
