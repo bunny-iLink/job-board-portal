@@ -88,3 +88,33 @@ export async function addEmployer(req, res) {
         });
     }
 }
+
+export async function getEmployerData(req, res) {
+    try {
+        const employerId = req.params.employerId;
+
+        // Validate employerId
+        if (!employerId) {
+            return res.status(400).json({ message: "Employer ID is required" });
+        }
+
+        // Find the employer by ID
+        const employer = await Employer.findById(employerId);
+        if (!employer) {
+            return res.status(404).json({ message: "Employer not found" });
+        }
+
+        // Return the employer data
+        return res.status(200).json({
+            message: "Employer data retrieved successfully",
+            employer
+        });
+
+    } catch (err) {
+        console.error("Error retrieving employer data:", err);
+        return res.status(500).json({
+            message: "Error retrieving employer data",
+            error: err.message || err
+        });
+    }
+}

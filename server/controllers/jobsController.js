@@ -89,3 +89,79 @@ export async function getJobs(req, res) {
     }
 }
 
+export async function updateJob(req, res) {
+    try {
+        const { jobId } = req.params;
+        console.log("Updating job with ID:", jobId);
+        
+        const updateData = req.body;
+
+        // If 'description' is provided, do partial validation only on provided nested fields
+        if (updateData.description) {
+            const desc = updateData.description;
+
+            if (desc.hasOwnProperty("overview") && !desc.overview) {
+                return res.status(400).json({ message: "Description overview cannot be empty" });
+            }
+
+            if (desc.hasOwnProperty("responsibilities") && !Array.isArray(desc.responsibilities)) {
+                return res.status(400).json({ message: "Responsibilities must be an array" });
+            }
+
+            if (desc.hasOwnProperty("requiredSkills") && !Array.isArray(desc.requiredSkills)) {
+                return res.status(400).json({ message: "Required skills must be an array" });
+            }
+
+            // Optional fields fallback to empty arrays if explicitly passed as null or undefined
+            if (!desc.preferredSkills) desc.preferredSkills = [];
+            if (!desc.whatWeOffer) desc.whatWeOffer = [];
+        }
+
+        const updatedJob = await Job.findByIdAndUpdate(
+            jobId,
+            { $set: updateData },
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedJob) {
+            return res.status(404).json({ message: "Job not found" });
+        }
+
+        console.log("Job updated successfully:", updatedJob);
+        res.status(200).json({
+            message: "Job updated successfully",
+            job: updatedJob
+        });
+    } catch (error) {
+        console.error("Error updating job:", error.message);
+        res.status(500).json({ message: "Error updating job", error: error.message });
+    }
+}
+
+export async function deleteJob(req, res) {
+    try {
+        const { jobId } = req.params;
+
+        // Validate the ID format
+        if (!mongoose.Types.ObjectId.isValid(jobId)) {
+            return res.status(400).json({ message: "Invalid job ID format" });
+        }
+
+        const deletedJob = await Job.findByIdAndDelete(jobId);
+
+        if (!deletedJob) {
+            return res.status(404).json({ message: "Job not found" });
+        }
+
+        console.log("Job deleted successfully:", deletedJob);
+        res.status(200).json({
+            message: "Job deleted successfully",
+            job: deletedJob
+        });
+    } catch (error) {
+        console.error("Error deleting job:", error.message);
+        res.status(500).json({ message: "Error deleting job", error: error.message });
+    }
+}
+
+
