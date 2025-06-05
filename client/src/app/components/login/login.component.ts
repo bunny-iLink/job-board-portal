@@ -40,7 +40,7 @@ export class LoginComponent {
         localStorage.setItem('token', response.token);
        this.router.navigate([`${response.user.role}/dashboard`]);  // adjust route as needed
       },
-      error: err => {
+      error: (err: any) => {
         console.error('Login error:', err);
         alert('Invalid email or password.');
       }

@@ -1,13 +1,13 @@
 import { mergeApplicationConfig, ApplicationConfig } from '@angular/core';
 import { provideServerRendering } from '@angular/platform-server';
-import { provideServerRouting } from '@angular/ssr';
+// Removed provideServerRouting import
 import { appConfig } from './app.config';
 import { serverRoutes } from './app.routes.server';
 
 const serverConfig: ApplicationConfig = {
   providers: [
     provideServerRendering(),
-    provideServerRouting(serverRoutes)
+    // If routing setup is needed, use provideRouter or similar from @angular/router
   ]
 };
 
