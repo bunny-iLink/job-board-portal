@@ -1,0 +1,32 @@
+<div class="dashboard-container">
+  <!-- Header with Employer Details -->
+  <header class="dashboard-header" *ngIf="employer">
+    <h1>Welcome, {{ employer.name }}</h1>
+    <p><strong>Email:</strong> {{ employer.email }}</p>
+    <p *ngIf="employer.company"><strong>Company:</strong> {{ employer.company }}</p>
+  </header>
+
+  <!-- Fallback if employer data is missing -->
+  <div *ngIf="!employer" class="no-data">
+    <p>Loading employer data or not logged in...</p>
+  </div>
+
+  <!-- Job Listings -->
+  <section class="job-listings" *ngIf="jobListings.length > 0">
+    <h2>Your Job Listings</h2>
+    <div class="tile-container">
+      <div class="job-tile" *ngFor="let job of jobListings">
+        <h3>{{ job.title }}</h3>
+        <p><strong>Location:</strong> {{ job.location }}</p>
+        <p><strong>Type:</strong> {{ job.type }}</p>
+        <p><strong>Description:</strong></p>
+        <p>{{ job.description }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fallback if no job listings -->
+  <div *ngIf="jobListings.length === 0 && employer">
+    <p>No job listings available.</p>
+  </div>
+</div>

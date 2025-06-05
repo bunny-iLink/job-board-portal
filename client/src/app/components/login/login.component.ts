@@ -38,7 +38,8 @@ export class LoginComponent {
         
         // Optional: Save token or user info here if returned
         localStorage.setItem('token', response.token);
-       this.router.navigate([`${response.user.role}/dashboard`]);  // adjust route as needed
+        localStorage.setItem('id', JSON.stringify(response.user.id));
+        this.router.navigate([`${response.user.role}/dashboard`]);  // adjust route as needed
       },
       error: (err: any) => {
         console.error('Login error:', err);
