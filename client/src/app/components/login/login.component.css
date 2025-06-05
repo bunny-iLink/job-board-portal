@@ -1,27 +1,37 @@
-.container {
+/* Login Form Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding: 20px;
+  /* padding: 20px; */
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.card {
+.login-container form {
   background: white;
   border-radius: 16px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  padding: 40px;
+  padding: 24px;
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
   animation: slideUp 0.6s ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -29,70 +39,28 @@
   }
 }
 
-.header {
+/* Header */
+.login-container h2 {
   text-align: center;
-  margin-bottom: 32px;
-}
-
-.header h1 {
-  font-size: 1.875rem;
+  font-size: 2rem;
   font-weight: 700;
   color: #2d3748;
-  margin: 0 0 8px 0;
+  margin-bottom: 16px;
 }
 
-.header p {
-  color: #718096;
-  font-size: 1rem;
-  margin: 0;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-/* Error Banner */
-.error-banner {
-  background: #fed7d7;
-  border: 1px solid #feb2b2;
-  border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 8px;
-}
-
-.error-content {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #c53030;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.error-icon {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-}
-
-/* Form Groups */
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.form-group label {
+/* Label Styling */
+.login-container label {
   font-weight: 600;
   color: #2d3748;
   font-size: 0.9rem;
+  margin-bottom: 6px;
+  display: block;
 }
 
 /* Input Fields */
-input[type="email"],
-input[type="password"] {
+.login-container input[type="email"],
+.login-container input[type="password"],
+.login-container input[type="text"] {
   padding: 12px 16px;
   border: 2px solid #e2e8f0;
   border-radius: 8px;
@@ -100,106 +68,59 @@ input[type="password"] {
   transition: all 0.2s ease;
   background: white;
   color: #2d3748;
+  width: 100%;
+  margin-bottom: 4px;
 }
 
-input[type="email"]:focus,
-input[type="password"]:focus {
+.login-container input:focus {
   outline: none;
   border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-input::placeholder {
+.login-container input::placeholder {
   color: #a0aec0;
 }
 
-input.error {
+/* Password Toggle */
+.login-container button[type="button"] {
+  background: none;
+  border: none;
+  color: #667eea;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  margin-top: 2px;
+  align-self: flex-start;
+  transition: background-color 0.2s ease;
+}
+
+.login-container button[type="button"]:hover {
+  background: #f7fafc;
+}
+
+/* Error Message */
+.login-container small {
+  color: #e53e3e;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: 0.5px;
+}
+
+/* Validation States */
+.login-container input.ng-invalid.ng-touched {
   border-color: #e53e3e;
   box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
 }
 
-input.ng-valid.ng-touched {
+.login-container input.ng-valid.ng-touched {
   border-color: #38a169;
 }
 
-/* Password Field */
-.password-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.password-wrapper input {
-  flex: 1;
-  padding-right: 48px;
-}
-
-.toggle-password {
-  position: absolute;
-  right: 12px;
-  background: none;
-  border: none;
-  color: #718096;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.toggle-password:hover {
-  color: #667eea;
-  background: #f7fafc;
-}
-
-.password-icon {
-  width: 20px;
-  height: 20px;
-}
-
-/* Form Options */
-.form-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.875rem;
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  color: #4a5568;
-  font-weight: 500;
-}
-
-.checkbox-label input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  accent-color: #667eea;
-}
-
-.forgot-password {
-  background: none;
-  border: none;
-  color: #667eea;
-  font-weight: 500;
-  cursor: pointer;
-  padding: 4px 0;
-  transition: color 0.2s ease;
-  font-size: 0.875rem;
-}
-
-.forgot-password:hover {
-  color: #5a67d8;
-  text-decoration: underline;
-}
-
 /* Submit Button */
-.submit-btn {
+.login-container button[type="submit"] {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
@@ -209,119 +130,27 @@ input.ng-valid.ng-touched {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-top: 8px;
+  margin-top: 12px;
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-  position: relative;
 }
 
-.submit-btn:hover:not(:disabled) {
+.login-container button[type="submit"]:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
-.submit-btn:active:not(:disabled) {
+.login-container button[type="submit"]:active:not(:disabled) {
   transform: translateY(0);
 }
 
-.submit-btn:disabled {
+.login-container button[type="submit"]:disabled {
   background: #cbd5e0;
   cursor: not-allowed;
   box-shadow: none;
-  transform: none;
 }
 
-.submit-btn.loading {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.submit-btn.loading::after {
-  content: '';
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  width: 16px;
-  height: 16px;
-  margin-top: -8px;
-  border: 2px solid transparent;
-  border-top: 2px solid white;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Error Messages */
-.error {
-  color: #e53e3e;
-  font-size: 0.875rem;
-  font-weight: 500;
-  margin-top: 4px;
-}
-
-/* Footer */
-.footer {
-  text-align: center;
-  margin-top: 32px;
-  padding-top: 24px;
-  border-top: 1px solid #e2e8f0;
-}
-
-.footer p {
-  color: #718096;
-  margin: 0;
-  font-size: 0.9rem;
-}
-
-.link-button {
-  background: none;
-  border: none;
-  color: #667eea;
-  font-weight: 500;
-  cursor: pointer;
-  padding: 0;
-  transition: color 0.2s ease;
-  font-size: inherit;
-}
-
-.link-button:hover {
-  color: #5a67d8;
-  text-decoration: underline;
-}
-
-/* Responsive Design */
-@media (max-width: 640px) {
-  .container {
-    padding: 16px;
-  }
-  
-  .card {
-    padding: 24px;
-    margin: 0;
-  }
-  
-  .header h1 {
-    font-size: 1.5rem;
-  }
-  
-  .form-options {
-    flex-direction: column;
-    gap: 12px;
-    align-items: flex-start;
-  }
-}
-
-/* Focus States for Accessibility */
-button:focus,
-input:focus {
-  outline: 2px solid #667eea;
-  outline-offset: 2px;
-}
-
-/* Animation for form elements */
-.form-group {
+/* Animation */
+.login-container > * {
   animation: fadeIn 0.3s ease-out;
 }
 
@@ -334,4 +163,86 @@ input:focus {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Focus Accessibility */
+.login-container button:focus,
+.login-container input:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .login-container {
+    padding: 16px;
+  }
+
+  .login-container form {
+    padding: 24px;
+  }
+
+  .login-container h2 {
+    font-size: 1.75rem;
+  }
+}
+
+/* Loading State */
+.login-container button[type="submit"].loading {
+  position: relative;
+  color: transparent;
+}
+
+.login-container button[type="submit"].loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Smooth Transitions */
+* {
+  box-sizing: border-box;
+}
+/* Password Field Wrapper */
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper input {
+  padding-right: 44px; /* Make room for the toggle button */
+}
+
+/* Show/Hide Button Inside Input */
+.password-wrapper button {
+  position: absolute;
+  top: 42%;
+  right: 12px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #667eea;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.password-wrapper button:hover {
+  background: #f7fafc;
 }

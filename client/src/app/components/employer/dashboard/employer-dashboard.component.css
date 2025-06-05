@@ -1,43 +1,86 @@
+/* Overall container */
 .dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 2rem;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  background-color: #f9f9f9;
 }
 
+/* Header styling */
 .dashboard-header {
-  background-color: #f1f1f1;
-  padding: 1rem;
+  background-color: #eef4ff;
+  padding: 1.5rem;
+  border-left: 6px solid #007BFF;
+  border-radius: 6px;
   margin-bottom: 2rem;
-  border-radius: 6px;
 }
 
-.job-tiles {
-  margin-top: 1rem;
+.dashboard-header h1 {
+  margin: 0 0 0.5rem;
+  color: #007BFF;
+  font-size: 2rem;
 }
 
-.tiles-grid {
+.dashboard-header p {
+  margin: 0.3rem 0;
+  font-size: 1rem;
+}
+
+/* Message when no employer is available */
+.no-data {
+  text-align: center;
+  padding: 2rem;
+  color: #888;
+  font-size: 1.1rem;
+}
+
+/* Section heading */
+.job-listings h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #222;
+}
+
+/* Job tile grid */
+.tile-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
 }
 
-.tile {
-  background-color: #ffffff;
-  padding: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+/* Each job tile */
+.job-tile {
+  background-color: #fff;
+  padding: 1.2rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease-in-out;
 }
 
-.tile h3 {
+.job-tile:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.12);
+}
+
+.job-tile h3 {
   margin-top: 0;
+  color: #007BFF;
+  font-size: 1.2rem;
 }
 
-.tile button {
-  margin-top: 1rem;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
+.job-tile p {
+  margin: 0.4rem 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* Fallback for no listings */
+.dashboard-container > div:last-child {
+  text-align: center;
+  margin-top: 2rem;
+  color: #666;
+  font-size: 1rem;
 }
