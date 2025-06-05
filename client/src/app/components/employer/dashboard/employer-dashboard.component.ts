@@ -1,15 +1,15 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-employer-dashboard',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  imports: [CommonModule],
+  templateUrl: './employer-dashboard.component.html',
+  styleUrls: ['./employer-dashboard.component.css']
 })
-export class Dashboard implements AfterViewInit {
+export class EmployerDashboardComponent implements AfterViewInit {
   employer: any = null;
   jobListings: any[] = [];
   employerId: string | null =null;

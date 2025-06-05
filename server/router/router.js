@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { addUser, addEmployer, getEmployerData } from '../controllers/userController.js';
+import { addUser, addEmployer, getEmployerData, getUserData } from '../controllers/userController.js';
 import { loginUser } from '../controllers/loginController.js';
 import { addJob, deleteJob, getJobs, updateJob } from '../controllers/jobsController.js';
 
@@ -13,7 +13,8 @@ router.post('/addJob', addJob);
 
 // GET methods
 router.get('/getJobs/:employerId', getJobs);
-router.get('/getEmployerData/:employerId', getEmployerData)
+router.get('/getEmployerData/:employerId', getEmployerData);
+router.get('/getUserData/:userId', getUserData);
 
 // PUT methods
 router.put('/updateJob/:jobId', updateJob);

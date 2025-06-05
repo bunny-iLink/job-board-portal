@@ -89,6 +89,35 @@ export async function addEmployer(req, res) {
     }
 }
 
+export async function getUserData(req, res) { 
+    try {
+        const userId = req.params.userId;
+
+        // Validate userId
+        if (!userId) {
+            return res.status(400).json({ message: "User ID is required" });
+        }
+
+        // Find the user by ID
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Return the user data
+        return res.status(200).json({
+            message: "User data retrieved successfully",
+            user
+        });
+    } catch (err) {
+        console.error("Error retrieving user data:", err);
+        return res.status(500).json({
+            message: "Error retrieving user data",
+            error: err.message || err
+        });
+    }
+}
+
 export async function getEmployerData(req, res) {
     try {
         const employerId = req.params.employerId;
