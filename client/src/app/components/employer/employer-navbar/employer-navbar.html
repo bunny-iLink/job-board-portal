@@ -1,0 +1,11 @@
+<nav class="navbar" *ngIf="token">
+    <div class="navbar-left">
+        <span class="greeting">Hello, {{ userName }}!</span>
+        <a href="#" class="nav-link">My Listings</a>
+        <a href="#" class="nav-link">Profile</a>
+    </div>
+    <div class="navbar-right">
+        <button class="icon-button" title="Notifications">🔔</button>
+        <button class="icon-button" (click)="logout()" title="Logout">🚪 Logout</button>
+    </div>
+</nav>

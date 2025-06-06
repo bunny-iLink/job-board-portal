@@ -1,6 +1,6 @@
 <div class="dashboard-container">
   <!-- Header with Employer Details -->
-  <header class="dashboard-header" *ngIf="employer">
+  <header class="dashboard-header" *ngIf="token">
     <h1>Welcome, {{ employer.name }}</h1>
     <p><strong>Email:</strong> {{ employer.email }}</p>
     <p *ngIf="employer.company"><strong>Company:</strong> {{ employer.company }}</p>

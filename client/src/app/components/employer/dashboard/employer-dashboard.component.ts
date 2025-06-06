@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, NgModule, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './employer-dashboard.component.html',
   styleUrls: ['./employer-dashboard.component.css']
 })
+
 export class EmployerDashboardComponent implements AfterViewInit {
   employer: any = null;
   employerId: string | null = null;
