@@ -1,20 +1,22 @@
-/* Overall container */
 .dashboard-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #333;
-  background-color: #f9f9f9;
 }
 
-/* Header styling */
 .dashboard-header {
-  background-color: #eef4ff;
   padding: 1.5rem;
   border-left: 6px solid #007BFF;
   border-radius: 6px;
   margin-bottom: 2rem;
+  width: 90vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
 }
 
 .dashboard-header h1 {
@@ -28,57 +30,14 @@
   font-size: 1rem;
 }
 
-/* Message when no employer is available */
 .no-data {
   text-align: center;
   padding: 2rem;
-  color: #888;
+  color: red;
   font-size: 1.1rem;
 }
 
-/* Section heading */
-.job-listings h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: #222;
-}
-
-/* Job tile grid */
-.tile-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
-}
-
-/* Each job tile */
-.job-tile {
-  background-color: #fff;
-  padding: 1.2rem;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-  transition: transform 0.2s ease-in-out;
-}
-
-.job-tile:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.12);
-}
-
-.job-tile h3 {
-  margin-top: 0;
-  color: #007BFF;
-  font-size: 1.2rem;
-}
-
-.job-tile p {
-  margin: 0.4rem 0;
-  font-size: 0.95rem;
-  line-height: 1.4;
-}
-
-/* Fallback for no listings */
-.dashboard-container > div:last-child {
+.dashboard-container>div:last-child {
   text-align: center;
   margin-top: 2rem;
   color: #666;

@@ -5,11 +5,12 @@
   padding: 0;
   border: 0;
 }
+
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 98vh;
   /* padding: 20px; */
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -33,6 +34,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -150,7 +152,7 @@
 }
 
 /* Animation */
-.login-container > * {
+.login-container>* {
   animation: fadeIn 0.3s ease-out;
 }
 
@@ -159,6 +161,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -208,14 +211,20 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Smooth Transitions */
 * {
   box-sizing: border-box;
 }
+
 /* Password Field Wrapper */
 .password-wrapper {
   position: relative;
@@ -223,7 +232,8 @@
 }
 
 .password-wrapper input {
-  padding-right: 44px; /* Make room for the toggle button */
+  padding-right: 44px;
+  /* Make room for the toggle button */
 }
 
 /* Show/Hide Button Inside Input */
@@ -245,4 +255,28 @@
 
 .password-wrapper button:hover {
   background: #f7fafc;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 0.9rem;
+  color: #2d3748;
+}
+
+.register-link span {
+  margin-right: 4px;
+}
+
+.register-link a {
+  color: #667eea;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+  color: #5a67d8;
 }

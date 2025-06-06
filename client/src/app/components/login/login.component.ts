@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -26,6 +26,11 @@ export class LoginComponent {
     this.showPassword = !this.showPassword;
   }
 
+  goToRegister() {
+    this.router.navigate(['/register']);
+  }
+
+
   onSubmit() {
     if (this.loginForm.invalid) return;
 
@@ -35,11 +40,9 @@ export class LoginComponent {
       next: (response: any) => {
         alert('Login successful!');
         console.log(response);
-        
-        // Optional: Save token or user info here if returned
         localStorage.setItem('token', response.token);
         localStorage.setItem('id', JSON.stringify(response.user.id));
-        this.router.navigate([`${response.user.role}/dashboard`]);  // adjust route as needed
+        this.router.navigate([`${response.user.role}/dashboard`]); 
       },
       error: (err: any) => {
         console.error('Login error:', err);

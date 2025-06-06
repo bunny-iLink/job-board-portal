@@ -7,25 +7,7 @@
   </header>
 
   <!-- Fallback if employer data is missing -->
-  <div *ngIf="!employer" class="no-data">
-    <p>Loading employer data or not logged in...</p>
+  <div *ngIf="!token" class="no-data">
+    <p>Please login to access the site....</p>
   </div>
-
-  <!-- Job Listings -->
-  <section class="job-listings" *ngIf="jobListings.length > 0">
-    <h2>Your Job Listings</h2>
-    <div class="tile-container">
-      <div class="job-tile" *ngFor="let job of jobListings">
-        <h3>{{ job.title }}</h3>
-        <p><strong>Location:</strong> {{ job.location }}</p>
-        <p><strong>Type:</strong> {{ job.type }}</p>
-        <p><strong>Description:</strong></p>
-        <p>{{ job.description }}</p>
-      </div>
-    </div>
-  </section>
-
-
-
-      
 </div>

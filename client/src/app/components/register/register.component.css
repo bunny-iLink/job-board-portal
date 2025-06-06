@@ -3,7 +3,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 98vh;
   padding: 20px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -64,6 +64,7 @@
   font-weight: 600;
   color: #2d3748;
   font-size: 0.9rem;
+  margin-top: 10px;
 }
 
 /* Role Selection Buttons */

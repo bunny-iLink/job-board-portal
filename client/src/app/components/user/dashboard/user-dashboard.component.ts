@@ -11,13 +11,17 @@ import { HttpClient } from '@angular/common/http';
 })
 export class UserDashboardComponent implements AfterViewInit {
   user: any = null;
-  savedJobs: any[] = [];
   userId: string | null = null;
+  token: string | null = null;
 
   constructor(private http: HttpClient) {}
 
   ngAfterViewInit() {
     this.loadUserData();
+
+    if (typeof window !== 'undefined') {
+      this.token = localStorage.getItem('token');
+    }
   }
 
   loadUserData() {
@@ -30,7 +34,6 @@ export class UserDashboardComponent implements AfterViewInit {
           next: (res: any) => {
             this.user = res.user;
             console.log('User data:', this.user);
-            this.loadSavedJobs(); // load jobs after user info is fetched
           },
           error: err => {
             console.error('Failed to load user data:', err);
@@ -41,18 +44,5 @@ export class UserDashboardComponent implements AfterViewInit {
         console.warn('No valid user ID in localStorage.');
       }
     }
-  }
-
-  loadSavedJobs() {
-    if (!this.userId) return;
-    this.http.get(`http://localhost:3000/api/user/savedJobs/${this.userId}`).subscribe({
-      next: (res: any) => {
-        this.savedJobs = res.jobs || res;
-        console.log('Saved jobs:', this.savedJobs);
-      },
-      error: err => {
-        console.error('Failed to load saved jobs:', err);
-      }
-    });
   }
 }

@@ -1,94 +1,45 @@
-/* Container styling */
 .dashboard-container {
-  max-width: 1200px;
-  margin: auto;
-  padding: 2rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
 }
 
-/* Header styling */
 .dashboard-header {
-  background-color: #f5f7fa;
-  border-left: 6px solid #007BFF;
-  padding: 1rem 1.5rem;
-  margin-bottom: 2rem;
-  border-radius: 4px;
+    padding: 1.5rem;
+    border-left: 6px solid #007BFF;
+    border-radius: 6px;
+    margin-bottom: 2rem;
+    width: 90vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
 }
 
 .dashboard-header h1 {
-  margin: 0;
-  font-size: 2rem;
-  color: #007BFF;
+    margin: 0 0 0.5rem;
+    color: #007BFF;
+    font-size: 2rem;
 }
 
 .dashboard-header p {
-  margin: 0.5rem 0 0;
-  font-size: 1rem;
+    margin: 0.3rem 0;
+    font-size: 1rem;
 }
 
-/* No data message */
 .no-data {
-  text-align: center;
-  color: #888;
-  font-size: 1rem;
-  margin-top: 2rem;
+    text-align: center;
+    padding: 2rem;
+    color: red;
+    font-size: 1.1rem;
 }
 
-/* Job tiles section */
-.job-tiles {
-  margin-top: 2rem;
-}
-
-.job-tiles h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: #222;
-}
-
-/* Grid layout */
-.tiles-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
-}
-
-/* Individual job tile */
-.tile {
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease-in-out;
-}
-
-.tile:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
-}
-
-.tile h3 {
-  margin-top: 0;
-  color: #007BFF;
-}
-
-.tile p {
-  margin: 0.3rem 0;
-  font-size: 0.95rem;
-}
-
-/* Optional button */
-.tile button {
-  margin-top: 1rem;
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  padding: 0.5rem 0.8rem;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.tile button:hover {
-  background-color: #c82333;
+.dashboard-container>div:last-child {
+    text-align: center;
+    margin-top: 2rem;
+    color: #666;
+    font-size: 1rem;
 }

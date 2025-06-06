@@ -6,30 +6,7 @@
     </header>
 
     <!-- Fallback if user data is missing -->
-    <div *ngIf="!user" class="no-data">
+    <div *ngIf="!token" class="no-data">
         <p>Loading user data or not logged in...</p>
-    </div>
-
-    <!-- Saved Job Listings -->
-    <section class="job-tiles" *ngIf="savedJobs.length > 0">
-        <h2>Your Saved Jobs</h2>
-        <div class="tiles-grid">
-            <div class="tile" *ngFor="let job of savedJobs">
-                <h3>{{ job.title }}</h3>
-                <p><strong>Company:</strong> {{ job.company }}</p>
-                <p><strong>Location:</strong> {{ job.location }}</p>
-                <p><strong>Type:</strong> {{ job.type }}</p>
-                <p><strong>Description:</strong></p>
-                <p>{{ job.description?.overview }}</p>
-
-                <!-- Optional action button -->
-                <!-- <button (click)="removeJob(job._id)">Remove</button> -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Fallback if no saved jobs -->
-    <div *ngIf="savedJobs.length === 0 && user">
-        <p>You haven’t saved any jobs yet.</p>
     </div>
 </div>

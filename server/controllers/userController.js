@@ -8,6 +8,10 @@ const Employer = mongoose.model("Employer", employerSchema);
 
 const SALT_ROUNDS = 10;
 
+// User Section
+
+// Add a new user
+
 export async function addUser(req, res) {
     try {
         const { name, email, password } = req.body;
@@ -44,6 +48,104 @@ export async function addUser(req, res) {
         });
     }
 }
+
+// Get user data by ID
+
+export async function getUserData(req, res) {
+    try {
+        const userId = req.params.userId;
+
+        // Validate userId
+        if (!userId) {
+            return res.status(400).json({ message: "User ID is required" });
+        }
+
+        // Find the user by ID
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Return the user data
+        return res.status(200).json({
+            message: "User data retrieved successfully",
+            user
+        });
+    } catch (err) {
+        console.error("Error retrieving user data:", err);
+        return res.status(500).json({
+            message: "Error retrieving user data",
+            error: err.message || err
+        });
+    }
+}
+
+// Update user data by ID
+
+export async function updateUserData(req, res) {
+    try {
+        const userId = req.params.userId;
+
+        const updatedData = req.body;
+
+        if (!userId) {
+            return res.status(400).json({ message: "User ID is required" });
+        }
+
+        // Find the user by ID and update
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            updatedData,
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        console.log("User updated successfully:", updatedUser);
+        return res.status(200).json({
+            message: "User updated successfully",
+        })
+    } catch (err) {
+        console.error("Error updating user data:", err);
+        return res.status(500).json({
+            message: "Error updating user data",
+            error: err.message || err
+        });
+    }
+}
+
+// Delete user by ID
+
+export async function deleteUserData(req, res) {
+    try {
+        const userId = req.params.userId;
+
+        if (!userId) {
+            return res.status(404).json({ message: "User ID is required" });
+        }
+
+        const result = await User.deleteOne({ _id: userId });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ message: "Failed to delete user" });
+        }
+
+        return res.status(200).json({ message: "User deleted successfully" });
+
+    } catch (err) {
+        console.log("Error occured: ", err);
+        return res.status(500).json({
+            message: "Some error occured",
+            error: err.message || err
+        });
+    }
+}
+
+// Employer Section
+
+// Add a new employer
 
 export async function addEmployer(req, res) {
     try {
@@ -89,34 +191,7 @@ export async function addEmployer(req, res) {
     }
 }
 
-export async function getUserData(req, res) { 
-    try {
-        const userId = req.params.userId;
-
-        // Validate userId
-        if (!userId) {
-            return res.status(400).json({ message: "User ID is required" });
-        }
-
-        // Find the user by ID
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        // Return the user data
-        return res.status(200).json({
-            message: "User data retrieved successfully",
-            user
-        });
-    } catch (err) {
-        console.error("Error retrieving user data:", err);
-        return res.status(500).json({
-            message: "Error retrieving user data",
-            error: err.message || err
-        });
-    }
-}
+// Get employer data by ID
 
 export async function getEmployerData(req, res) {
     try {
@@ -147,3 +222,64 @@ export async function getEmployerData(req, res) {
         });
     }
 }
+
+// Update employer data by ID
+
+export async function updateEmployerData(req, res) {
+    try {
+        const employerId = req.params.employerId;
+
+        const updatedData = req.body;
+
+        if (!employerId) {
+            return res.status(400).json({ message: "Employer ID is required" });
+        }
+
+        const result = await Employer.findByIdAndUpdate(
+            employerId,
+            updatedData,
+            { new: true, runValidators: true }
+        )
+
+        if (!result) {
+            return res.status(404).json({ message: "Employer not found" });
+        }
+        console.log("Employer updated successfully:", result);
+        return res.status(200).json({
+            message: "Employer updated successfully"
+        });
+    } catch (err) {
+        console.error("Error updating employer data:", err);
+        return res.status(500).json({
+            message: "Error updating employer data",
+            error: err.message || err
+        });
+    }
+}
+
+// Delete Employer by ID
+
+export async function deleteEmployerData(req, res) {
+    try {
+        const employerId = req.params.employerId;
+
+        if (!employerId) {
+            return res.status(404).json({ message: "Employer not found" });
+        }
+
+        const result = await Employer.deleteOne({ _id: employerId });
+
+        if (result.deletedCount === 0) {
+            res.status(404).json({ message: "Failed to delete employer" });
+        }
+
+        return res.status(200).json({ message: "Employer deleted successfully" });
+
+    } catch (err) {
+        console.log("Error occured: ", err);
+        return res.status(500).json({
+            message: "Some error occured",
+            error: err
+        })
+    }
+} 
