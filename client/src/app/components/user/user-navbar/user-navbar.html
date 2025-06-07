@@ -1,8 +1,8 @@
 <nav class="navbar" *ngIf="token">
     <div class="navbar-left">
-        <span class="greeting">Hello, {{ userName }}!</span>
-        <a href="#" class="nav-link">Search Jobs</a>
-        <a href="#" class="nav-link">Profile</a>
+        <span class="greeting clickable" (click)="goToDashboard()">Hello, {{ userName }}!</span>
+        <button class="nav-button" (click)="goToListings()">Jobs</button>
+        <button class="nav-button" (click)="goToProfile()">Profile</button>
     </div>
     <div class="navbar-right">
         <button class="icon-button" title="Notifications">🔔</button>

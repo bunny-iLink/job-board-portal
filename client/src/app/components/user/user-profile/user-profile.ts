@@ -6,15 +6,15 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
 
 @Component({
-  selector: 'app-employer-profile',
+  selector: 'app-user-profile',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './employer-profile.html',
-  styleUrls: ['./employer-profile.css']
+  templateUrl: 'user-profile.html',
+  styleUrls: ['./user-profile.css']
 })
-export class EmployerProfileComponent implements OnInit {
-  employerId: string | null = null;
-  employer: any = null;
+export class UserProfileComponent implements OnInit {
+  userId: string | null = null;
+  user: any = null;
   loading = false;
   error = '';
   success = '';
@@ -28,66 +28,66 @@ export class EmployerProfileComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.employerId = this.authService.getUserId();
-    if (!this.employerId) {
-      this.error = 'No employer ID found.';
+    this.userId = this.authService.getUserId();
+    if (!this.userId) {
+      this.error = 'No user ID found.';
       return;
     }
-    this.fetchEmployer();
+    this.fetchuser();
   }
 
-  fetchEmployer() {
+  fetchuser() {
     this.loading = true;
-    this.http.get(`${this.apiBase}/getEmployerData/${this.employerId}`)
+    this.http.get(`${this.apiBase}/getUserData/${this.userId}`)
       .subscribe({
         next: (data: any) => {
-          this.employer = data.employer;
-          if (this.employer) {
-            this.employer.password = '';
+          this.user = data.user;
+          if (this.user) {
+            this.user.password = '';
           }
           this.loading = false;
         },
         error: () => {
-          this.error = 'Failed to load employer data.';
+          this.error = 'Failed to load user data.';
           this.loading = false;
         }
       });
   }
 
   updateProfile() {
-  if (!this.employerId) return;
+    if (!this.userId) return;
 
-  this.success = '';
-  this.error = '';
+    this.success = '';
+    this.error = '';
 
-  const updatedemployer = { ...this.employer };
-  updatedemployer.updatedAt = new Date().toISOString();
+    const updatedUser = { ...this.user };
+    updatedUser.updatedAt = new Date().toISOString();
 
-  // Remove password field if it's empty or just whitespace
-  if (!updatedemployer.password || updatedemployer.password.trim() === '') {
-    delete updatedemployer.password;
+    // Remove password field if it's empty or just whitespace
+    if (!updatedUser.password || updatedUser.password.trim() === '') {
+      delete updatedUser.password;
+    }
+
+    this.http.put(`${this.apiBase}/updateUser/${this.userId}`, updatedUser)
+      .subscribe({
+        next: () => {
+          this.success = 'Profile updated successfully!';
+        },
+        error: () => {
+          this.error = 'Failed to update profile.';
+        }
+      });
   }
-
-  this.http.put(`${this.apiBase}/updateemployer/${this.employerId}`, updatedemployer)
-    .subscribe({
-      next: () => {
-        this.success = 'Profile updated successfully!';
-      },
-      error: () => {
-        this.error = 'Failed to update profile.';
-      }
-    });
-}
 
 
   deleteProfile() {
-    if (!this.employerId) return;
+    if (!this.userId) return;
 
     if (!confirm('Are you sure you want to delete your profile? This action cannot be undone.')) {
       return;
     }
 
-    this.http.delete(`${this.apiBase}/deleteEmployer/${this.employerId}`)
+    this.http.delete(`${this.apiBase}/deleteUser/${this.userId}`)
       .subscribe({
         next: () => {
           alert('Profile deleted successfully.');

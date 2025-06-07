@@ -36,7 +36,7 @@ export class EmployerDashboardComponent implements OnInit {
           }
         });
       } else {
-        console.warn('No valid user in localStorage.');
+        console.warn('No valid employer');
       }
     }
   }

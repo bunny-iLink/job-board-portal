@@ -1,8 +1,8 @@
 <div class="dashboard-container">
     <!-- Header with User Details -->
     <header class="dashboard-header" *ngIf="token">
-        <h1>Welcome, {{ user.name }}</h1>
-        <p><strong>Email:</strong> {{ user.email }}</p>
+        <h1>Welcome, {{ user?.name }}</h1>
+        <p><strong>Email:</strong> {{ user?.email }}</p>
     </header>
 
     <!-- Fallback if user data is missing -->

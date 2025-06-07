@@ -33,11 +33,13 @@ export async function addUser(req, res) {
         });
 
         const savedUser = await newUser.save();
+        const userToReturn = savedUser.toObject();
+        delete userToReturn.password;
 
         console.log("User added successfully:", savedUser);
         return res.status(201).json({
             message: "User added successfully",
-            user: savedUser
+            user: userToReturn
         });
 
     } catch (err) {
@@ -67,9 +69,11 @@ export async function getUserData(req, res) {
         }
 
         // Return the user data
+        const userToReturn = user.toObject();
+        delete userToReturn.password;
         return res.status(200).json({
             message: "User data retrieved successfully",
-            user
+            user: userToReturn
         });
     } catch (err) {
         console.error("Error retrieving user data:", err);
@@ -85,14 +89,17 @@ export async function getUserData(req, res) {
 export async function updateUserData(req, res) {
     try {
         const userId = req.params.userId;
-
-        const updatedData = req.body;
+        const updatedData = { ...req.body };
 
         if (!userId) {
             return res.status(400).json({ message: "User ID is required" });
         }
 
-        // Find the user by ID and update
+        // If password is being updated, hash it first
+        if (updatedData.password) {
+            updatedData.password = await bcrypt.hash(updatedData.password, SALT_ROUNDS);
+        }
+
         const updatedUser = await User.findByIdAndUpdate(
             userId,
             updatedData,
@@ -103,10 +110,15 @@ export async function updateUserData(req, res) {
             return res.status(404).json({ message: "User not found" });
         }
 
+        const userToReturn = updatedUser.toObject();
+        delete userToReturn.password;
+
         console.log("User updated successfully:", updatedUser);
         return res.status(200).json({
             message: "User updated successfully",
-        })
+            user: userToReturn
+        });
+
     } catch (err) {
         console.error("Error updating user data:", err);
         return res.status(500).json({
@@ -115,6 +127,7 @@ export async function updateUserData(req, res) {
         });
     }
 }
+
 
 // Delete user by ID
 
@@ -175,11 +188,13 @@ export async function addEmployer(req, res) {
         });
 
         const savedEmployer = await newEmployer.save();
+        const employerToReturn = savedEmployer.toObject();
+        delete employerToReturn.password;
 
         console.log("Employer added successfully:", savedEmployer);
         return res.status(201).json({
             message: "Employer added successfully",
-            employer: savedEmployer
+            employer: employerToReturn
         });
 
     } catch (err) {
@@ -208,10 +223,13 @@ export async function getEmployerData(req, res) {
             return res.status(404).json({ message: "Employer not found" });
         }
 
+        const employerToReturn = employer.toObject();
+        delete employerToReturn.password;
+
         // Return the employer data
         return res.status(200).json({
             message: "Employer data retrieved successfully",
-            employer
+            employer: employerToReturn
         });
 
     } catch (err) {
@@ -228,26 +246,36 @@ export async function getEmployerData(req, res) {
 export async function updateEmployerData(req, res) {
     try {
         const employerId = req.params.employerId;
-
-        const updatedData = req.body;
+        const updatedData = { ...req.body };
 
         if (!employerId) {
             return res.status(400).json({ message: "Employer ID is required" });
         }
 
-        const result = await Employer.findByIdAndUpdate(
+        // If password is being updated, hash it first
+        if (updatedData.password) {
+            updatedData.password = await bcrypt.hash(updatedData.password, SALT_ROUNDS);
+        }
+
+        const updatedEmployer = await Employer.findByIdAndUpdate(
             employerId,
             updatedData,
             { new: true, runValidators: true }
-        )
+        );
 
-        if (!result) {
+        if (!updatedEmployer) {
             return res.status(404).json({ message: "Employer not found" });
         }
-        console.log("Employer updated successfully:", result);
+
+        const employerToReturn = updatedEmployer.toObject();
+        delete employerToReturn.password;
+
+        console.log("Employer updated successfully:", updatedEmployer);
         return res.status(200).json({
-            message: "Employer updated successfully"
+            message: "Employer updated successfully",
+            employer: employerToReturn
         });
+
     } catch (err) {
         console.error("Error updating employer data:", err);
         return res.status(500).json({

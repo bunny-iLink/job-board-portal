@@ -6,7 +6,7 @@ import { UserNavbar } from '../user-navbar/user-navbar';
   selector: 'app-user-layout',
   standalone: true,
   imports: [RouterOutlet, UserNavbar],
-  templateUrl: './user-layout.html',
+  templateUrl: 'user-layout.html',
   styleUrl: './user-layout.css'
 })
 export class UserLayoutComponent {

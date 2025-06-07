@@ -76,3 +76,52 @@
     left: 0;
     z-index: 1000;
 }
+
+.nav-button {
+    background: none;
+    border: none;
+    color: white;
+    margin-right: 20px;
+    font-size: 16px;
+    font-family: inherit;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.3s;
+    padding: 0;
+}
+
+.nav-button:hover {
+    color: #18bc9c;
+}
+
+.nav-button::after {
+    content: "";
+    display: block;
+    width: 0;
+    height: 2px;
+    background: #18bc9c;
+    transition: width 0.3s;
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+}
+
+.nav-button:hover::after {
+    width: 100%;
+}
+
+.greeting {
+    margin-right: 25px;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.greeting.clickable {
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.greeting.clickable:hover {
+    color: #18bc9c;
+    text-decoration: underline;
+}

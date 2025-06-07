@@ -36,7 +36,10 @@ export const routes: Routes = [
         path: 'dashboard',
         loadComponent: () => import('./components/user/dashboard/user-dashboard.component').then(m => m.UserDashboardComponent)
       },
-      // Add more user routes here
+      {
+        path: 'profile',
+        loadComponent: () => import('./components/user/user-profile/user-profile').then(m => m.UserProfileComponent)
+      }
     ]
   },
 

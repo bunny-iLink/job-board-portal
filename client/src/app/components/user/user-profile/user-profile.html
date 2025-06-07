@@ -1,0 +1,67 @@
+<div *ngIf="loading" class="loading">Loading profile...</div>
+<div *ngIf="error" class="error">{{ error }}</div>
+
+<div class="profile-container">
+    <form *ngIf="!loading && !error" (ngSubmit)="updateProfile()">
+        <h2>User Profile</h2>
+
+        <label>
+            Name:
+            <input type="text" [(ngModel)]="user.name" name="name" required />
+        </label>
+
+        <label>
+            Email:
+            <input type="email" [(ngModel)]="user.email" name="email" required />
+        </label>
+
+        <label>
+            Password:
+            <input type="password" [(ngModel)]="user.password" name="password" />
+        </label>
+
+        <label>
+            Role:
+            <input type="text" [(ngModel)]="user.role" name="role" readonly />
+        </label>
+
+        <label>
+            Address:
+            <input type="text" [(ngModel)]="user.address" name="company" />
+        </label>
+
+        <label>
+            Experience (years):
+            <input type="number" [(ngModel)]="user.experience" name="experience" />
+        </label>
+
+        <label>
+            Phone:
+            <input type="text" [(ngModel)]="user.phone" name="designation" />
+        </label>
+
+        <label>
+            Preferred Domain:
+            <select id="preferredDomain" [(ngModel)]="user.preferredDomain" name="preferredDomain">
+                <option value="">Select preferred domain</option>
+                <option value="Frontend Development">Frontend Development</option>
+                <option value="Backend Development">Backend Development</option>
+                <option value="Full Stack Development">Full Stack Development</option>
+                <option value="Mobile Development">Mobile Development</option>
+                <option value="Data Science">Data Science</option>
+                <option value="Machine Learning">Machine Learning</option>
+                <option value="DevOps">DevOps</option>
+                <option value="UI/UX Design">UI/UX Design</option>
+                <option value="Quality Assurance">Quality Assurance</option>
+                <option value="Project Management">Project Management</option>
+            </select>
+        </label>
+
+        <div class="buttons">
+            <button type="submit">Save Changes</button>
+            <button type="button" (click)="deleteProfile()" class="delete-btn">Delete Profile</button>
+        </div>
+
+        <div *ngIf="success" class="success">{{ success }}</div>
+    </form>
+</div>
