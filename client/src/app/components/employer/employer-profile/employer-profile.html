@@ -1,0 +1,55 @@
+<div *ngIf="loading" class="loading">Loading profile...</div>
+<div *ngIf="error" class="error">{{ error }}</div>
+
+<div class="profile-container">
+    <form *ngIf="!loading && !error" (ngSubmit)="updateProfile()">
+        <h2>Employer Profile</h2>
+
+        <label>
+            Name:
+            <input type="text" [(ngModel)]="employer.name" name="name" required />
+        </label>
+
+        <label>
+            Email:
+            <input type="email" [(ngModel)]="employer.email" name="email" required />
+        </label>
+
+        <label>
+            Password:
+            <input type="password" [(ngModel)]="employer.password" name="password" required />
+        </label>
+
+        <label>
+            Role:
+            <input type="text" [(ngModel)]="employer.role" name="role" readonly />
+        </label>
+
+        <label>
+            Company:
+            <input type="text" [(ngModel)]="employer.company" name="company" />
+        </label>
+
+        <label>
+            Experience (years):
+            <input type="number" [(ngModel)]="employer.experience" name="experience" />
+        </label>
+
+        <label>
+            Designation:
+            <input type="text" [(ngModel)]="employer.designation" name="designation" />
+        </label>
+
+        <label>
+            Domain:
+            <input type="text" [(ngModel)]="employer.domain" name="domain" />
+        </label>
+
+        <div class="buttons">
+            <button type="submit">Save Changes</button>
+            <button type="button" (click)="deleteProfile()" class="delete-btn">Delete Profile</button>
+        </div>
+
+        <div *ngIf="success" class="success">{{ success }}</div>
+    </form>
+</div>

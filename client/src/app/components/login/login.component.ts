@@ -15,24 +15,29 @@ export class LoginComponent {
   loginForm: FormGroup;
   showPassword: boolean = false;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private router: Router
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
     });
   }
 
-  togglePassword() {
+  togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
 
-  goToRegister() {
+  goToRegister(): void {
     this.router.navigate(['/register']);
   }
 
-
-  onSubmit() {
-    if (this.loginForm.invalid) return;
+  onSubmit(): void {
+    if (this.loginForm.invalid) {
+      return;
+    }
 
     const loginData = this.loginForm.value;
 
@@ -40,9 +45,18 @@ export class LoginComponent {
       next: (response: any) => {
         alert('Login successful!');
         console.log(response);
+
+        // ✅ Save token and user safely
         localStorage.setItem('token', response.token);
-        localStorage.setItem('id', JSON.stringify(response.user.id));
-        this.router.navigate([`${response.user.role}/dashboard`]); 
+        localStorage.setItem('user', JSON.stringify(response.user));
+
+        const role = response.user?.role;
+        if (role) {
+          this.router.navigate([`/${role}/dashboard`]);
+        } else {
+          console.warn('User role not found. Redirecting to fallback...');
+          this.router.navigate(['/']);
+        }
       },
       error: (err: any) => {
         console.error('Login error:', err);

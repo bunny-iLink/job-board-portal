@@ -1,0 +1,71 @@
+form {
+    max-width: 400px;
+    margin: 2rem auto;
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+}
+
+label {
+    margin-bottom: 15px;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+}
+
+input {
+    padding: 8px;
+    font-size: 14px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+}
+
+button[type="submit"] {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.delete-btn {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.success {
+    margin-top: 15px;
+    color: green;
+    font-weight: 600;
+    text-align: center;
+}
+
+.error {
+    color: red;
+    text-align: center;
+    margin: 20px auto;
+    font-weight: 600;
+}
+
+.loading {
+    text-align: center;
+    font-style: italic;
+    margin-top: 20px;
+}
+
+.profile-container {
+    margin-top: 100px;
+}

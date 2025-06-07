@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 export const employerSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true },
-    password: { type: String, required: true },
+    password: { type: String },
     role: { type: String, default: 'employer' },
     company: { type: String, default: null },
     createdAt: { type: Date, default: Date.now },

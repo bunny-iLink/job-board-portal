@@ -24,6 +24,6 @@ router.put('/updateEmployer/:employerId', updateEmployerData);
 // DELETE methods
 router.delete('/deleteJob/:jobId', deleteJob);
 router.delete('/deleteUser/:userId', deleteUserData);
-router.delete('/deleteEmployer', deleteEmployerData);
+router.delete('/deleteEmployer/:employerId', deleteEmployerData);
 
 export default router;

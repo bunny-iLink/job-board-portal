@@ -49,13 +49,7 @@ export async function loginUser(req, res) {
         return res.status(200).json({
             message: "Login successful",
             token,
-            user: {
-                id: account._id,
-                name: account.name,
-                email: account.email,
-                ...(accountType === "employer" && { companyName: account.companyName }),
-                role: accountType
-            }
+            user: account
         });
 
     } catch (err) {

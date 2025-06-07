@@ -1,35 +1,44 @@
 import { Routes } from '@angular/router';
-import { RegisterComponent } from './components/register/register.component';
-import { LoginComponent } from './components/login/login.component';
 
-import { EmployerDashboardComponent } from './components/employer/dashboard/employer-dashboard.component';
-import { UserDashboardComponent } from './components/user/dashboard/user-dashboard.component';
-
+// Import the eagerly loaded EmployerLayoutComponent since we need to use it as `component` (not lazy-loaded)
 import { EmployerLayoutComponent } from './components/employer/employer-layout/employer-layout';
-import { UserLayoutComponent } from './components/user/user-layout/user-layout';
 
 export const routes: Routes = [
-  { path: 'register', component: RegisterComponent },
-  { path: 'login', component: LoginComponent },
+  {
+    path: 'register',
+    loadComponent: () => import('./components/register/register.component').then(m => m.RegisterComponent)
+  },
+  {
+    path: 'login',
+    loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent)
+  },
 
   {
     path: 'employer',
-    component: EmployerLayoutComponent,
+    component: EmployerLayoutComponent,  // Use component here for layout with children
     children: [
-      { path: 'dashboard', component: EmployerDashboardComponent },
-      // Add more employer routes here
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./components/employer/dashboard/employer-dashboard.component').then(m => m.EmployerDashboardComponent)
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('./components/employer/employer-profile/employer-profile').then(m => m.EmployerProfileComponent)
+      }
     ]
   },
 
   {
     path: 'user',
-    component: UserLayoutComponent,
+    loadComponent: () => import('./components/user/user-layout/user-layout').then(m => m.UserLayoutComponent),
     children: [
-      { path: 'dashboard', component: UserDashboardComponent },
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./components/user/dashboard/user-dashboard.component').then(m => m.UserDashboardComponent)
+      },
       // Add more user routes here
     ]
   },
 
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: '**', redirectTo: '/login' }
 ];
