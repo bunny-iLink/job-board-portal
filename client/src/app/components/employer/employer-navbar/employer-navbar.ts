@@ -28,7 +28,7 @@ export class EmployerNavbar implements OnInit {
   }
 
   goToListings(): void {
-    this.router.navigate(['/employer/profile']);
+    this.router.navigate(['/employer/my-listings']);
   }
 
   goToProfile(): void {

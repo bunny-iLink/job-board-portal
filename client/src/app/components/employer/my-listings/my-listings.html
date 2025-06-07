@@ -1,0 +1,65 @@
+<div class="header">
+    <button class="add-btn" (click)="openModal()">+ Add Job</button>
+</div>
+
+<!-- Modal -->
+<div class="modal" *ngIf="isModalOpen">
+    <div class="modal-content">
+        <h2>{{ isEditMode ? 'Edit Job' : 'Add New Job' }}</h2>
+        <form (ngSubmit)="saveJob()" #jobFormEl="ngForm">
+            <input [(ngModel)]="jobForm.title" name="title" placeholder="Title" required />
+            <input [(ngModel)]="jobForm.employerName" name="employerName" placeholder="Employer Name" required />
+            <input [(ngModel)]="jobForm.domain" name="domain" placeholder="Domain" required />
+            <input [(ngModel)]="jobForm.description.overview" name="overview" placeholder="Overview" required />
+            <input [(ngModel)]="jobForm.company" name="company" placeholder="Company" required />
+            <input [(ngModel)]="jobForm.location" name="location" placeholder="Location" required />
+            <input [(ngModel)]="jobForm.salary" name="salary" type="number" placeholder="Enter salary (in LPA)"
+                required />
+            <input [(ngModel)]="jobForm.type" name="type" placeholder="Job Type (e.g. Full-Time)" required />
+            <input [(ngModel)]="jobForm.experience" name="experience" placeholder="Experience" required />
+            <input [(ngModel)]="jobForm.vacancies" name="vacancies" type="number"
+                placeholder="Enter number of vacancies" required />
+            <label for="status">Status</label>
+            <select [(ngModel)]="jobForm.status" name="status" id="status" required>
+                <option value="open">Open</option>
+                <option value="close">Close</option>
+            </select>
+
+
+            <input [ngModel]="fromArray(jobForm.description.responsibilities)"
+                (ngModelChange)="jobForm.description.responsibilities = toArray($event)" name="responsibilities"
+                placeholder="Responsibilities (comma separated)" />
+
+            <input [ngModel]="fromArray(jobForm.description.requiredSkills)"
+                (ngModelChange)="jobForm.description.requiredSkills = toArray($event)" name="requiredSkills"
+                placeholder="Required Skills (comma separated)" />
+
+            <input [ngModel]="fromArray(jobForm.description.preferredSkills)"
+                (ngModelChange)="jobForm.description.preferredSkills = toArray($event)" name="preferredSkills"
+                placeholder="Preferred Skills (comma separated)" />
+
+            <input [ngModel]="fromArray(jobForm.description.whatWeOffer)"
+                (ngModelChange)="jobForm.description.whatWeOffer = toArray($event)" name="whatWeOffer"
+                placeholder="What We Offer (comma separated)" />
+
+            <button type="submit">{{ isEditMode ? 'Update' : 'Create' }}</button>
+            <button type="button" (click)="closeModal()">Cancel</button>
+        </form>
+    </div>
+</div>
+
+<!-- Job List -->
+<div class="job-list">
+    <div class="job-tile" *ngFor="let job of jobs">
+        <h3>{{ job.title }}</h3>
+        <p><strong>Company:</strong> {{ job.company }}</p>
+        <p><strong>Location:</strong> {{ job.location }}</p>
+        <p><strong>Salary:</strong> ₹{{ job.salary }} LPA</p>
+        <p><strong>Type:</strong> {{ job.type }}</p>
+        <p><strong>Status:</strong> {{ job.status }}</p>
+        <div class="actions">
+            <button class="edit-btn" (click)="openModal(job)">Edit</button>
+            <button class="delete-btn" (click)="deleteJob(job._id!)">Delete</button>
+        </div>
+    </div>
+</div>
