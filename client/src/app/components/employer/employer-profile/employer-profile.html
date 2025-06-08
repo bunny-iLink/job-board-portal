@@ -60,7 +60,22 @@
 
         <label>
             Domain:
-            <input type="text" [(ngModel)]="employer.domain" name="domain" />
+            <select [(ngModel)]="employer.domain" name="domain">
+                <option value="">Select preferred domain</option>
+                <option value="Technology & IT">Technology & IT</option>
+                <option value="Sales & Marketing">Sales & Marketing</option>
+                <option value="Business & Management">Business & Management</option>
+                <option value="Finance & Accounting">Finance & Accounting</option>
+                <option value="Human Resources & Recruitment">Human Resources & Recruitment</option>
+                <option value="Healthcare & Life Sciences">Healthcare & Life Sciences</option>
+                <option value="Education & Training">Education & Training</option>
+                <option value="Engineering & Manufacturing">Engineering & Manufacturing</option>
+                <option value="Creative & Design">Creative & Design</option>
+                <option value="Legal & Compliance">Legal & Compliance</option>
+                <option value="Media & Communication">Media & Communication</option>
+                <option value="Logistics & Supply Chain">Logistics & Supply Chain</option>
+                <option value="Customer Service & Support">Customer Service & Support</option>
+            </select>
         </label>
 
         <div class="buttons">

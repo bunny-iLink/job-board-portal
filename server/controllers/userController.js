@@ -2,9 +2,6 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import { userSchema } from "../models/users.js";
 import { employerSchema } from "../models/employer.js";
-import fs from 'fs';
-import path from 'path';
-import { upload } from '../controllers/upload.js'
 
 const User = mongoose.model("User", userSchema);
 const Employer = mongoose.model("Employer", employerSchema);
@@ -98,6 +95,12 @@ export async function updateUserData(req, res) {
             return res.status(400).json({ message: "User ID is required" });
         }
 
+        // Remove unmodifiable/system fields
+        delete updatedData._id;
+        delete updatedData.__v;
+        delete updatedData.createdAt;
+        delete updatedData.updatedAt;
+
         // If password is being updated, hash it first
         if (updatedData.password) {
             updatedData.password = await bcrypt.hash(updatedData.password, SALT_ROUNDS);
@@ -105,7 +108,7 @@ export async function updateUserData(req, res) {
 
         const updatedUser = await User.findByIdAndUpdate(
             userId,
-            updatedData,
+            { $set: updatedData },
             { new: true, runValidators: true }
         );
 
@@ -292,17 +295,46 @@ export async function getEmployerData(req, res) {
 
 export async function updateEmployerData(req, res) {
     try {
-        const employerId = req.params.id;
-        const updateData = req.body;
+        const employerId = req.params.employerId;
+        const updatedData = { ...req.body };
 
-        if (!updateData.password || updateData.password.trim() === '') {
-            delete updateData.password;
+        if (!employerId) {
+            return res.status(400).json({ message: "Employer ID is required" });
         }
 
-        const updatedEmployer = await Employer.findByIdAndUpdate(employerId, updateData, { new: true });
-        res.json({ message: "Employer updated successfully", employer: updatedEmployer });
+        delete updatedData._id;
+        delete updatedData.__v;
+        delete updatedData.createdAt;
+        delete updatedData.updatedAt;
+
+        if (updatedData.password) {
+            updatedData.password = await bcrypt.hash(updatedData.password, SALT_ROUNDS);
+        }
+
+        const updatedUser = await Employer.findByIdAndUpdate(
+            employerId,
+            { $set: updatedData },
+            { new: true, runValidators: true }
+        );
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const userToReturn = updatedUser.toObject();
+        delete userToReturn.password;
+
+        console.log("User updated successfully:", updatedUser);
+        return res.status(200).json({
+            message: "User updated successfully",
+            user: userToReturn
+        });
+
     } catch (err) {
-        res.status(500).json({ error: "Failed to update employer profile" });
+        console.error("Error updating user data:", err);
+        return res.status(500).json({
+            message: "Error updating user data",
+            error: err.message || err
+        });
     }
 }
 
