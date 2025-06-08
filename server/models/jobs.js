@@ -21,4 +21,6 @@ export const jobsSchema = new mongoose.Schema({
     status: { type: String, default: 'open' },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
+    applicantCount: { type: Number, default: 0 }
+
 });

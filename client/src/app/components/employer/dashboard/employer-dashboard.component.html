@@ -1,14 +1,28 @@
-<div class="dashboard-container">
+<div class="dashboard-container"> 
   <!-- Header with Employer Details -->
-  <header class="dashboard-header" *ngIf="token">
+  <header class="dashboard-header" *ngIf="token && employer">
     <h1>Welcome, {{ employer?.name }}</h1>
     <p><strong>Email:</strong> {{ employer?.email }}</p>
     <p *ngIf="employer?.company"><strong>Company:</strong> {{ employer?.company }}</p>
   </header>
 
+  <section *ngIf="token">
+    <h2 class="section-title">My Job Listings</h2>
 
-  <!-- Fallback if employer data is missing -->
+    <div *ngIf="jobs.length === 0" class="no-jobs">
+      <p>No jobs posted yet.</p>
+    </div>
+
+    <div class="job-grid">
+      <div *ngFor="let job of jobs" class="job-tile">
+        <h3>{{ job.title }}</h3>
+        <p><strong>Applicants:</strong> {{ job.applicantCount }}</p>
+        <p><strong>Vacancies:</strong> {{ job.vacancies }}</p>
+      </div>
+    </div>
+  </section>
+
   <div *ngIf="!token" class="no-data">
-    <p>Please login to access the site....</p>
+    <p>Please login to access the site.</p>
   </div>
 </div>

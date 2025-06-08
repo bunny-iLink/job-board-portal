@@ -3,6 +3,13 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
+interface JobSummary {
+  _id: string;
+  title: string;
+  vacancies: number;
+  applicantCount: number;
+}
+
 @Component({
   selector: 'app-employer-dashboard',
   standalone: true,
@@ -14,8 +21,9 @@ export class EmployerDashboardComponent implements OnInit {
   employer: any = null;
   employerId: string | null = null;
   token: string | null = null;
+  jobs: JobSummary[] = [];
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     if (typeof window !== 'undefined') {
@@ -26,18 +34,39 @@ export class EmployerDashboardComponent implements OnInit {
         const user = JSON.parse(storedUser);
         this.employerId = user._id;
 
-        this.http.get(`http://localhost:3000/api/getEmployerData/${this.employerId}`).subscribe({
-          next: (res: any) => {
-            this.employer = res.employer;
-            console.log('Employer loaded:', this.employer);
-          },
-          error: err => {
-            console.error('Failed to load employer data:', err);
-          }
-        });
+        this.fetchEmployerData();
+        this.fetchJobSummaries();
       } else {
-        console.warn('No valid employer');
+        console.warn("No valid employer");
       }
     }
+  }
+
+  fetchEmployerData() {
+    if (!this.employerId) return;
+
+    this.http.get(`http://localhost:3000/api/getEmployerData/${this.employerId}`).subscribe({
+      next: (res: any) => {
+        this.employer = res.employer;
+        console.log('Employer loaded:', this.employer);
+      },
+      error: err => {
+        console.error('Failed to load employer data:', err);
+      }
+    });
+  }
+
+  fetchJobSummaries() {
+    if (!this.employerId) return;
+
+    this.http.get<JobSummary[]>(`http://localhost:3000/api/getJobs/${this.employerId}`).subscribe({
+      next: res => {
+        this.jobs = res;
+        console.log('Jobs:', this.jobs);
+      },
+      error: err => {
+        console.error('Failed to load job summaries:', err);
+      }
+    });
   }
 }

@@ -163,9 +163,14 @@ export class MyListingsComponent implements OnInit {
   }
 
   deleteJob(jobId: string) {
+    if (!confirm('Are you sure you want to delete this job? This action cannot be undone.')) {
+      return;
+    }
+    else{
     this.http.delete(`${this.baseUrl}/deleteJob/${jobId}`).subscribe({
       next: () => this.fetchJobs(),
       error: (err) => console.error('Failed to delete job:', err)
     });
   }
+}
 }
