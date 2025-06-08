@@ -154,6 +154,27 @@ export async function uploadUserProfilePicture(req, res) {
     }
 }
 
+export async function uploadUserResume(req, res) {
+    try {
+        const userId = req.params.id;
+        if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+
+        const resume = req.file.filename;
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { resume },
+            { new: true }
+        );
+
+        res.json({ user: updatedUser, filename: resume });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to upload resume' });
+    }
+}
 
 // Delete user by ID
 

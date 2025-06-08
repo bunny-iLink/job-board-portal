@@ -12,4 +12,5 @@ export const userSchema = new mongoose.Schema({
     phone: { type: String, default: null },
     profilePicture: { type: String, default: null },
     experience: { type: Number, default: null },
+    resume: {type: String, default: ''}
 })

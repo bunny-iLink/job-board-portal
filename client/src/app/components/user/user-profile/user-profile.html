@@ -60,18 +60,35 @@
             Preferred Domain:
             <select id="preferredDomain" [(ngModel)]="user.preferredDomain" name="preferredDomain">
                 <option value="">Select preferred domain</option>
-                <option value="Frontend Development">Frontend Development</option>
-                <option value="Backend Development">Backend Development</option>
-                <option value="Full Stack Development">Full Stack Development</option>
-                <option value="Mobile Development">Mobile Development</option>
-                <option value="Data Science">Data Science</option>
-                <option value="Machine Learning">Machine Learning</option>
-                <option value="DevOps">DevOps</option>
-                <option value="UI/UX Design">UI/UX Design</option>
-                <option value="Quality Assurance">Quality Assurance</option>
-                <option value="Project Management">Project Management</option>
+                <option value="Technology & IT">Technology & IT</option>
+                <option value="Sales & Marketing">Sales & Marketing</option>
+                <option value="Business & Management">Business & Management</option>
+                <option value="Finance & Accounting">Finance & Accounting</option>
+                <option value="Human Resources & Recruitment">Human Resources & Recruitment</option>
+                <option value="Healthcare & Life Sciences">Healthcare & Life Sciences</option>
+                <option value="Education & Training">Education & Training</option>
+                <option value="Engineering & Manufacturing">Engineering & Manufacturing</option>
+                <option value="Creative & Design">Creative & Design</option>
+                <option value="Legal & Compliance">Legal & Compliance</option>
+                <option value="Media & Communication">Media & Communication</option>
+                <option value="Logistics & Supply Chain">Logistics & Supply Chain</option>
+                <option value="Customer Service & Support">Customer Service & Support</option>
             </select>
         </label>
+
+        <div class="resume-section">
+            <div class="current-resume">
+                <a *ngIf="user?.resume" [href]="getResumeUrl(user.resume)" target="_blank">
+                    View Resume
+                </a>
+                <div *ngIf="!user?.resume">No resume uploaded</div>
+            </div>
+            <div class="upload-section">
+                <input type="file" (change)="onResumeSelected($event)" accept="application/pdf" />
+                <button type="button" (click)="uploadResume()">Upload Resume</button>
+            </div>
+        </div>
+
 
         <div class="buttons">
             <button type="submit">Save Changes</button>
