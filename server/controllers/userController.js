@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import { userSchema } from "../models/users.js";
 import { employerSchema } from "../models/employer.js";
+import fs from 'fs';
+import path from 'path';
+import { upload } from '../controllers/upload.js'
 
 const User = mongoose.model("User", userSchema);
 const Employer = mongoose.model("Employer", employerSchema);
@@ -128,6 +131,29 @@ export async function updateUserData(req, res) {
     }
 }
 
+// Update User profile picture 
+
+export async function uploadUserProfilePicture(req, res) {
+    try {
+        const userId = req.params.id;
+        if (!req.file) {
+            return res.status(400).json({ error: "No file uploaded" });
+        }
+
+        const profilePicture = req.file.filename;
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId, { profilePicture }, { new: true }
+        );
+
+        res.json({ user: updatedUser, filename: profilePicture });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: "Failed to upload profile picture" });
+
+    }
+}
+
 
 // Delete user by ID
 
@@ -245,43 +271,40 @@ export async function getEmployerData(req, res) {
 
 export async function updateEmployerData(req, res) {
     try {
-        const employerId = req.params.employerId;
-        const updatedData = { ...req.body };
+        const employerId = req.params.id;
+        const updateData = req.body;
 
-        if (!employerId) {
-            return res.status(400).json({ message: "Employer ID is required" });
+        if (!updateData.password || updateData.password.trim() === '') {
+            delete updateData.password;
         }
 
-        // If password is being updated, hash it first
-        if (updatedData.password) {
-            updatedData.password = await bcrypt.hash(updatedData.password, SALT_ROUNDS);
+        const updatedEmployer = await Employer.findByIdAndUpdate(employerId, updateData, { new: true });
+        res.json({ message: "Employer updated successfully", employer: updatedEmployer });
+    } catch (err) {
+        res.status(500).json({ error: "Failed to update employer profile" });
+    }
+}
+
+// Update Employer profile picture
+
+export async function uploadEmployerProfilePicture(req, res) {
+    try {
+        const employerId = req.params.id;
+        if (!req.file) {
+            return res.status(400).json({ error: "No file uploaded" });
         }
+
+        const profilePicture = req.file.filename;
 
         const updatedEmployer = await Employer.findByIdAndUpdate(
-            employerId,
-            updatedData,
-            { new: true, runValidators: true }
+            employerId, { profilePicture }, { new: true }
         );
 
-        if (!updatedEmployer) {
-            return res.status(404).json({ message: "Employer not found" });
-        }
-
-        const employerToReturn = updatedEmployer.toObject();
-        delete employerToReturn.password;
-
-        console.log("Employer updated successfully:", updatedEmployer);
-        return res.status(200).json({
-            message: "Employer updated successfully",
-            employer: employerToReturn
-        });
-
+        res.json({ employer: updatedEmployer, filename: profilePicture });
     } catch (err) {
-        console.error("Error updating employer data:", err);
-        return res.status(500).json({
-            message: "Error updating employer data",
-            error: err.message || err
-        });
+        console.log(err);
+        res.status(500).json({ error: "Failed to upload profile picture" });
+
     }
 }
 

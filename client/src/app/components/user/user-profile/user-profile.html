@@ -5,6 +5,22 @@
     <form *ngIf="!loading && !error" (ngSubmit)="updateProfile()">
         <h2>User Profile</h2>
 
+        <div class="profile-picture-section">
+            <div class="current-picture">
+                <img *ngIf="user?.profilePicture" [src]="getProfilePictureUrl(user.profilePicture)"
+                    alt="Profile Picture" class="profile-picture" />
+                <div *ngIf="!user?.profilePicture" class="no-picture">
+                    No profile picture
+                </div>
+            </div>
+            <div class="upload-section">
+                <input type="file" (change)="onProfilePictureSelected($event)" accept="image/*" />
+                <button type="button" (click)="uploadProfilePicture()">
+                    Upload Profile Picture
+                </button>
+            </div>
+        </div>
+
         <label>
             Name:
             <input type="text" [(ngModel)]="user.name" name="name" required />

@@ -19,6 +19,8 @@ export class EmployerProfileComponent implements OnInit {
   error = '';
   success = '';
 
+  selectedProfilePicture: File | null = null;
+
   apiBase = 'http://localhost:3000/api';
 
   constructor(
@@ -55,29 +57,51 @@ export class EmployerProfileComponent implements OnInit {
   }
 
   updateProfile() {
-  if (!this.employerId) return;
+    if (!this.employerId) return;
 
-  this.success = '';
-  this.error = '';
+    this.success = '';
+    this.error = '';
 
-  const updatedemployer = { ...this.employer };
-  updatedemployer.updatedAt = new Date().toISOString();
+    const updatedEmployer = { ...this.employer };
+    updatedEmployer.updatedAt = new Date().toISOString();
 
-  // Remove password field if it's empty or just whitespace
-  if (!updatedemployer.password || updatedemployer.password.trim() === '') {
-    delete updatedemployer.password;
+    // Remove password if empty
+    if (!updatedEmployer.password || updatedEmployer.password.trim() === '') {
+      delete updatedEmployer.password;
+    }
+
+    this.http.put(`${this.apiBase}/updateEmployer/${this.employerId}`, updatedEmployer)
+      .subscribe({
+        next: () => {
+          this.success = 'Profile updated successfully!';
+        },
+        error: () => {
+          this.error = 'Failed to update profile.';
+        }
+      });
   }
 
-  this.http.put(`${this.apiBase}/updateemployer/${this.employerId}`, updatedemployer)
-    .subscribe({
-      next: () => {
-        this.success = 'Profile updated successfully!';
-      },
-      error: () => {
-        this.error = 'Failed to update profile.';
-      }
-    });
-}
+  uploadProfilePicture() {
+    if (!this.employerId || !this.selectedProfilePicture) {
+      alert('Please select a profile picture to upload.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('profilePicture', this.selectedProfilePicture);
+
+    this.http.post(`${this.apiBase}/uploadEmployerProfilePicture/${this.employerId}`, formData)
+      .subscribe({
+        next: (response: any) => {
+          this.employer.profilePicture = response.filename;
+          this.success = 'Profile picture uploaded successfully!';
+        },
+        error: () => {
+          this.error = 'Failed to upload profile picture.';
+        }
+      });
+  }
+
 
 
   deleteProfile() {
@@ -91,15 +115,23 @@ export class EmployerProfileComponent implements OnInit {
       .subscribe({
         next: () => {
           alert('Profile deleted successfully.');
-          if (typeof window !== 'undefined') {
-            localStorage.removeItem('id');
-            localStorage.removeItem('token');
-          }
+          localStorage.removeItem('id');
+          localStorage.removeItem('token');
           this.router.navigate(['/login']);
         },
         error: () => {
           this.error = 'Failed to delete profile.';
         }
       });
+  }
+
+  getProfilePictureUrl(filename: string): string {
+    return `${this.apiBase}/uploads/${filename}`;
+  }
+
+  onProfilePictureSelected(event: any) {
+    if (event.target.files && event.target.files.length > 0) {
+      this.selectedProfilePicture = event.target.files[0];
+    }
   }
 }

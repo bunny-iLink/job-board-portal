@@ -26,6 +26,8 @@ app.get("/", (req, res) => {
     res.status(200).json("Welcome to the Job Portal API");
 });
 
+app.use('/api/uploads', express.static(path.join(process.cwd(), 'uploads')));
+
 app.use('/api', router);
 
 connect().then(() => {

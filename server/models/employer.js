@@ -12,4 +12,5 @@ export const employerSchema = new mongoose.Schema({
     experience: { type: Number, default: null },
     designation: { type: String, default: null },
     domain: { type: String, default: null },
+    profilePicture: { type: String, default: null }
 })

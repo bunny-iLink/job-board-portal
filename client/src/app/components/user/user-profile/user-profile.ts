@@ -19,6 +19,8 @@ export class UserProfileComponent implements OnInit {
   error = '';
   success = '';
 
+  selectedProfilePicture: File | null = null;
+
   apiBase = 'http://localhost:3000/api';
 
   constructor(
@@ -79,6 +81,27 @@ export class UserProfileComponent implements OnInit {
       });
   }
 
+  uploadProfilePicture() {
+    if (!this.userId || !this.selectedProfilePicture) {
+      alert('Please select a profile picture to upload.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('profilePicture', this.selectedProfilePicture);
+
+    this.http.post(`${this.apiBase}/uploadUserProfilePicture/${this.userId}`, formData)
+      .subscribe({
+        next: (response: any) => {
+          this.user.profilePicture = response.filename;
+          this.success = 'Profile picture uploaded successfully!';
+        },
+        error: () => {
+          this.error = 'Failed to upload profile picture.';
+        }
+      });
+  }
+
 
   deleteProfile() {
     if (!this.userId) return;
@@ -101,5 +124,15 @@ export class UserProfileComponent implements OnInit {
           this.error = 'Failed to delete profile.';
         }
       });
+  }
+
+  getProfilePictureUrl(filename: string): string {
+    return `${this.apiBase}/uploads/${filename}`;
+  }
+
+  onProfilePictureSelected(event: any) {
+    if (event.target.files && event.target.files.length > 0) {
+      this.selectedProfilePicture = event.target.files[0];
+    }
   }
 }

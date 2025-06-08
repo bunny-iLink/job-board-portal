@@ -69,3 +69,37 @@ button[type="submit"] {
 .profile-container {
     margin-top: 100px;
 }
+
+.profile-picture-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.current-picture {
+    margin-right: 20px;
+}
+
+.profile-picture {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+}
+
+.no-picture {
+    width: 120px;
+    height: 120px;
+    background-color: #eee;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+}
+
+.upload-section input[type="file"] {
+    display: block;
+    margin-bottom: 5px;
+}
