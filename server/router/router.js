@@ -1,7 +1,8 @@
 import { Router } from 'express';
-import { addUser, addEmployer, getEmployerData, getUserData, updateUserData, updateEmployerData, deleteUserData, deleteEmployerData } from '../controllers/userController.js';
+import { addUser, addEmployer, getEmployerData, getUserData, updateUserData, updateEmployerData, deleteUserData, deleteEmployerData, uploadEmployerProfilePicture, uploadUserProfilePicture, uploadUserResume } from '../controllers/userController.js';
 import { loginUser } from '../controllers/loginController.js';
 import { addJob, deleteJob, getJobs, updateJob } from '../controllers/jobsController.js';
+import { upload, uploadResume } from '../controllers/upload.js';
 
 const router = Router();
 
@@ -10,6 +11,9 @@ router.post('/addUser', addUser);
 router.post('/addEmployer', addEmployer);
 router.post('/login', loginUser);
 router.post('/addJob', addJob);
+router.post('/uploadEmployerProfilePicture/:id', upload.single('profilePicture'), uploadEmployerProfilePicture);
+router.post('/uploadUserProfilePicture/:id', upload.single('profilePicture'), uploadUserProfilePicture);
+router.post('/uploadUserResume/:id', uploadResume.single('resume'), uploadUserResume)
 
 // GET methods
 router.get('/getJobs/:employerId', getJobs);

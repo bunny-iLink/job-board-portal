@@ -95,6 +95,12 @@ export async function updateUserData(req, res) {
             return res.status(400).json({ message: "User ID is required" });
         }
 
+        // Remove unmodifiable/system fields
+        delete updatedData._id;
+        delete updatedData.__v;
+        delete updatedData.createdAt;
+        delete updatedData.updatedAt;
+
         // If password is being updated, hash it first
         if (updatedData.password) {
             updatedData.password = await bcrypt.hash(updatedData.password, SALT_ROUNDS);
@@ -102,7 +108,7 @@ export async function updateUserData(req, res) {
 
         const updatedUser = await User.findByIdAndUpdate(
             userId,
-            updatedData,
+            { $set: updatedData },
             { new: true, runValidators: true }
         );
 
@@ -128,6 +134,50 @@ export async function updateUserData(req, res) {
     }
 }
 
+// Update User profile picture 
+
+export async function uploadUserProfilePicture(req, res) {
+    try {
+        const userId = req.params.id;
+        if (!req.file) {
+            return res.status(400).json({ error: "No file uploaded" });
+        }
+
+        const profilePicture = req.file.filename;
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId, { profilePicture }, { new: true }
+        );
+
+        res.json({ user: updatedUser, filename: profilePicture });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: "Failed to upload profile picture" });
+
+    }
+}
+
+export async function uploadUserResume(req, res) {
+    try {
+        const userId = req.params.id;
+        if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+
+        const resume = req.file.filename;
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { resume },
+            { new: true }
+        );
+
+        res.json({ user: updatedUser, filename: resume });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to upload resume' });
+    }
+}
 
 // Delete user by ID
 
@@ -252,36 +302,62 @@ export async function updateEmployerData(req, res) {
             return res.status(400).json({ message: "Employer ID is required" });
         }
 
-        // If password is being updated, hash it first
+        delete updatedData._id;
+        delete updatedData.__v;
+        delete updatedData.createdAt;
+        delete updatedData.updatedAt;
+
         if (updatedData.password) {
             updatedData.password = await bcrypt.hash(updatedData.password, SALT_ROUNDS);
         }
 
-        const updatedEmployer = await Employer.findByIdAndUpdate(
+        const updatedUser = await Employer.findByIdAndUpdate(
             employerId,
-            updatedData,
+            { $set: updatedData },
             { new: true, runValidators: true }
         );
-
-        if (!updatedEmployer) {
-            return res.status(404).json({ message: "Employer not found" });
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found" });
         }
 
-        const employerToReturn = updatedEmployer.toObject();
-        delete employerToReturn.password;
+        const userToReturn = updatedUser.toObject();
+        delete userToReturn.password;
 
-        console.log("Employer updated successfully:", updatedEmployer);
+        console.log("User updated successfully:", updatedUser);
         return res.status(200).json({
-            message: "Employer updated successfully",
-            employer: employerToReturn
+            message: "User updated successfully",
+            user: userToReturn
         });
 
     } catch (err) {
-        console.error("Error updating employer data:", err);
+        console.error("Error updating user data:", err);
         return res.status(500).json({
-            message: "Error updating employer data",
+            message: "Error updating user data",
             error: err.message || err
         });
+    }
+}
+
+// Update Employer profile picture
+
+export async function uploadEmployerProfilePicture(req, res) {
+    try {
+        const employerId = req.params.id;
+        if (!req.file) {
+            return res.status(400).json({ error: "No file uploaded" });
+        }
+
+        const profilePicture = req.file.filename;
+
+        const updatedEmployer = await Employer.findByIdAndUpdate(
+            employerId, { profilePicture }, { new: true }
+        );
+
+        res.json({ employer: updatedEmployer, filename: profilePicture });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: "Failed to upload profile picture" });
+
     }
 }
 

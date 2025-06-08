@@ -8,8 +8,8 @@ export const employerSchema = new mongoose.Schema({
     company: { type: String, default: null },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
-    company: { type: String, default: null },
     experience: { type: Number, default: null },
     designation: { type: String, default: null },
     domain: { type: String, default: null },
-})
+    profilePicture: { type: String, default: null }
+}, {timestamps: true})

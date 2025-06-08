@@ -19,6 +19,9 @@ export class UserProfileComponent implements OnInit {
   error = '';
   success = '';
 
+  selectedProfilePicture: File | null = null;
+  selectedResume: File | null = null;
+
   apiBase = 'http://localhost:3000/api';
 
   constructor(
@@ -79,6 +82,27 @@ export class UserProfileComponent implements OnInit {
       });
   }
 
+  uploadProfilePicture() {
+    if (!this.userId || !this.selectedProfilePicture) {
+      alert('Please select a profile picture to upload.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('profilePicture', this.selectedProfilePicture);
+
+    this.http.post(`${this.apiBase}/uploadUserProfilePicture/${this.userId}`, formData)
+      .subscribe({
+        next: (response: any) => {
+          this.user.profilePicture = response.filename;
+          this.success = 'Profile picture uploaded successfully!';
+        },
+        error: () => {
+          this.error = 'Failed to upload profile picture.';
+        }
+      });
+  }
+
 
   deleteProfile() {
     if (!this.userId) return;
@@ -102,4 +126,55 @@ export class UserProfileComponent implements OnInit {
         }
       });
   }
+
+  getProfilePictureUrl(filename: string): string {
+    return `${this.apiBase}/uploads/${filename}`;
+  }
+
+  onProfilePictureSelected(event: any) {
+    if (event.target.files && event.target.files.length > 0) {
+      this.selectedProfilePicture = event.target.files[0];
+    }
+  }
+
+  onResumeSelected(event: any) {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.type !== 'application/pdf') {
+        alert('Only PDF files are allowed.');
+        return;
+      }
+      if (file.size > 2 * 1024 * 1024) { // 2MB
+        alert('File size must be less than 2MB.');
+        return;
+      }
+      this.selectedResume = file;
+    }
+  }
+
+  uploadResume() {
+    if (!this.userId || !this.selectedResume) {
+      alert('Please select a resume to upload.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('resume', this.selectedResume);
+
+    this.http.post(`${this.apiBase}/uploadUserResume/${this.userId}`, formData)
+      .subscribe({
+        next: (response: any) => {
+          this.user.resume = response.filename;
+          this.success = 'Resume uploaded successfully!';
+        },
+        error: () => {
+          this.error = 'Failed to upload resume.';
+        }
+      });
+  }
+
+  getResumeUrl(filename: string): string {
+    return `${this.apiBase}/uploads/${filename}`;
+  }
+
 }

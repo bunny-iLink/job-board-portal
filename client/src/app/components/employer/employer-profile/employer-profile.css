@@ -22,6 +22,22 @@ input {
     border-radius: 4px;
 }
 
+input,
+select {
+    padding: 10px;
+    font-size: 14px;
+    margin-top: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+input:focus,
+select:focus {
+    border-color: #3498db;
+}
+
 .buttons {
     display: flex;
     justify-content: space-between;
@@ -68,4 +84,38 @@ button[type="submit"] {
 
 .profile-container {
     margin-top: 100px;
+}
+
+.profile-picture-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.current-picture {
+    margin-right: 20px;
+}
+
+.profile-picture {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+}
+
+.no-picture {
+    width: 120px;
+    height: 120px;
+    background-color: #eee;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+}
+
+.upload-section input[type="file"] {
+    display: block;
+    margin-bottom: 5px;
 }
