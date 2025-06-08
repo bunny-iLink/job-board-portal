@@ -9,7 +9,22 @@
         <form (ngSubmit)="saveJob()" #jobFormEl="ngForm">
             <input [(ngModel)]="jobForm.title" name="title" placeholder="Title" required />
             <input [(ngModel)]="jobForm.employerName" name="employerName" placeholder="Employer Name" required />
-            <input [(ngModel)]="jobForm.domain" name="domain" placeholder="Domain" required />
+            <select [(ngModel)]="jobForm.domain" name="domain" placeholder="Domain" required>
+                <option value="">Select domain</option>
+                <option value="Technology & IT">Technology & IT</option>
+                <option value="Sales & Marketing">Sales & Marketing</option>
+                <option value="Business & Management">Business & Management</option>
+                <option value="Finance & Accounting">Finance & Accounting</option>
+                <option value="Human Resources & Recruitment">Human Resources & Recruitment</option>
+                <option value="Healthcare & Life Sciences">Healthcare & Life Sciences</option>
+                <option value="Education & Training">Education & Training</option>
+                <option value="Engineering & Manufacturing">Engineering & Manufacturing</option>
+                <option value="Creative & Design">Creative & Design</option>
+                <option value="Legal & Compliance">Legal & Compliance</option>
+                <option value="Media & Communication">Media & Communication</option>
+                <option value="Logistics & Supply Chain">Logistics & Supply Chain</option>
+                <option value="Customer Service & Support">Customer Service & Support</option>
+            </select>
             <input [(ngModel)]="jobForm.description.overview" name="overview" placeholder="Overview" required />
             <input [(ngModel)]="jobForm.company" name="company" placeholder="Company" required />
             <input [(ngModel)]="jobForm.location" name="location" placeholder="Location" required />
