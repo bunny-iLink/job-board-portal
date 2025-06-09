@@ -1,213 +1,235 @@
 /* General Reset and Base Styles */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .search-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-    background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
-    min-height: 100vh;
+  margin-top: 90px;  
+  min-height: 100vh;
+  padding: 2rem;
+  background: linear-gradient(135deg, #1a1a2e 0%, #2a2a4e 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Search Input */
 .search-container input {
-    width: 100%;
-    max-width: 600px;
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    border: 2px solid #e5e7eb;
-    border-radius: 8px;
-    margin-bottom: 2rem;
-    outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+  max-width: 1200px;
+  width: 100%;
+  padding: 0.9rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  background: #33334d;
+  color: #ffffff;
+  border: 2px solid #4b4b6b;
+  border-radius: 10px;
+  outline: none;
+  margin-bottom: 2rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .search-container input:focus {
-    border-color: #00d4ff;
-    box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+  border-color: #00d4ff;
+  box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.2);
 }
 
 .search-container input::placeholder {
-    color: #9ca3af;
+  color: #6b7280;
 }
 
 /* Jobs Grid */
 .jobs-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
+  max-width: 1200px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
 }
 
 .job-card {
-    background: #ffffff;
-    padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-    border-left: 4px solid #00d4ff;
+  background: rgba(37, 37, 64, 0.95);
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border: 1px solid #33334d;
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .job-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 32px rgba(0, 212, 255, 0.2);
 }
 
 .job-card h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #1f2937;
-    margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.75rem;
+  text-transform: capitalize;
 }
 
 .job-card p {
-    font-size: 1rem;
-    color: #4b5563;
-    margin-bottom: 0.5rem;
+  font-size: 1rem;
+  color: #e5e7eb;
+  margin-bottom: 0.5rem;
 }
 
 .job-card p strong {
-    color: #1f2937;
+  color: #00d4ff;
 }
 
 /* Modal Styles */
 .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
 .modal-content {
-    background: #ffffff;
-    padding: 2rem;
-    border-radius: 12px;
-    max-width: 500px;
-    width: 90%;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    position: relative;
-    animation: slideIn 0.3s ease;
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateY(-20px);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
+  max-width: 600px;
+  width: 90%;
+  background: rgba(37, 37, 64, 0.95);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border: 1px solid #33334d;
+  backdrop-filter: blur(8px);
+  position: relative;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .close-btn {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    font-size: 1.5rem;
-    color: #6b7280;
-    cursor: pointer;
-    transition: color 0.2s ease;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  color: #e5e7eb;
+  cursor: pointer;
+  transition: color 0.3s ease;
 }
 
 .close-btn:hover {
-    color: #1f2937;
+  color: #ff4d4f;
 }
 
 .modal-content h2 {
-    font-size: 2rem;
-    font-weight: 600;
-    color: #1f2937;
-    margin-bottom: 1rem;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .modal-content p {
-    font-size: 1rem;
-    color: #4b5563;
-    margin-bottom: 0.75rem;
+  font-size: 1rem;
+  color: #e5e7eb;
+  margin-bottom: 0.75rem;
 }
 
 .modal-content p strong {
-    color: #1f2937;
+  color: #00d4ff;
+}
+
+.modal-content ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.modal-content ul li {
+  font-size: 1rem;
+  color: #e5e7eb;
+  margin-bottom: 0.5rem;
 }
 
 .modal-content button {
-    background: #00d4ff;
-    color: #ffffff;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    margin-top: 1rem;
-    display: block;
-    width: fit-content;
+  width: 100%;
+  padding: 0.9rem;
+  background: #00d4ff;
+  color: #1a1a2e;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  margin-top: 1.5rem;
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
 }
 
 .modal-content button:hover {
-    background: #00b7d6;
+  background: #00b7d6;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 212, 255, 0.3);
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .search-container {
-        padding: 1rem;
-    }
+  .search-container {
+    padding: 1.5rem;
+  }
 
-    .search-container input {
-        font-size: 0.9rem;
-        padding: 0.65rem 1rem;
-    }
+  .search-container input {
+    font-size: 1rem;
+    padding: 0.8rem;
+  }
 
-    .job-card {
-        padding: 1rem;
-    }
+  .jobs-grid {
+    grid-template-columns: 1fr;
+  }
 
-    .job-card h3 {
-        font-size: 1.25rem;
-    }
+  .job-card {
+    padding: 1.25rem;
+  }
 
-    .modal-content {
-        padding: 1.5rem;
-    }
+  .job-card h3 {
+    font-size: 1.25rem;
+  }
 
-    .modal-content h2 {
-        font-size: 1.75rem;
-    }
+  .modal-content {
+    padding: 1.5rem;
+  }
+
+  .modal-content h2 {
+    font-size: 1.75rem;
+  }
 }
 
 @media (max-width: 480px) {
-    .jobs-grid {
-        grid-template-columns: 1fr;
-    }
+  .search-container input {
+    font-size: 0.95rem;
+  }
 
-    .modal-content {
-        width: 95%;
-    }
+  .job-card h3 {
+    font-size: 1.2rem;
+  }
 
-    .modal-content h2 {
-        font-size: 1.5rem;
-    }
+  .modal-content {
+    width: 95%;
+  }
 
-    .modal-content button {
-        width: 100%;
-        text-align: center;
-    }
+  .modal-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .modal-content button {
+    font-size: 1rem;
+    padding: 0.8rem;
+  }
 }

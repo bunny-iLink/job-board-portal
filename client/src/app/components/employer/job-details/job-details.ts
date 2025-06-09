@@ -7,8 +7,8 @@ import { HttpClient } from '@angular/common/http';
   selector: 'app-job-details',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './job-details.html',
-  styleUrls: ['./job-details.css']
+  templateUrl: 'job-details.html',
+  styleUrls: ['job-details.css']
 })
 export class JobDetailsComponent implements OnInit {
   jobId: string = '';

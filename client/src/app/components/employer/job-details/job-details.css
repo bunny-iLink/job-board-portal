@@ -1,57 +1,283 @@
+/* General Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
 .job-details-container {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 24px;
-  background: #f9f9f9;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-height: 100vh;
+  padding: clamp(1rem, 3vw, 2rem);
+  background: linear-gradient(135deg, #1a1a2e 0%, #2a2a4e 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
 }
 
+/* Job Details Section */
 .job-details-container h1 {
-  font-size: 2rem;
-  margin-bottom: 10px;
-  color: #333;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  position: relative;
+  margin-bottom: 1rem;
 }
 
-.job-details-container p {
-  margin: 4px 0;
-  font-size: 15px;
+.job-details-container h1::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(50px, 10vw, 70px);
+  height: 4px;
+  background: #00d4ff;
+  border-radius: 2px;
 }
 
-.job-section, .applicant-section {
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid #ddd;
+.job-details-container > p {
+  max-width: 1200px;
+  width: 100%;
+  font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+  color: #e5e7eb;
+  background: rgba(37, 37, 64, 0.95);
+  padding: clamp(0.75rem, 1.5vw, 1rem);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border: 1px solid #33334d;
+  backdrop-filter: blur(8px);
+  margin-bottom: 0.5rem;
 }
 
-h2, h3 {
-  margin-top: 16px;
-  color: #2c3e50;
+.job-details-container > p strong {
+  color: #00d4ff;
 }
 
-ul {
+/* Job Description Section */
+.job-section {
+  max-width: 1200px;
+  width: 100%;
+  background: rgba(37, 37, 64, 0.95);
+  padding: clamp(1rem, 2vw, 1.5rem);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border: 1px solid #33334d;
+  backdrop-filter: blur(8px);
+}
+
+.job-section h2 {
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.job-section h3 {
+  font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+  font-weight: 600;
+  color: #e5e7eb;
+  margin: 1rem 0 0.5rem;
+}
+
+.job-section p {
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
+  color: #e5e7eb;
+  line-height: 1.6;
+}
+
+.job-section ul {
   list-style: disc;
-  padding-left: 20px;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.job-section ul li {
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
+  color: #e5e7eb;
+  margin-bottom: 0.5rem;
+}
+
+/* Applicants Section */
+.applicant-section {
+  max-width: 1200px;
+  width: 100%;
+  background: rgba(37, 37, 64, 0.95);
+  padding: clamp(1rem, 2vw, 1.5rem);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border: 1px solid #33334d;
+  backdrop-filter: blur(8px);
+}
+
+.applicant-section h2 {
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.no-applicants p {
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
+  color: #e5e7eb;
+  text-align: center;
+  background: #33334d;
+  padding: clamp(0.75rem, 1.5vw, 1rem);
+  border-radius: 10px;
 }
 
 .applicant-card {
-  background: white;
-  padding: 12px;
-  margin-top: 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  background: #33334d;
+  padding: clamp(0.75rem, 1.5vw, 1rem);
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.applicant-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 212, 255, 0.2);
 }
 
 .applicant-card p {
-  margin: 4px 0;
+  font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+  color: #e5e7eb;
+  margin-bottom: 0.5rem;
 }
 
-a {
-  color: #007bff;
+.applicant-card p strong {
+  color: #00d4ff;
+}
+
+.applicant-card a {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+  color: #00d4ff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+.applicant-card a:hover {
+  color: #00b7d6;
   text-decoration: underline;
 }
 
-.no-applicants {
-  font-style: italic;
-  color: #888;
+/* Responsive Design */
+@media (max-width: 768px) {
+  .job-details-container {
+    padding: clamp(0.75rem, 2vw, 1.5rem);
+  }
+
+  .job-details-container h1 {
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+  }
+
+  .job-details-container > p {
+    font-size: clamp(0.9rem, 1.2vw, 1rem);
+    padding: clamp(0.5rem, 1vw, 0.75rem);
+  }
+
+  .job-section {
+    padding: clamp(0.75rem, 1.5vw, 1rem);
+  }
+
+  .job-section h2 {
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+  }
+
+  .job-section h3 {
+    font-size: clamp(1.1rem, 1.5vw, 1.25rem);
+  }
+
+  .applicant-section {
+    padding: clamp(0.75rem, 1.5vw, 1rem);
+  }
+
+  .applicant-section h2 {
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+  }
+
+  .applicant-card {
+    padding: clamp(0.5rem, 1vw, 0.75rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .job-details-container {
+    padding: clamp(0.5rem, 1.5vw, 1rem);
+  }
+
+  .job-details-container h1 {
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+  }
+
+  .job-details-container h1::after {
+    width: clamp(40px, 8vw, 50px);
+  }
+
+  .job-details-container > p {
+    font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+  }
+
+  .job-section h2 {
+    font-size: clamp(1rem, 1.8vw, 1.5rem);
+  }
+
+  .job-section h3 {
+    font-size: clamp(1rem, 1.3vw, 1.1rem);
+  }
+
+  .applicant-section h2 {
+    font-size: clamp(1rem, 1.8vw, 1.5rem);
+  }
+
+  .applicant-card p,
+  .applicant-card a {
+    font-size: clamp(0.8rem, 1vw, 0.9rem);
+  }
+}
+
+@media (max-width: 320px) {
+  .job-details-container {
+    padding: clamp(0.5rem, 1vw, 0.75rem);
+  }
+
+  .job-details-container h1 {
+    font-size: clamp(1rem, 1.8vw, 1.5rem);
+  }
+
+  .job-section,
+  .applicant-section {
+    padding: clamp(0.5rem, 1vw, 0.75rem);
+  }
+
+  .applicant-card {
+    padding: clamp(0.5rem, 0.8vw, 0.65rem);
+  }
+}
+
+@media (min-width: 1200px) {
+  .job-details-container {
+    padding: 2.5rem;
+  }
+
+  .job-details-container h1 {
+    font-size: 2.75rem;
+  }
+
+  .job-section,
+  .applicant-section {
+    padding: 2rem;
+  }
 }
