@@ -115,8 +115,10 @@ export class EmployerProfileComponent implements OnInit {
       .subscribe({
         next: () => {
           alert('Profile deleted successfully.');
-          localStorage.removeItem('id');
-          localStorage.removeItem('token');
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('id');
+            localStorage.removeItem('token');
+          }
           this.router.navigate(['/login']);
         },
         error: () => {

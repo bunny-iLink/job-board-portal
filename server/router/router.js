@@ -5,7 +5,7 @@ import {
     uploadEmployerProfilePicture, uploadUserProfilePicture, uploadUserResume,
 } from '../controllers/userController.js';
 import { loginUser } from '../controllers/loginController.js';
-import { addJob, deleteJob, getJobs, updateJob, getJobsSummaryForEmployer, getJobsByDomain, getJobById } from '../controllers/jobsController.js';
+import { addJob, deleteJob, updateJob, getJobsSummaryForEmployer, getJobsByDomain, getJobById, getJobsForEmployer, searchJobsForUsers } from '../controllers/jobsController.js';
 import { upload, uploadResume } from '../controllers/upload.js';
 import { applyForJob, updateApplicationStatus, getUserAppliedJobs } from '../controllers/applicationController.js';
 import { getUserNotifications } from '../controllers/notificationController.js';
@@ -23,7 +23,7 @@ router.post('/uploadUserResume/:id', uploadResume.single('resume'), uploadUserRe
 router.post('/applyForJob/', applyForJob)
 
 // GET methods
-router.get('/getJobs/:employerId', getJobs);
+router.get('/getJobs/:employerId', getJobsForEmployer);
 router.get('/getEmployerData/:employerId', getEmployerData);
 router.get('/getUserData/:userId', getUserData);
 router.get('/employer/:employerId/jobs-summary', getJobsSummaryForEmployer)
@@ -31,6 +31,7 @@ router.get('/notifications/:userId', getUserNotifications)
 router.get('/appliedJobs/:userId', getUserAppliedJobs);
 router.get('/jobs-by-domain', getJobsByDomain);
 router.get('/getJobById/:jobId', getJobById);
+router.get('/getJobsForUser', searchJobsForUsers)
 
 // PUT methods
 router.put('/updateJob/:jobId', updateJob);

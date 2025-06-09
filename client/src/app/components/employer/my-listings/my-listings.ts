@@ -48,7 +48,7 @@ export class MyListingsComponent implements OnInit {
   readonly baseUrl = 'http://localhost:3000/api'; // Replace with your backend host
 
   ngOnInit() {
-    if (typeof window != 'undefined') {
+    if (typeof window !== 'undefined') {
       this.employer = localStorage.getItem('user');
       console.log(this.employer);
 
@@ -97,6 +97,7 @@ export class MyListingsComponent implements OnInit {
 
   openModal(job?: Job) {
     this.isModalOpen = true;
+    console.log('Modal Opened:', this.isModalOpen);  // Debugging log
     this.isEditMode = !!job;
 
     if (job) {
@@ -106,18 +107,16 @@ export class MyListingsComponent implements OnInit {
       this.selectedJobId = null;
       this.jobForm = this.getEmptyJob();
 
-      // Parse employer if it's stored as a string
       if (typeof this.employer === 'string') {
         this.employer = JSON.parse(this.employer);
       }
 
-      // Set employer-specific fields
       this.jobForm.employerId = this.employer._id;
       this.jobForm.employerName = this.employer.name;
       this.jobForm.company = this.employer.company;
-      // this.jobForm.domain = this.employer.domain;
     }
   }
+
 
 
   closeModal() {
@@ -166,11 +165,11 @@ export class MyListingsComponent implements OnInit {
     if (!confirm('Are you sure you want to delete this job? This action cannot be undone.')) {
       return;
     }
-    else{
-    this.http.delete(`${this.baseUrl}/deleteJob/${jobId}`).subscribe({
-      next: () => this.fetchJobs(),
-      error: (err) => console.error('Failed to delete job:', err)
-    });
+    else {
+      this.http.delete(`${this.baseUrl}/deleteJob/${jobId}`).subscribe({
+        next: () => this.fetchJobs(),
+        error: (err) => console.error('Failed to delete job:', err)
+      });
+    }
   }
-}
 }
