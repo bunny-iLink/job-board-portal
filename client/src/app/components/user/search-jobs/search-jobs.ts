@@ -28,10 +28,11 @@ export class SearchJobsComponent implements OnInit {
     if (storedUser && storedUser !== 'null') {
       const user = JSON.parse(storedUser);
       const preferredDomain = user.preferredDomain;
+      const userId = user._id;
 
-      if (preferredDomain) {
+      if (preferredDomain && userId) {
         this.http
-          .get(`http://localhost:3000/api/jobs-by-domain?domain=${encodeURIComponent(preferredDomain)}`)
+          .get(`http://localhost:3000/api/jobs-by-domain?domain=${encodeURIComponent(preferredDomain)}&userId=${userId}`)
           .subscribe({
             next: (res: any) => {
               this.allJobs = res;
@@ -42,12 +43,13 @@ export class SearchJobsComponent implements OnInit {
             }
           });
       } else {
-        console.warn('Preferred domain not found in user data.');
+        console.warn('Preferred domain or user ID not found in user data.');
       }
     } else {
       console.warn('No user data in localStorage.');
     }
   }
+
 
 
   searchJobs() {
@@ -69,7 +71,35 @@ export class SearchJobsComponent implements OnInit {
   }
 
   applyToJob(job: any) {
-    alert(`Applied to ${job.title} at ${job.company}`);
-    this.closeModal();
+    const storedUser = localStorage.getItem('user');
+    if (!storedUser || storedUser === 'null') {
+      alert('User not found. Please log in again.');
+      return;
+    }
+
+    const user = JSON.parse(storedUser);
+    const payload = {
+      userId: user._id,
+      jobId: job._id
+    };
+
+    this.http.post('http://localhost:3000/api/applyForJob', payload)
+      .subscribe({
+        next: (res: any) => {
+          alert(res.message || 'Application submitted successfully!');
+          this.closeModal();
+          this.loadJobs(); // refresh list to hide applied job
+        },
+        error: err => {
+          if (err.status === 409) {
+            alert('You have already applied for this job.');
+          } else {
+            console.error('Error applying for job:', err);
+            alert('Something went wrong while applying. Please try again.');
+          }
+          this.closeModal();
+        }
+      });
   }
+
 }

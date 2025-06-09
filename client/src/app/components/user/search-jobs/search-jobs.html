@@ -14,12 +14,41 @@
 <div class="modal" *ngIf="showModal">
     <div class="modal-content">
         <span class="close-btn" (click)="closeModal()">&times;</span>
+
         <h2>{{ selectedJob.title }}</h2>
         <p><strong>Company:</strong> {{ selectedJob.company }}</p>
         <p><strong>Location:</strong> {{ selectedJob.location }}</p>
         <p><strong>Type:</strong> {{ selectedJob.type }}</p>
-        <p><strong>Salary:</strong> {{ selectedJob.salary }}</p>
-        <p><strong>Description:</strong> {{ selectedJob.description }}</p>
+        <p><strong>Salary:</strong> ₹{{ selectedJob.salary }}</p>
+        <p><strong>Experience Required:</strong> {{ selectedJob.experience }}</p>
+        <p><strong>Vacancies:</strong> {{ selectedJob.vacancies }}</p>
+        <p><strong>Status:</strong> {{ selectedJob.status }}</p>
+
+        <div *ngIf="selectedJob.description">
+            <p><strong>Overview:</strong></p>
+            <p>{{ selectedJob.description.overview }}</p>
+
+            <p><strong>Responsibilities:</strong></p>
+            <ul>
+                <li *ngFor="let item of selectedJob.description.responsibilities">{{ item }}</li>
+            </ul>
+
+            <p><strong>Required Skills:</strong></p>
+            <ul>
+                <li *ngFor="let skill of selectedJob.description.requiredSkills">{{ skill }}</li>
+            </ul>
+
+            <p *ngIf="selectedJob.description.preferredSkills?.length"><strong>Preferred Skills:</strong></p>
+            <ul *ngIf="selectedJob.description.preferredSkills?.length">
+                <li *ngFor="let skill of selectedJob.description.preferredSkills">{{ skill }}</li>
+            </ul>
+
+            <p *ngIf="selectedJob.description.whatWeOffer?.length"><strong>What We Offer:</strong></p>
+            <ul *ngIf="selectedJob.description.whatWeOffer?.length">
+                <li *ngFor="let benefit of selectedJob.description.whatWeOffer">{{ benefit }}</li>
+            </ul>
+        </div>
+
         <button (click)="applyToJob(selectedJob)">Apply</button>
     </div>
 </div>
