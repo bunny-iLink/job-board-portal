@@ -43,4 +43,24 @@ router.delete('/deleteJob/:jobId', deleteJob);
 router.delete('/deleteUser/:userId', deleteUserData);
 router.delete('/deleteEmployer/:employerId', deleteEmployerData);
 
+
+//PATCH methods
+router.patch('/application/update-status', async (req, res) => {
+    try {
+        const { applicationId, status } = req.body;
+
+        if (!['In Progress', 'Accepted', 'Rejected'].includes(status)) {
+            return res.status(400).json({ message: "Invalid status" });
+        }
+
+        const updated = await Application.findByIdAndUpdate(applicationId, { status }, { new: true });
+        if (!updated) {
+            return res.status(404).json({ message: "Application not found" });
+        }
+
+        res.status(200).json({ message: "Status updated", application: updated });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+});
 export default router;

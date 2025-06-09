@@ -1,230 +1,92 @@
-/* General Reset and Base Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
+/* Login Page Styles */
+
 
 .login-container {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg, #1a1a2e 0%, #2a2a4e 100%);
-  background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" opacity="0.1"%3E%3Cdefs%3E%3ClinearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"%3E%3Cstop offset="0%" style="stop-color:%231a1a2e;stop-opacity:1" /%3E%3Cstop offset="100%" style="stop-color:%2300d4ff;stop-opacity:0.2" /%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx="200" cy="200" r="100" fill="url(%23grad)" /%3E%3Ccircle cx="1400" cy="700" r="150" fill="url(%23grad)" /%3E%3Ccircle cx="800" cy="400" r="80" fill="url(%23grad)" /%3E%3C/svg%3E');
-  background-size: cover;
-  padding: 1rem;
+  max-width: 380px;
+  background-color: #ffffff;
+  padding: 32px 28px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  margin: 50px auto;
 }
 
-/* Form Styles */
-form {
-  max-width: 420px;
-  width: 100%;
-  padding: 2.5rem;
-  background: rgba(37, 37, 64, 0.95);
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  border: 1px solid #33334d;
-  backdrop-filter: blur(8px);
-}
-
-form h2 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #ffffff;
+.login-container h2 {
+  margin-bottom: 20px;
   text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  margin-bottom: 1.5rem;
-  position: relative;
+  color: #333;
 }
 
-form h2::after {
-  content: '';
-  position: absolute;
-  bottom: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 70px;
-  height: 4px;
-  background: #00d4ff;
-  border-radius: 2px;
-}
-
-/* Form Labels and Inputs */
-label {
+.login-container label {
   display: block;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #e5e7eb;
-  margin-bottom: 0.5rem;
-}
-
-input {
-  width: 100%;
-  padding: 0.9rem;
-  font-size: 1rem;
+  margin-top: 12px;
+  margin-bottom: 4px;
   font-weight: 500;
-  background: #33334d;
-  color: #ffffff;
-  border: 2px solid #4b4b6b;
-  border-radius: 10px;
-  outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  margin-bottom: 1rem;
 }
 
-input:focus {
-  border-color: #00d4ff;
-  box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.2);
+.login-container input[type="email"],
+.login-container input[type="password"],
+.login-container input[type="text"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
 }
 
-input::placeholder {
-  color: #6b7280;
-}
-
-/* Password Wrapper */
 .password-wrapper {
-  position: relative;
   display: flex;
   align-items: center;
-  margin-bottom: 1rem;
 }
 
 .password-wrapper input {
-  padding-right: 3rem;
+  flex: 1;
 }
 
 .password-wrapper button {
-  position: absolute;
-  right: 0.9rem;
   background: none;
   border: none;
-  font-size: 1.3rem;
-  color: #6b7280;
   cursor: pointer;
-  transition: color 0.3s ease;
+  font-size: 18px;
+  margin-left: 8px;
 }
 
-.password-wrapper button:hover {
-  color: #00d4ff;
-}
-
-/* Validation Messages */
-div.invalid-feedback {
-  color: #ff4d4f;
-  font-size: 0.9rem;
-  font-weight: 500;
-  margin-bottom: 0.75rem;
-  display: block;
-}
-
-/* Submit Button */
 button[type="submit"] {
+  margin-top: 20px;
   width: 100%;
-  padding: 0.9rem;
-  background: #00d4ff;
-  color: #1a1a2e;
+  padding: 12px;
+  background-color: #0073e6;
+  color: white;
   border: none;
-  border-radius: 10px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  border-radius: 6px;
+  font-size: 16px;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-  margin-top: 1.5rem;
+  transition: background 0.3s;
 }
 
-button[type="submit"]:hover:not(:disabled) {
-  background: #00b7d6;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(0, 212, 255, 0.3);
-}
-
-button[type="submit"]:disabled {
-  background: #4b4b6b;
-  color: #6b7280;
-  cursor: not-allowed;
-}
-
-/* Register Link */
-.register-link {
-  text-align: center;
-  margin-top: 1.75rem;
-  font-size: 1rem;
-  color: #e5e7eb;
-}
-
-.register-link span {
-  margin-right: 0.5rem;
-}
-
-.register-link a {
-  color: #00d4ff;
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.3s ease;
-}
-
-.register-link a:hover {
-  color: #00b7d6;
-  text-decoration: underline;
+button[type="submit"]:hover {
+  background-color: #005bb5;
 }
 
 .invalid-feedback {
-  color: #ff4d4f;
-  font-size: 0.9rem;
-  font-weight: 500;
-  margin-bottom: 0.75rem;
-  display: block;
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
 }
 
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .login-container {
-    padding: 1.5rem;
-  }
-
-  form {
-    padding: 2rem;
-  }
-
-  form h2 {
-    font-size: 2rem;
-  }
-
-  input,
-  button[type="submit"] {
-    font-size: 0.95rem;
-    padding: 0.8rem;
-  }
-
-  .password-wrapper button {
-    font-size: 1.2rem;
-  }
+.register-link {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
 }
 
-@media (max-width: 480px) {
-  form {
-    padding: 1.5rem;
-  }
+.register-link a {
+  color: #0073e6;
+  text-decoration: none;
+  margin-left: 4px;
+}
 
-  form h2 {
-    font-size: 1.75rem;
-  }
-
-  form h2::after {
-    width: 50px;
-  }
-
-  div.invalid-feedback {
-    font-size: 0.85rem;
-  }
-
-  .register-link {
-    font-size: 0.95rem;
-  }
+.register-link a:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }

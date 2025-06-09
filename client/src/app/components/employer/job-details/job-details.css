@@ -1,314 +1,100 @@
-/* General Reset and Base Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
+/* Job Details Container */
 .job-details-container {
-  min-height: 100vh;
-  padding: clamp(1rem, 3vw, 2rem);
-  background: linear-gradient(135deg, #1a1a2e 0%, #2a2a4e 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 32px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  font-family: "Segoe UI", sans-serif;
 }
 
-/* Job Details Section */
 .job-details-container h1 {
-  font-size: clamp(1.75rem, 3vw, 2.5rem);
-  font-weight: 700;
-  color: #ffffff;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  position: relative;
-  margin-bottom: 1rem;
+  font-size: 28px;
+  color: #0073e6;
+  margin-bottom: 16px;
 }
 
-.job-details-container h1::after {
-  content: '';
-  position: absolute;
-  bottom: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: clamp(50px, 10vw, 70px);
-  height: 4px;
-  background: #00d4ff;
-  border-radius: 2px;
+.job-details-container p {
+  font-size: 16px;
+  color: #444;
+  margin: 6px 0;
 }
 
-.job-details-container>p {
-  max-width: 1200px;
-  width: 100%;
-  font-size: clamp(0.95rem, 1.3vw, 1.1rem);
-  color: #e5e7eb;
-  background: rgba(37, 37, 64, 0.95);
-  padding: clamp(0.75rem, 1.5vw, 1rem);
-  border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  border: 1px solid #33334d;
-  backdrop-filter: blur(8px);
-  margin-bottom: 0.5rem;
+.job-details-container strong {
+  color: #222;
 }
 
-.job-details-container>p strong {
-  color: #00d4ff;
-}
-
-/* Job Description Section */
-.job-section {
-  max-width: 1200px;
-  width: 100%;
-  background: rgba(37, 37, 64, 0.95);
-  padding: clamp(1rem, 2vw, 1.5rem);
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  border: 1px solid #33334d;
-  backdrop-filter: blur(8px);
-}
-
-.job-section h2 {
-  font-size: clamp(1.5rem, 2.5vw, 2rem);
-  font-weight: 700;
-  color: #ffffff;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+/* Section Headings */
+.job-section h2,
+.applicant-section h2 {
+  margin-top: 32px;
+  font-size: 22px;
+  color: #333;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 4px;
 }
 
 .job-section h3 {
-  font-size: clamp(1.2rem, 1.8vw, 1.5rem);
-  font-weight: 600;
-  color: #e5e7eb;
-  margin: 1rem 0 0.5rem;
-}
-
-.job-section p {
-  font-size: clamp(0.9rem, 1.2vw, 1rem);
-  color: #e5e7eb;
-  line-height: 1.6;
+  margin-top: 20px;
+  font-size: 18px;
+  color: #0073e6;
 }
 
 .job-section ul {
-  list-style: disc;
-  padding-left: 1.5rem;
-  margin-bottom: 1rem;
+  padding-left: 20px;
+  margin-top: 8px;
 }
 
-.job-section ul li {
-  font-size: clamp(0.9rem, 1.2vw, 1rem);
-  color: #e5e7eb;
-  margin-bottom: 0.5rem;
+.job-section li {
+  margin-bottom: 6px;
+  color: #555;
 }
 
 /* Applicants Section */
-.applicant-section {
-  max-width: 1200px;
-  width: 100%;
-  background: rgba(37, 37, 64, 0.95);
-  padding: clamp(1rem, 2vw, 1.5rem);
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  border: 1px solid #33334d;
-  backdrop-filter: blur(8px);
-}
-
-.applicant-section h2 {
-  font-size: clamp(1.5rem, 2.5vw, 2rem);
-  font-weight: 700;
-  color: #ffffff;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.no-applicants p {
-  font-size: clamp(0.9rem, 1.2vw, 1rem);
-  color: #e5e7eb;
-  text-align: center;
-  background: #33334d;
-  padding: clamp(0.75rem, 1.5vw, 1rem);
-  border-radius: 10px;
-}
-
 .applicant-card {
-  background: #33334d;
-  padding: clamp(0.75rem, 1.5vw, 1rem);
-  border-radius: 10px;
-  margin-bottom: 1rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.applicant-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(0, 212, 255, 0.2);
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
 }
 
 .applicant-card p {
-  font-size: clamp(0.85rem, 1.1vw, 0.95rem);
-  color: #e5e7eb;
-  margin-bottom: 0.5rem;
-}
-
-.applicant-card p strong {
-  color: #00d4ff;
-}
-
-.applicant-card a {
-  display: inline-block;
-  margin-top: 0.5rem;
-  font-size: clamp(0.85rem, 1.1vw, 0.95rem);
-  color: #00d4ff;
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.3s ease, text-decoration 0.3s ease;
-}
-
-.applicant-card a:hover {
-  color: #00b7d6;
-  text-decoration: underline;
+  margin: 6px 0;
 }
 
 .status-dropdown {
-  width: 130px;
-  background: rgba(255, 255, 255, 0.05);
-  color: #00d4ff;
-  border: 1px solid #00d4ff;
-  padding: 0.35rem 0.75rem;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 1rem;
-  transition: border 0.3s ease, background-color 0.3s ease;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #fff;
+  font-size: 14px;
+  margin-top: 4px;
 }
 
 .status-dropdown:focus {
   outline: none;
-  border-color: #00b7d6;
-  background-color: rgba(255, 255, 255, 0.1);
+  border-color: #0073e6;
+  box-shadow: 0 0 0 2px rgba(0, 115, 230, 0.15);
 }
 
-.status-dropdown option {
-  background: #2a2a4e;
-  color: #e5e7eb;
+a {
+  display: inline-block;
+  margin-top: 8px;
+  color: #0073e6;
+  text-decoration: none;
 }
 
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .job-details-container {
-    padding: clamp(0.75rem, 2vw, 1.5rem);
-  }
-
-  .job-details-container h1 {
-    font-size: clamp(1.5rem, 2.5vw, 2rem);
-  }
-
-  .job-details-container>p {
-    font-size: clamp(0.9rem, 1.2vw, 1rem);
-    padding: clamp(0.5rem, 1vw, 0.75rem);
-  }
-
-  .job-section {
-    padding: clamp(0.75rem, 1.5vw, 1rem);
-  }
-
-  .job-section h2 {
-    font-size: clamp(1.25rem, 2vw, 1.75rem);
-  }
-
-  .job-section h3 {
-    font-size: clamp(1.1rem, 1.5vw, 1.25rem);
-  }
-
-  .applicant-section {
-    padding: clamp(0.75rem, 1.5vw, 1rem);
-  }
-
-  .applicant-section h2 {
-    font-size: clamp(1.25rem, 2vw, 1.75rem);
-  }
-
-  .applicant-card {
-    padding: clamp(0.5rem, 1vw, 0.75rem);
-  }
+a:hover {
+  text-decoration: underline;
 }
 
-@media (max-width: 480px) {
-  .job-details-container {
-    padding: clamp(0.5rem, 1.5vw, 1rem);
-  }
-
-  .job-details-container h1 {
-    font-size: clamp(1.25rem, 2vw, 1.75rem);
-  }
-
-  .job-details-container h1::after {
-    width: clamp(40px, 8vw, 50px);
-  }
-
-  .job-details-container>p {
-    font-size: clamp(0.85rem, 1.1vw, 0.95rem);
-  }
-
-  .job-section h2 {
-    font-size: clamp(1rem, 1.8vw, 1.5rem);
-  }
-
-  .job-section h3 {
-    font-size: clamp(1rem, 1.3vw, 1.1rem);
-  }
-
-  .applicant-section h2 {
-    font-size: clamp(1rem, 1.8vw, 1.5rem);
-  }
-
-  .applicant-card p,
-  .applicant-card a {
-    font-size: clamp(0.8rem, 1vw, 0.9rem);
-  }
-}
-
-@media (max-width: 320px) {
-  .job-details-container {
-    padding: clamp(0.5rem, 1vw, 0.75rem);
-  }
-
-  .job-details-container h1 {
-    font-size: clamp(1rem, 1.8vw, 1.5rem);
-  }
-
-  .job-section,
-  .applicant-section {
-    padding: clamp(0.5rem, 1vw, 0.75rem);
-  }
-
-  .applicant-card {
-    padding: clamp(0.5rem, 0.8vw, 0.65rem);
-  }
-}
-
-@media (min-width: 1200px) {
-  .job-details-container {
-    padding: 2.5rem;
-  }
-
-  .job-details-container h1 {
-    font-size: 2.75rem;
-  }
-
-  .job-section,
-  .applicant-section {
-    padding: 2rem;
-  }
+/* Empty State */
+.no-applicants {
+  text-align: center;
+  margin-top: 20px;
+  color: #777;
+  font-style: italic;
 }

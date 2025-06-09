@@ -1,228 +1,82 @@
-/* General Reset and Base Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
+/* User Dashboard Styles */
 .dashboard-container {
-    margin-top: 100px;
-  min-height: 100vh;
-  padding: 2rem;
-  background: linear-gradient(135deg, #1a1a2e 0%, #2a2a4e 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
 }
 
-/* Header Styles */
 .dashboard-header {
-  max-width: 1200px;
-  width: 100%;
-  background: rgba(37, 37, 64, 0.95);
-  color: #ffffff;
-  padding: 2.5rem;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  margin-bottom: 2rem;
   text-align: center;
-  border: 1px solid #33334d;
-  backdrop-filter: blur(8px);
+  margin-bottom: 30px;
 }
 
 .dashboard-header h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #00d4ff;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  margin-bottom: 0.75rem;
+  margin-bottom: 10px;
+  font-size: 28px;
+  color: #0073e6;
 }
 
 .dashboard-header p {
-  font-size: 1.2rem;
-  color: #e5e7eb;
-  font-weight: 500;
+  font-size: 16px;
+  color: #444;
 }
 
-.dashboard-header p strong {
-  color: #ffffff;
-}
-
-/* No Data Fallback */
-.no-data {
-  max-width: 1200px;
-  width: 100%;
-  text-align: center;
-  padding: 2rem;
-  background: rgba(37, 37, 64, 0.95);
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  margin-bottom: 2rem;
-  border: 1px solid #33334d;
-  backdrop-filter: blur(8px);
-}
-
-.no-data p {
-  font-size: 1.2rem;
-  color: #e5e7eb;
-  font-weight: 500;
-}
-
-/* Applied Jobs Section */
 .applied-jobs {
-  max-width: 1200px;
-  width: 100%;
-  margin-bottom: 3rem;
+  margin-top: 20px;
 }
 
 .applied-jobs h2 {
-  font-size: 2.25rem;
-  font-weight: 700;
-  color: #ffffff;
-  margin-bottom: 1.5rem;
-  position: relative;
-  display: inline-block;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.applied-jobs h2::after {
-  content: '';
-  position: absolute;
-  bottom: -6px;
-  left: 0;
-  width: 70px;
-  height: 4px;
-  background: #00d4ff;
-  border-radius: 2px;
+  font-size: 22px;
+  margin-bottom: 12px;
+  color: #333;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 4px;
 }
 
 .job-table {
   width: 100%;
   border-collapse: collapse;
-  background: rgba(37, 37, 64, 0.95);
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  border: 1px solid #33334d;
-  backdrop-filter: blur(8px);
+  margin-top: 12px;
 }
 
 .job-table th,
 .job-table td {
-  padding: 1.25rem;
   text-align: left;
-  font-size: 1rem;
-  color: #e5e7eb;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .job-table th {
-  background: #33334d;
+  background-color: #f4f6f8;
   font-weight: 600;
-  text-transform: uppercase;
-  color: #ffffff;
+  color: #555;
 }
 
-.job-table tbody tr {
-  border-bottom: 1px solid #4b4b6b;
-  transition: background 0.3s ease;
+.job-table td {
+  color: #333;
 }
 
-.job-table tbody tr:hover {
-  background: rgba(75, 75, 107, 0.2);
+.accepted {
+  color: #28a745;
+  font-weight: bold;
 }
 
-.job-table td span {
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  display: inline-block;
+.rejected {
+  color: #dc3545;
+  font-weight: bold;
 }
 
-.job-table td .accepted {
-  background: #d1fae5;
-  color: #065f46;
+.in-progress {
+  color: #ffc107;
+  font-weight: bold;
 }
 
-.job-table td .rejected {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.job-table td .in-progress {
-  background: #e0f2fe;
-  color: #1e40af;
-}
-
-/* Empty State Messages */
-div p {
-  max-width: 1200px;
-  width: 100%;
+.no-data {
   text-align: center;
-  font-size: 1.2rem;
-  color: #e5e7eb;
-  background: rgba(37, 37, 64, 0.95);
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  border: 1px solid #33334d;
-  backdrop-filter: blur(8px);
-  font-weight: 500;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .dashboard-container {
-    padding: 1.5rem;
-  }
-
-  .dashboard-header {
-    padding: 2rem;
-  }
-
-  .dashboard-header h1 {
-    font-size: 2rem;
-  }
-
-  .applied-jobs h2 {
-    font-size: 2rem;
-  }
-
-  .job-table th,
-  .job-table td {
-    font-size: 0.95rem;
-    padding: 1rem;
-  }
-
-  .no-data p,
-  div p {
-    font-size: 1.1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .dashboard-header h1 {
-    font-size: 1.75rem;
-  }
-
-  .dashboard-header p {
-    font-size: 1rem;
-  }
-
-  .applied-jobs h2 {
-    font-size: 1.75rem;
-  }
-
-  .job-table {
-    display: block;
-    overflow-x: auto;
-  }
-
-  .no-data p,
-  div p {
-    font-size: 1rem;
-  }
+  font-size: 16px;
+  color: #666;
+  margin-top: 40px;
 }
