@@ -32,6 +32,8 @@ router.get('/appliedJobs/:userId', getUserAppliedJobs);
 router.get('/jobs-by-domain', getJobsByDomain);
 router.get('/getJobById/:jobId', getJobById);
 router.get('/getJobsForUser', searchJobsForUsers)
+router.get('/searchJobs', searchJobsForUsers);
+
 
 // PUT methods
 router.put('/updateJob/:jobId', updateJob);
