@@ -1,9 +1,11 @@
 import mongoose from "mongoose";
 import { jobsSchema } from "../models/jobs.js";
 import { applicationSchema } from "../models/applications.js";
+import { userSchema } from "../models/users.js";
 
 const Job = mongoose.model("Job", jobsSchema);
 const Application = mongoose.model("Application", applicationSchema);
+const User = mongoose.model("User", userSchema);
 
 
 export async function addJob(req, res) {
@@ -220,3 +222,27 @@ export async function getJobsByDomain(req, res) {
     }
 }
 
+export async function getJobById(req, res) {
+    try {
+        const jobId = req.params.jobId;
+
+        // Fetch the job
+        const job = await Job.findById(jobId);
+        if (!job) {
+            return res.status(404).json({ message: "Job not found" });
+        }
+
+        // Fetch applications and populate full user info
+        const applications = await Application.find({ jobId })
+            .populate('userId') // populate all user fields
+            .sort({ appliedAt: -1 });
+
+        res.status(200).json({
+            job,
+            applicants: applications
+        });
+    } catch (error) {
+        console.error("Error fetching job details and applicants:", error.message);
+        res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+}
