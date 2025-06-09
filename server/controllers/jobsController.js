@@ -202,21 +202,30 @@ export async function getJobsSummaryForEmployer(req, res) {
     }
 }
 
-// In jobsController.js
 export async function getJobsByDomain(req, res) {
     try {
-        const { domain } = req.query;
+        const { domain, userId } = req.query;
 
-        if (!domain) {
-            return res.status(400).json({ message: "Preferred domain is required." });
+        if (!domain || !userId) {
+            return res.status(400).json({ message: 'Domain and user ID are required.' });
         }
 
-        const jobs = await Job.find({ domain }); // Exact match
+        // Get all jobIds the user has already applied for
+        const appliedJobs = await Application.find({ userId }).select('jobId');
+        const appliedJobIds = appliedJobs.map(app => app.jobId.toString());
+
+        // Get jobs matching the domain, excluding already applied ones, and only those with status 'open'
+        const jobs = await Job.find({
+            domain,
+            status: 'open',
+            _id: { $nin: appliedJobIds }
+        });
 
         res.status(200).json(jobs);
     } catch (err) {
-        console.error("Error fetching jobs by domain:", err);
-        res.status(500).json({ message: "Internal server error." });
+        console.error('Error fetching jobs by domain:', err);
+        res.status(500).json({ message: 'Internal server error.' });
     }
 }
+
 
