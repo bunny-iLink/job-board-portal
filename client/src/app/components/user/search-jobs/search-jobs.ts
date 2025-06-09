@@ -17,47 +17,65 @@ export class SearchJobsComponent implements OnInit {
   selectedJob: any = null;
   showModal: boolean = false;
 
+  filters = {
+    type: '',
+    experience: '',
+    minSalary: '',
+    maxSalary: ''
+  };
+
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
-    this.loadJobs();
+    this.searchJobs();
   }
 
-  loadJobs() {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser && storedUser !== 'null') {
-      const user = JSON.parse(storedUser);
-      const preferredDomain = user.preferredDomain;
-      const userId = user._id;
+  isBrowser(): boolean {
+    return typeof window !== 'undefined';
+  }
 
-      if (preferredDomain && userId) {
-        this.http
-          .get(`http://localhost:3000/api/jobs-by-domain?domain=${encodeURIComponent(preferredDomain)}&userId=${userId}`)
-          .subscribe({
-            next: (res: any) => {
-              this.allJobs = res;
-              this.filteredJobs = [...res];
-            },
-            error: err => {
-              console.error('Failed to fetch jobs:', err);
-            }
-          });
-      } else {
-        console.warn('Preferred domain or user ID not found in user data.');
+  getStoredUser() {
+    if (this.isBrowser()) {
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        try {
+          return JSON.parse(userStr);
+        } catch (e) {
+          console.warn('Invalid JSON in localStorage');
+        }
       }
-    } else {
-      console.warn('No user data in localStorage.');
     }
+    return null;
   }
-
-
 
   searchJobs() {
-    const term = this.searchTerm.toLowerCase();
-    this.filteredJobs = this.allJobs.filter(job =>
-      job.title.toLowerCase().includes(term) ||
-      job.company.toLowerCase().includes(term)
-    );
+    const user = this.getStoredUser();
+    if (!user) {
+      console.warn('User not found in localStorage');
+      return;
+    }
+
+    const queryParams: any = {
+      userId: user._id,
+      domain: user.preferredDomain,
+      search: this.searchTerm.trim()
+    };
+
+    if (this.filters.type) queryParams.type = this.filters.type;
+    if (this.filters.experience) queryParams.experience = this.filters.experience;
+    if (this.filters.minSalary) queryParams.minSalary = this.filters.minSalary;
+    if (this.filters.maxSalary) queryParams.maxSalary = this.filters.maxSalary;
+
+    const queryString = new URLSearchParams(queryParams).toString();
+
+    this.http.get(`http://localhost:3000/api/searchJobs?${queryString}`)
+      .subscribe({
+        next: (res: any) => {
+          this.allJobs = res;
+          this.filteredJobs = [...res];
+        },
+        error: (err) => console.error('Error fetching jobs:', err)
+      });
   }
 
   openJobModal(job: any) {
@@ -66,40 +84,37 @@ export class SearchJobsComponent implements OnInit {
   }
 
   closeModal() {
-    this.showModal = false;
     this.selectedJob = null;
+    this.showModal = false;
   }
 
   applyToJob(job: any) {
-    const storedUser = localStorage.getItem('user');
-    if (!storedUser || storedUser === 'null') {
-      alert('User not found. Please log in again.');
+    const user = this.getStoredUser();
+    if (!user) {
+      alert('Please log in to apply.');
       return;
     }
 
-    const user = JSON.parse(storedUser);
     const payload = {
       userId: user._id,
       jobId: job._id
     };
 
-    this.http.post('http://localhost:3000/api/applyForJob', payload)
-      .subscribe({
-        next: (res: any) => {
-          alert(res.message || 'Application submitted successfully!');
-          this.closeModal();
-          this.loadJobs(); // refresh list to hide applied job
-        },
-        error: err => {
-          if (err.status === 409) {
-            alert('You have already applied for this job.');
-          } else {
-            console.error('Error applying for job:', err);
-            alert('Something went wrong while applying. Please try again.');
-          }
-          this.closeModal();
+    this.http.post('http://localhost:3000/api/applyForJob', payload).subscribe({
+      next: (res: any) => {
+        alert(res.message || 'Application submitted!');
+        this.closeModal();
+        this.searchJobs();
+      },
+      error: (err) => {
+        if (err.status === 409) {
+          alert('Already applied to this job.');
+        } else {
+          console.error('Application error:', err);
+          alert('Failed to apply.');
         }
-      });
+        this.closeModal();
+      }
+    });
   }
-
 }

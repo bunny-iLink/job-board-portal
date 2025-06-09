@@ -78,7 +78,9 @@ export class UserProfileComponent implements OnInit {
 
           // Update localStorage
           const newUser = res.user || updatedUser; // in case API returns the updated user
-          localStorage.setItem('user', JSON.stringify(newUser));
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('user', JSON.stringify(newUser));
+          }
         },
         error: () => {
           this.error = 'Failed to update profile.';

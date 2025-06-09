@@ -47,8 +47,10 @@ export class LoginComponent {
         console.log(response);
 
         // ✅ Save token and user safely
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('user', JSON.stringify(response.user));
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('token', response.token);
+          localStorage.setItem('user', JSON.stringify(response.user));
+        }
 
         const role = response.user?.role;
         if (role) {

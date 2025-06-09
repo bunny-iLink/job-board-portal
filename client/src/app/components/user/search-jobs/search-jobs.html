@@ -1,6 +1,30 @@
 <div class="search-container">
     <input [(ngModel)]="searchTerm" (input)="searchJobs()" placeholder="Search jobs..." />
 
+    <div class="filters">
+        <label>Type:
+            <select [(ngModel)]="filters.type" (change)="searchJobs()">
+                <option value="">All</option>
+                <option value="Full-time">Full-time</option>
+                <option value="Part-time">Part-time</option>
+                <option value="Internship">Internship</option>
+            </select>
+        </label>
+
+        <label>Experience:
+            <input type="number" [(ngModel)]="filters.experience" (input)="searchJobs()" placeholder="Years" />
+        </label>
+
+        <label>Min Salary:
+            <input type="number" [(ngModel)]="filters.minSalary" (input)="searchJobs()" />
+        </label>
+
+        <label>Max Salary:
+            <input type="number" [(ngModel)]="filters.maxSalary" (input)="searchJobs()" />
+        </label>
+    </div>
+
+
     <div class="jobs-grid">
         <div class="job-card" *ngFor="let job of filteredJobs" (click)="openJobModal(job)">
             <h3>{{ job.title }}</h3>

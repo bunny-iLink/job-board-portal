@@ -71,22 +71,21 @@ export async function addJob(req, res) {
     }
 }
 
-export async function getJobs(req, res) {
+export async function getJobsForEmployer(req, res) {
     try {
-        const employerId = req.params.employerId;
+        const { employerId } = req.params;
 
-        let jobs;
-        if (employerId) {
-            // Get jobs for a specific employer
-            jobs = await Job.find({ employerId });
-        } else {
-            console.log("No employerId received");
+        if (!employerId) {
+            return res.status(400).json({ message: "Employer ID is required" });
         }
+
+        const jobs = await Job.find({ employerId });
 
         if (!jobs || jobs.length === 0) {
-            return res.status(404).json({ message: "No jobs found" });
+            return res.status(404).json({ message: "No jobs found for this employer" });
         }
-        const jobsWithCounts = await Promise.all(
+
+        const jobsWithApplicantCount = await Promise.all(
             jobs.map(async (job) => {
                 const count = await Application.countDocuments({ jobId: job._id });
                 return {
@@ -95,12 +94,14 @@ export async function getJobs(req, res) {
                 };
             })
         );
-        res.status(200).json(jobsWithCounts);
+
+        res.status(200).json(jobsWithApplicantCount);
     } catch (error) {
-        console.error("Error fetching jobs:", error.message);
-        res.status(500).json({ message: "Error fetching jobs", error: error.message });
+        console.error("Error fetching employer jobs:", error.message);
+        res.status(500).json({ message: "Internal server error", error: error.message });
     }
 }
+
 
 export async function updateJob(req, res) {
     try {
@@ -250,3 +251,55 @@ export async function getJobById(req, res) {
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 }
+
+export async function searchJobsForUsers(req, res) {
+    try {
+        const {
+            domain,
+            experience,
+            minSalary,
+            maxSalary,
+            type,
+            search,
+            userId // optional: if passed, exclude already-applied jobs
+        } = req.query;
+
+        const query = {
+            status: 'open'
+        };
+
+        // Build dynamic query
+        if (domain) query.domain = domain;
+        if (type) query.type = type;
+        if (experience) query.experience = { $lte: Number(experience) };
+        if (minSalary || maxSalary) {
+            query.salary = {};
+            if (minSalary) query.salary.$gte = Number(minSalary);
+            if (maxSalary) query.salary.$lte = Number(maxSalary);
+        }
+        if (search) {
+            const regex = new RegExp(search, 'i');
+            query.$or = [
+                { title: regex },
+                { company: regex },
+                { location: regex },
+                { 'description.overview': regex }
+            ];
+        }
+
+        // Exclude already applied jobs if userId is passed
+        if (userId) {
+            const appliedJobs = await Application.find({ userId }).select('jobId');
+            const appliedJobIds = appliedJobs.map(app => app.jobId.toString());
+            query._id = { $nin: appliedJobIds };
+        }
+
+        const jobs = await Job.find(query);
+
+        res.status(200).json(jobs);
+    } catch (error) {
+        console.error("Error searching jobs:", error.message);
+        res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+}
+
