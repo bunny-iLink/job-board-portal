@@ -14,3 +14,5 @@ export const userSchema = new mongoose.Schema({
     experience: { type: Number, default: null },
     resume: {type: String, default: ''}
 })
+
+export const User = mongoose.model("User", userSchema);

@@ -73,14 +73,19 @@ export class UserProfileComponent implements OnInit {
 
     this.http.put(`${this.apiBase}/updateUser/${this.userId}`, updatedUser)
       .subscribe({
-        next: () => {
+        next: (res: any) => {
           this.success = 'Profile updated successfully!';
+
+          // Update localStorage
+          const newUser = res.user || updatedUser; // in case API returns the updated user
+          localStorage.setItem('user', JSON.stringify(newUser));
         },
         error: () => {
           this.error = 'Failed to update profile.';
         }
       });
   }
+
 
   uploadProfilePicture() {
     if (!this.userId || !this.selectedProfilePicture) {

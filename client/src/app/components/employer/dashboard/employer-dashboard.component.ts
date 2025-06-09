@@ -23,7 +23,7 @@ export class EmployerDashboardComponent implements OnInit {
   token: string | null = null;
   jobs: JobSummary[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     if (typeof window !== 'undefined') {
@@ -59,14 +59,15 @@ export class EmployerDashboardComponent implements OnInit {
   fetchJobSummaries() {
     if (!this.employerId) return;
 
-    this.http.get<JobSummary[]>(`http://localhost:3000/api/getJobs/${this.employerId}`).subscribe({
+    this.http.get<JobSummary[]>(`http://localhost:3000/api/employer/${this.employerId}/jobs-summary`).subscribe({
       next: res => {
         this.jobs = res;
-        console.log('Jobs:', this.jobs);
+        console.log('Jobs with applicant count:', this.jobs);
       },
       error: err => {
         console.error('Failed to load job summaries:', err);
       }
     });
   }
+
 }

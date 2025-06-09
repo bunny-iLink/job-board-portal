@@ -1,9 +1,13 @@
 import { Router } from 'express';
-import { addUser, addEmployer, getEmployerData, getUserData, updateUserData, updateEmployerData, deleteUserData, deleteEmployerData, uploadEmployerProfilePicture, uploadUserProfilePicture, uploadUserResume } from '../controllers/userController.js';
+import {
+    addUser, addEmployer, getEmployerData, getUserData,
+    updateUserData, updateEmployerData, deleteUserData, deleteEmployerData,
+    uploadEmployerProfilePicture, uploadUserProfilePicture, uploadUserResume,
+} from '../controllers/userController.js';
 import { loginUser } from '../controllers/loginController.js';
-import { addJob, deleteJob, getJobs, updateJob } from '../controllers/jobsController.js';
+import { addJob, deleteJob, getJobs, updateJob, getJobsSummaryForEmployer, getJobsByDomain } from '../controllers/jobsController.js';
 import { upload, uploadResume } from '../controllers/upload.js';
-import { applyForJob, getApplicationCountForJobs, updateApplicationStatus } from '../controllers/applicationController.js';
+import { applyForJob, updateApplicationStatus, getUserAppliedJobs } from '../controllers/applicationController.js';
 import { getUserNotifications } from '../controllers/notificationController.js';
 
 const router = Router();
@@ -22,8 +26,10 @@ router.post('/applyForJob/', applyForJob)
 router.get('/getJobs/:employerId', getJobs);
 router.get('/getEmployerData/:employerId', getEmployerData);
 router.get('/getUserData/:userId', getUserData);
-router.get('/:jobId/applicant-count', getApplicationCountForJobs);
+router.get('/employer/:employerId/jobs-summary', getJobsSummaryForEmployer)
 router.get('/notifications/:userId', getUserNotifications)
+router.get('/appliedJobs/:userId', getUserAppliedJobs);
+router.get('/jobs-by-domain', getJobsByDomain);
 
 // PUT methods
 router.put('/updateJob/:jobId', updateJob);

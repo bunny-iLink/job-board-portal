@@ -1,46 +1,258 @@
+/* General Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
 .dashboard-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #333;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+    min-height: 100vh;
 }
 
+/* Header Styles */
 .dashboard-header {
-    padding: 1.5rem;
-    border-left: 6px solid #007BFF;
-    border-radius: 6px;
+    background: #1a1a2e;
+    color: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     margin-bottom: 2rem;
-    width: 90vw;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-    margin-top: 40px;
+    text-align: center;
 }
 
 .dashboard-header h1 {
-    margin: 0 0 0.5rem;
-    color: #007BFF;
-    font-size: 2rem;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #00d4ff;
 }
 
 .dashboard-header p {
-    margin: 0.3rem 0;
-    font-size: 1rem;
+    font-size: 1.1rem;
+    color: #d1d5db;
 }
 
+.dashboard-header p strong {
+    color: #ffffff;
+}
+
+/* No Data Fallback */
 .no-data {
     text-align: center;
     padding: 2rem;
-    color: red;
-    font-size: 1.1rem;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
 }
 
-.dashboard-container>div:last-child {
-    text-align: center;
-    margin-top: 2rem;
-    color: #666;
+.no-data p {
+    font-size: 1.2rem;
+    color: #6b7280;
+}
+
+/* Saved Jobs Section */
+.job-tiles {
+    margin-bottom: 3rem;
+}
+
+.job-tiles h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1.5rem;
+    position: relative;
+    display: inline-block;
+}
+
+.job-tiles h2::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 50%;
+    height: 3px;
+    background: #00d4ff;
+    border-radius: 2px;
+}
+
+.tiles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.tile {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-left: 4px solid #00d4ff;
+}
+
+.tile:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.tile h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.75rem;
+}
+
+.tile p {
     font-size: 1rem;
+    color: #4b5563;
+    margin-bottom: 0.5rem;
+}
+
+.tile p strong {
+    color: #1f2937;
+}
+
+/* Applied Jobs Table */
+.applied-jobs {
+    margin-bottom: 3rem;
+}
+
+.applied-jobs h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1.5rem;
+    position: relative;
+    display: inline-block;
+}
+
+.applied-jobs h2::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 50%;
+    height: 3px;
+    background: #00d4ff;
+    border-radius: 2px;
+}
+
+.job-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.job-table th,
+.job-table td {
+    padding: 1rem;
+    text-align: left;
+    font-size: 1rem;
+}
+
+.job-table th {
+    background: #1a1a2e;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.job-table tbody tr {
+    border-bottom: 1px solid #e5e7eb;
+    transition: background 0.2s ease;
+}
+
+.job-table tbody tr:hover {
+    background: #f9fafb;
+}
+
+.job-table td span {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.job-table td .accepted {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.job-table td .rejected {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.job-table td .in-progress {
+    background: #e0f2fe;
+    color: #1e40af;
+}
+
+/* Empty State Messages */
+div p {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #6b7280;
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 1rem;
+    }
+
+    .dashboard-header {
+        padding: 1.5rem;
+    }
+
+    .dashboard-header h1 {
+        font-size: 2rem;
+    }
+
+    .job-tiles h2,
+    .applied-jobs h2 {
+        font-size: 1.75rem;
+    }
+
+    .tiles-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .job-table th,
+    .job-table td {
+        font-size: 0.9rem;
+        padding: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-header h1 {
+        font-size: 1.75rem;
+    }
+
+    .job-tiles h2,
+    .applied-jobs h2 {
+        font-size: 1.5rem;
+    }
+
+    .tile {
+        padding: 1rem;
+    }
+
+    .job-table {
+        display: block;
+        overflow-x: auto;
+    }
 }

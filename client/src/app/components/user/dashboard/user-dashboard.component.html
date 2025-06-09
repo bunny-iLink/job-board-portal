@@ -1,12 +1,43 @@
 <div class="dashboard-container">
     <!-- Header with User Details -->
-    <header class="dashboard-header" *ngIf="token">
-        <h1>Welcome, {{ user?.name }}</h1>
-        <p><strong>Email:</strong> {{ user?.email }}</p>
+    <header class="dashboard-header" *ngIf="user">
+        <h1>Welcome, {{ user.name }}</h1>
+        <p><strong>Email:</strong> {{ user.email }}</p>
     </header>
 
     <!-- Fallback if user data is missing -->
-    <div *ngIf="!token" class="no-data">
-        <p>Please login to access the site....</p>
+    <div *ngIf="!user" class="no-data">
+        <p>Loading user data or not logged in...</p>
+    </div>
+
+    <!-- Applied Jobs Table -->
+    <section class="applied-jobs" *ngIf="appliedJobs.length > 0">
+        <h2>Your Applied Jobs</h2>
+        <table class="job-table">
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let job of appliedJobs">
+                    <td>{{ job.title }}</td>
+                    <td>
+                        <span [ngClass]="{
+              'accepted': job.status === 'Accepted',
+              'rejected': job.status === 'Rejected',
+              'in-progress': job.status === 'In Progress'
+            }">
+                            {{ job.status }}
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <div *ngIf="appliedJobs.length === 0 && user">
+        <p>You haven’t applied for any jobs yet.</p>
     </div>
 </div>

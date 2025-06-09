@@ -13,3 +13,5 @@ export const employerSchema = new mongoose.Schema({
     domain: { type: String, default: null },
     profilePicture: { type: String, default: null }
 }, {timestamps: true})
+
+export const Employer = mongoose.model("Employer", employerSchema);

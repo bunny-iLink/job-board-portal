@@ -22,3 +22,5 @@ export const jobsSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
 });
+
+export const Job = mongoose.model("Job", jobsSchema);

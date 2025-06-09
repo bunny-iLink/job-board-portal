@@ -1,4 +1,4 @@
-import { Application } from '../models/application.js';
+import { Application } from '../models/applications.js';
 import { Job } from '../models/jobs.js';
 import { User } from '../models/users.js';
 
@@ -37,19 +37,6 @@ export async function applyForJob(req, res) {
 
     } catch (error) {
         console.error('Error applying for job:', error);
-        res.status(500).json({ message: 'Internal server error.' });
-    }
-};
-
-export async function getApplicationCountForJobs(req, res) {
-    try {
-        const { jobId } = req.params;
-
-        const count = await Application.countDocuments({ jobId });
-
-        res.status(200).json({ applicantCount: count });
-    } catch (error) {
-        console.error('Error counting applications:', error);
         res.status(500).json({ message: 'Internal server error.' });
     }
 };
@@ -104,6 +91,31 @@ export const updateApplicationStatus = async (req, res) => {
         res.status(500).json({ message: "Internal server error." });
     }
 };
+
+export async function getUserAppliedJobs(req, res) {
+    try {
+        const { userId } = req.params;
+
+        if (!userId) {
+            return res.status(400).json({ message: "User ID is required." });
+        }
+
+        // Fetch all applications by the user, and populate job details
+        const applications = await Application.find({ userId })
+            .populate('jobId', 'title')  // Only bring `title` from the Job document
+            .exec();
+
+        const appliedJobs = applications.map(app => ({
+            title: app.jobId?.title || 'Unknown',
+            status: app.status,
+        }));
+
+        res.status(200).json(appliedJobs);
+    } catch (err) {
+        console.error('Error fetching applied jobs:', err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
 
 
 

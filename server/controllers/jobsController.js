@@ -86,14 +86,14 @@ export async function getJobs(req, res) {
             return res.status(404).json({ message: "No jobs found" });
         }
         const jobsWithCounts = await Promise.all(
-        jobs.map(async (job) => {
-        const count = await Application.countDocuments({ jobId: job._id });
-        return {
-          ...job.toObject(),
-          applicantCount: count,
-        };
-      })
-    );
+            jobs.map(async (job) => {
+                const count = await Application.countDocuments({ jobId: job._id });
+                return {
+                    ...job.toObject(),
+                    applicantCount: count,
+                };
+            })
+        );
         res.status(200).json(jobsWithCounts);
     } catch (error) {
         console.error("Error fetching jobs:", error.message);
@@ -105,7 +105,7 @@ export async function updateJob(req, res) {
     try {
         const { jobId } = req.params;
         console.log("Updating job with ID:", jobId);
-        
+
         const updateData = req.body;
 
         // If 'description' is provided, do partial validation only on provided nested fields
@@ -175,3 +175,48 @@ export async function deleteJob(req, res) {
         res.status(500).json({ message: "Error deleting job", error: error.message });
     }
 }
+
+export async function getJobsSummaryForEmployer(req, res) {
+    try {
+        const { employerId } = req.params;
+
+        const jobs = await Job.find({ employerId }).select('_id title vacancies');
+
+        const jobSummaries = await Promise.all(
+            jobs.map(async job => {
+                const applicantCount = await Application.countDocuments({ jobId: job._id });
+                return {
+                    _id: job._id,
+                    title: job.title,
+                    vacancies: job.vacancies,
+                    applicantCount
+                };
+            })
+        );
+
+        console.log(res);
+        res.status(200).json(jobSummaries);
+    } catch (error) {
+        console.error('Error getting job summaries:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+// In jobsController.js
+export async function getJobsByDomain(req, res) {
+    try {
+        const { domain } = req.query;
+
+        if (!domain) {
+            return res.status(400).json({ message: "Preferred domain is required." });
+        }
+
+        const jobs = await Job.find({ domain }); // Exact match
+
+        res.status(200).json(jobs);
+    } catch (err) {
+        console.error("Error fetching jobs by domain:", err);
+        res.status(500).json({ message: "Internal server error." });
+    }
+}
+
