@@ -1,0 +1,58 @@
+<div class="job-details-container" *ngIf="job">
+  <h1>{{ job.title }}</h1>
+  <p><strong>Company:</strong> {{ job.company }}</p>
+  <p><strong>Location:</strong> {{ job.location }}</p>
+  <p><strong>Type:</strong> {{ job.type }}</p>
+  <p><strong>Salary:</strong> {{ job.salary }}</p>
+  <p><strong>Experience Required:</strong> {{ job.experience }} years</p>
+  <p><strong>Vacancies:</strong> {{ job.vacancies }}</p>
+  <p><strong>Status:</strong> {{ job.status }}</p>
+
+  <section class="job-section" *ngIf="job.description">
+    <h2>Overview</h2>
+    <p>{{ job.description.overview }}</p>
+
+    <h3>Responsibilities</h3>
+    <ul>
+      <li *ngFor="let task of job.description.responsibilities">{{ task }}</li>
+    </ul>
+
+    <h3>Required Skills</h3>
+    <ul>
+      <li *ngFor="let skill of job.description.requiredSkills">{{ skill }}</li>
+    </ul>
+
+    <h3 *ngIf="job.description.preferredSkills?.length">Preferred Skills</h3>
+    <ul>
+      <li *ngFor="let skill of job.description.preferredSkills">{{ skill }}</li>
+    </ul>
+
+    <h3 *ngIf="job.description.whatWeOffer?.length">What We Offer</h3>
+    <ul>
+      <li *ngFor="let offer of job.description.whatWeOffer">{{ offer }}</li>
+    </ul>
+  </section>
+
+  <section class="applicant-section">
+    <h2>Applicants ({{ applicants.length }})</h2>
+
+    <div *ngIf="applicants.length === 0" class="no-applicants">
+      <p>No one has applied for this job yet.</p>
+    </div>
+
+    <div *ngFor="let applicant of applicants" class="applicant-card">
+      <p><strong>Name:</strong> {{ applicant.userId?.name || 'N/A' }}</p>
+      <p><strong>Email:</strong> {{ applicant.userId?.email || 'N/A' }}</p>
+      <p><strong>Status:</strong> {{ applicant.status }}</p>
+      <p><strong>Applied At:</strong> {{ applicant.appliedAt | date:'medium' }}</p>
+      <a *ngIf="applicant.userId?.resume" 
+   [attr.href]="'http://localhost:3000/api/uploads/' + applicant.userId.resume"
+   target="_blank" rel="noopener noreferrer">
+   View Resume
+</a>
+
+
+
+    </div>
+  </section>
+</div>

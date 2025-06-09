@@ -14,7 +14,7 @@
     </div>
 
     <div class="job-grid">
-      <div *ngFor="let job of jobs" class="job-tile">
+      <div *ngFor="let job of jobs" class="job-tile" (click)="viewJobDetails(job._id)">
         <h3>{{ job.title }}</h3>
         <p><strong>Applicants:</strong> {{ job.applicantCount }}</p>
         <p><strong>Vacancies:</strong> {{ job.vacancies }}</p>

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+
 
 interface JobSummary {
   _id: string;
@@ -23,7 +25,7 @@ export class EmployerDashboardComponent implements OnInit {
   token: string | null = null;
   jobs: JobSummary[] = [];
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
     if (typeof window !== 'undefined') {
@@ -69,5 +71,8 @@ export class EmployerDashboardComponent implements OnInit {
       }
     });
   }
+  viewJobDetails(jobId: string) {
+  this.router.navigate(['/job', jobId]); // redirects to /job/:id
+}
 
 }

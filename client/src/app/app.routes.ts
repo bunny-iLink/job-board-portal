@@ -52,4 +52,9 @@ export const routes: Routes = [
   },
 
   { path: '', redirectTo: '/login', pathMatch: 'full' },
+  {
+  path: 'job/:id',
+  loadComponent: () => import('../app/components/employer/job-details/job-details').then(m => m.JobDetailsComponent)
+}
+
 ];
