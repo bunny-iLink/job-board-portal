@@ -36,7 +36,6 @@ export async function addUser(req, res) {
         const userToReturn = savedUser.toObject();
         delete userToReturn.password;
 
-        console.log("User added successfully:", savedUser);
         return res.status(201).json({
             message: "User added successfully",
             user: userToReturn
@@ -119,7 +118,6 @@ export async function updateUserData(req, res) {
         const userToReturn = updatedUser.toObject();
         delete userToReturn.password;
 
-        console.log("User updated successfully:", updatedUser);
         return res.status(200).json({
             message: "User updated successfully",
             user: userToReturn
@@ -151,9 +149,7 @@ export async function uploadUserProfilePicture(req, res) {
 
         res.json({ user: updatedUser, filename: profilePicture });
     } catch (err) {
-        console.log(err);
         res.status(500).json({ error: "Failed to upload profile picture" });
-
     }
 }
 
@@ -198,7 +194,6 @@ export async function deleteUserData(req, res) {
         return res.status(200).json({ message: "User deleted successfully" });
 
     } catch (err) {
-        console.log("Error occured: ", err);
         return res.status(500).json({
             message: "Some error occured",
             error: err.message || err
@@ -241,7 +236,6 @@ export async function addEmployer(req, res) {
         const employerToReturn = savedEmployer.toObject();
         delete employerToReturn.password;
 
-        console.log("Employer added successfully:", savedEmployer);
         return res.status(201).json({
             message: "Employer added successfully",
             employer: employerToReturn
@@ -323,7 +317,6 @@ export async function updateEmployerData(req, res) {
         const userToReturn = updatedUser.toObject();
         delete userToReturn.password;
 
-        console.log("User updated successfully:", updatedUser);
         return res.status(200).json({
             message: "User updated successfully",
             user: userToReturn

@@ -6,26 +6,22 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-.job-list {
-  min-height: 100vh;
-  padding: clamp(1rem, 3vw, 2rem);
-  background: linear-gradient(135deg, #1a1a2e 0%, #2a2a4e 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 1.5rem;
-}
-
-/* Header Styles */
+/* Sticky Header Styles */
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: linear-gradient(135deg, #1a1a2e 0%, #2a2a4e 100%);
   max-width: 1200px;
   width: 100%;
   display: flex;
   justify-content: flex-end;
-  margin-bottom: clamp(1rem, 2vw, 2rem);
+  padding: clamp(0.75rem, 2vw, 1rem);
+  box-shadow: 0 2px 6px rgba(0, 212, 255, 0.2);
+  margin: 0 auto;
 }
 
+/* Add Button */
 .add-btn {
   padding: clamp(0.6rem, 1.5vw, 0.9rem) clamp(1rem, 2vw, 1.5rem);
   background: #00d4ff;
@@ -48,12 +44,16 @@
 
 /* Job List Styles */
 .job-list {
-  max-width: 1200px;
-  width: 100%;
+  min-height: calc(100vh - 80px);
+  /* Adjusted to account for header */
+  padding: clamp(1rem, 3vw, 2rem);
+  background: linear-gradient(135deg, #1a1a2e 0%, #2a2a4e 100%);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(clamp(250px, 30vw, 300px), 1fr));
   gap: clamp(1rem, 2vw, 1.5rem);
   justify-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .job-tile {
@@ -163,7 +163,6 @@
   overflow-y: auto;
 }
 
-/* Scrollbar Styling for Modal */
 .modal-content::-webkit-scrollbar {
   width: 8px;
 }
@@ -295,53 +294,22 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .job-list {
-    padding: clamp(0.75rem, 2vw, 1.5rem);
-  }
-
   .header {
     justify-content: center;
   }
 
   .add-btn {
+    width: 100%;
     font-size: clamp(0.85rem, 1.3vw, 1rem);
     padding: clamp(0.5rem, 1.2vw, 0.8rem) clamp(0.75rem, 1.5vw, 1.25rem);
-  }
-
-  .job-tile {
-    padding: clamp(0.75rem, 1.5vw, 1.25rem);
-  }
-
-  .job-tile h3 {
-    font-size: clamp(1.1rem, 1.8vw, 1.25rem);
-  }
-
-  .actions button {
-    font-size: clamp(0.8rem, 1.1vw, 0.95rem);
-    padding: clamp(0.4rem, 0.8vw, 0.65rem);
   }
 
   .modal-content {
     padding: clamp(1rem, 2vw, 1.5rem);
   }
-
-  .modal-content h2 {
-    font-size: clamp(1.25rem, 2vw, 1.75rem);
-  }
-
-  .modal-content input,
-  .modal-content select,
-  .modal-content button {
-    font-size: clamp(0.8rem, 1.1vw, 0.95rem);
-    padding: clamp(0.5rem, 1vw, 0.8rem);
-  }
 }
 
 @media (max-width: 480px) {
-  .job-tile h3 {
-    font-size: clamp(1rem, 1.5vw, 1.2rem);
-  }
-
   .job-list {
     grid-template-columns: 1fr;
   }
@@ -351,14 +319,6 @@
     max-height: 90vh;
   }
 
-  .modal-content h2 {
-    font-size: clamp(1rem, 1.8vw, 1.5rem);
-  }
-
-  .modal-content h2::after {
-    width: clamp(40px, 8vw, 50px);
-  }
-
   .actions {
     flex-direction: column;
     gap: 0.75rem;
@@ -366,43 +326,5 @@
 
   .actions button {
     width: 100%;
-  }
-}
-
-@media (max-width: 320px) {
-  .job-tile {
-    padding: clamp(0.5rem, 1vw, 1rem);
-  }
-
-  .job-tile h3 {
-    font-size: clamp(0.9rem, 1.3vw, 1.1rem);
-  }
-
-  .job-tile p {
-    font-size: clamp(0.8rem, 1.1vw, 0.9rem);
-  }
-
-  .modal-content {
-    padding: clamp(0.75rem, 1.5vw, 1rem);
-  }
-}
-
-/* Ensure Dynamic Scaling for Larger Screens */
-@media (min-width: 1200px) {
-  .job-list {
-    padding: 2.5rem;
-  }
-
-  .job-tile {
-    padding: 2rem;
-  }
-
-  .job-tile h3 {
-    font-size: 1.75rem;
-  }
-
-  .modal-content {
-    max-width: 650px;
-    padding: 2.5rem;
   }
 }

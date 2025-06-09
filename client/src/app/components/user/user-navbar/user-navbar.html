@@ -5,7 +5,14 @@
         <button class="nav-button" (click)="goToProfile()">Profile</button>
     </div>
     <div class="navbar-right">
-        <button class="icon-button" title="Notifications">🔔</button>
+        <button class="icon-button" (click)="toggleNotifications()" title="Notifications">🔔</button>
         <button class="icon-button" (click)="logout()" title="Logout">🚪 Logout</button>
     </div>
 </nav>
+
+<div *ngIf="showNotifications" class="notification-modal">
+    <h4>Notifications</h4>
+    <ul>
+        <li *ngFor="let notification of notifications">{{ notification.message }}</li>
+    </ul>
+</div>

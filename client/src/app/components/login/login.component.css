@@ -173,6 +173,15 @@ button[type="submit"]:disabled {
   text-decoration: underline;
 }
 
+.invalid-feedback {
+  color: #ff4d4f;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .login-container {

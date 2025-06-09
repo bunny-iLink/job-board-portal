@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-job-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: 'job-details.html',
   styleUrls: ['job-details.css']
 })
@@ -15,32 +16,45 @@ export class JobDetailsComponent implements OnInit {
   job: any = null;
   applicants: any[] = [];
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) {}
+  constructor(private route: ActivatedRoute, private http: HttpClient) { }
 
   ngOnInit(): void {
     this.jobId = this.route.snapshot.paramMap.get('id') || '';
     if (this.jobId) {
       this.loadJobDetails();
-      //his.loadApplicants();
     }
   }
 
-loadJobDetails() {
-  this.http.get<{ job: any; applicants: any[] }>(`http://localhost:3000/api/getJobById/${this.jobId}`)
-    .subscribe({
-      next: res => {
-        this.job = res.job;
-        this.applicants = res.applicants;
+  loadJobDetails() {
+    this.http.get<{ job: any; applicants: any[] }>(`http://localhost:3000/api/getJobById/${this.jobId}`)
+      .subscribe({
+        next: res => {
+          this.job = res.job;
+          this.applicants = res.applicants;
+        },
+        error: err => console.error('Failed to load job details:', err)
+      });
+  }
+
+  onStatusChange(applicationId: string, newStatus: string) {
+    const confirmed = window.confirm(`Are you sure you want to change the status to "${newStatus}"?`);
+
+    if (!confirmed) {
+      return;
+    }
+
+    this.http.put(`http://localhost:3000/api/${applicationId}/status`, {
+      status: newStatus
+    }).subscribe({
+      next: () => {
+        const applicant = this.applicants.find(a => a._id === applicationId);
+        if (applicant) {
+          applicant.status = newStatus;
+        }
       },
-      error: err => console.error('Failed to load job details:', err)
+      error: err => console.error('Failed to update status:', err)
     });
-}
+  }
 
 
-  // loadApplicants() {
-  //   this.http.get<any[]>(`http://localhost:3000/api/job/${this.jobId}/applicants`).subscribe({
-  //     next: res => this.applicants = res,
-  //     error: err => console.error('Failed to load applicants:', err)
-  //   });
-  // }
 }

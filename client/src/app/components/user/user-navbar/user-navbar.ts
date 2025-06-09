@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../service/auth.service';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-user-navbar',
@@ -13,8 +14,14 @@ import { CommonModule } from '@angular/common';
 export class UserNavbar implements OnInit {
   userName: string | null = null;
   token: string | null = null;
+  notifications: any[] = [];
+  showNotifications = false;
 
-  constructor(private router: Router, private authService: AuthService) { }
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private http: HttpClient
+  ) { }
 
   ngOnInit(): void {
     this.token = this.authService.getToken();
@@ -38,4 +45,22 @@ export class UserNavbar implements OnInit {
   goToDashboard(): void {
     this.router.navigate(['/user/dashboard']);
   }
+
+  toggleNotifications(): void {
+    if (!this.showNotifications) {
+      const userId = this.authService.getUserId(); // Ensure this method exists in AuthService
+      this.http.get(`http://localhost:3000/api/notifications/${userId}`).subscribe({
+        next: (data: any) => {
+          this.notifications = data.notifications;
+          this.showNotifications = true;
+        },
+        error: (error) => {
+          console.error('Error fetching notifications', error);
+        }
+      });
+    } else {
+      this.showNotifications = false;
+    }
+  }
+
 }

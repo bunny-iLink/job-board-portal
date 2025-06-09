@@ -125,3 +125,84 @@
     color: #18bc9c;
     text-decoration: underline;
 }
+
+.notification-modal {
+    position: absolute;
+    right: 10px;
+    top: 50px;
+    width: 280px;
+    background-color: #2c3e50;
+    /* match navbar background */
+    border: 1px solid #18bc9c;
+    /* teal accent border */
+    box-shadow: 0 4px 15px rgba(24, 188, 156, 0.4);
+    /* teal glow */
+    padding: 15px 20px;
+    z-index: 1000;
+    border-radius: 6px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.notification-modal h4 {
+    margin: 0 0 12px 0;
+    font-size: 18px;
+    font-weight: 700;
+    border-bottom: 2px solid #18bc9c;
+    padding-bottom: 6px;
+}
+
+.notification-modal ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+.notification-modal li {
+    margin-bottom: 10px;
+    font-size: 15px;
+    line-height: 1.4;
+    border-left: 3px solid transparent;
+    padding-left: 8px;
+    cursor: default;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+.notification-modal li:hover {
+    background-color: #18bc9c;
+    /* teal highlight */
+    color: #2c3e50;
+    /* dark text on highlight */
+    border-left-color: #fff;
+    border-radius: 3px;
+}
+
+.notification-modal li:last-child {
+    margin-bottom: 0;
+}
+
+/* Scrollbar for overflow */
+.notification-modal ul::-webkit-scrollbar {
+    width: 6px;
+}
+
+.notification-modal ul::-webkit-scrollbar-track {
+    background: #2c3e50;
+}
+
+.notification-modal ul::-webkit-scrollbar-thumb {
+    background-color: #18bc9c;
+    border-radius: 3px;
+}
+
+/* Responsive tweak if needed */
+@media (max-width: 400px) {
+    .notification-modal {
+        width: 95vw;
+        right: 2.5vw;
+        top: 60px;
+    }
+}

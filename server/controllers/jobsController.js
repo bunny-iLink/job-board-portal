@@ -59,7 +59,6 @@ export async function addJob(req, res) {
         });
 
         const savedJob = await newJob.save();
-        console.log("Job added successfully:", savedJob);
         return res.status(201).json({
             message: "Job added successfully"
         });
@@ -106,7 +105,6 @@ export async function getJobs(req, res) {
 export async function updateJob(req, res) {
     try {
         const { jobId } = req.params;
-        console.log("Updating job with ID:", jobId);
 
         const updateData = req.body;
 
@@ -141,7 +139,6 @@ export async function updateJob(req, res) {
             return res.status(404).json({ message: "Job not found" });
         }
 
-        console.log("Job updated successfully:", updatedJob);
         res.status(200).json({
             message: "Job updated successfully",
             job: updatedJob
@@ -167,7 +164,6 @@ export async function deleteJob(req, res) {
             return res.status(404).json({ message: "Job not found" });
         }
 
-        console.log("Job deleted successfully:", deletedJob);
         res.status(200).json({
             message: "Job deleted successfully",
             job: deletedJob
@@ -196,7 +192,6 @@ export async function getJobsSummaryForEmployer(req, res) {
             })
         );
 
-        console.log(res);
         res.status(200).json(jobSummaries);
     } catch (error) {
         console.error('Error getting job summaries:', error);

@@ -5,7 +5,7 @@
     <label>Email:</label>
     <input type="email" formControlName="email" required />
     <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-      <small>Email is required and must be valid.</small>
+      <small class="invalid-feedback">Email is required and must be valid.</small>
     </div>
 
     <label>Password:</label>
@@ -15,7 +15,7 @@
     </div>
 
     <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-      <small>Password is required.</small>
+      <small class="invalid-feedback">Password is required.</small>
     </div>
 
     <button type="submit" [disabled]="loginForm.invalid">Login</button>

@@ -43,16 +43,21 @@
     <div *ngFor="let applicant of applicants" class="applicant-card">
       <p><strong>Name:</strong> {{ applicant.userId?.name || 'N/A' }}</p>
       <p><strong>Email:</strong> {{ applicant.userId?.email || 'N/A' }}</p>
-      <p><strong>Status:</strong> {{ applicant.status }}</p>
+      <p><strong>Status:</strong>
+        <select [ngModel]="applicant.status" (ngModelChange)="onStatusChange(applicant._id, $event)"
+          class="status-dropdown">
+          <option value="In Progress">In Progress</option>
+          <option value="Accepted">Accepted</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+      </p>
       <p><strong>Applied At:</strong> {{ applicant.appliedAt | date:'medium' }}</p>
-      <a *ngIf="applicant.userId?.resume" 
-   [attr.href]="'http://localhost:3000/api/uploads/' + applicant.userId.resume"
-   target="_blank" rel="noopener noreferrer">
-   View Resume
-</a>
-
-
-
+      <a *ngIf="applicant.userId?.resume" [attr.href]="'http://localhost:3000/api/uploads/' + applicant.userId.resume"
+        target="_blank" rel="noopener noreferrer">
+        View Resume
+      </a>
     </div>
+
+
   </section>
 </div>

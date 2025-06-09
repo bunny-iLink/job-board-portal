@@ -1,6 +1,7 @@
 import { Application } from '../models/applications.js';
 import { Job } from '../models/jobs.js';
 import { User } from '../models/users.js';
+import { Notification } from '../models/notification.js';
 
 export async function applyForJob(req, res) {
     try {
@@ -43,7 +44,9 @@ export async function applyForJob(req, res) {
 
 export const updateApplicationStatus = async (req, res) => {
     try {
-        const { applicationId } = req.params;
+        const applicationId = req.params.applicationId;
+        console.log("applicationId:", applicationId);
+
         const { status } = req.body;
 
         const validStatuses = ["In Progress", "Accepted", "Rejected"];
