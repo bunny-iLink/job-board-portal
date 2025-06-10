@@ -74,20 +74,26 @@ export class AppliedJobsComponent implements OnInit {
   }
 
 revokeApplication(jobId: string) {
-  if (!this.userId || !jobId) return;
+  if (!jobId) return;
+
+  // Find the application to get the applicationId
+  const application = this.appliedJobs.find(job => job._id === jobId);
+  if (!application) {
+    alert("Application not found!");
+    return;
+  }
 
   const confirmRevoke = confirm("Are you sure you want to revoke your application for this job?");
   if (!confirmRevoke) return;
 
-  this.http.delete(`http://localhost:3000/api/revokeApplication/${this.userId}/${jobId}`).subscribe({
+  this.http.delete(`http://localhost:3000/api/revokeApplication/${application.applicationId}`).subscribe({
     next: (res: any) => {
       alert("Application revoked successfully!");
-      // Remove the job from the local array to reflect changes instantly
       this.appliedJobs = this.appliedJobs.filter(job => job._id !== jobId);
     },
     error: err => {
       console.error('Error revoking application:', err);
-      alert("Failed to revoke application. Please try again.");
+      alert(`Failed to revoke application: ${err.error?.message || 'Unknown error'}`);
     }
   });
 }
