@@ -72,7 +72,7 @@ export class EmployerDashboardComponent implements OnInit {
     });
   }
   viewJobDetails(jobId: string) {
-  this.router.navigate(['/job', jobId]); // redirects to /job/:id
+  this.router.navigate(['employer//job', jobId]); // redirects to /job/:id
 }
 
 }

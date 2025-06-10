@@ -31,7 +31,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -45,7 +45,7 @@
   max-width: 600px;
   border-radius: 12px;
   padding: 25px 30px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   max-height: 90vh;
   overflow-y: auto;
 }
@@ -59,18 +59,20 @@
   text-align: center;
 }
 
-/* Form Inputs & Selects */
-.modal-content input[type="text"],
-.modal-content input[type="number"],
-.modal-content select {
-  width: 100%;
-  padding: 10px 12px;
-  margin: 10px 0 18px 0;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 15px;
-  transition: border-color 0.3s ease;
-  box-sizing: border-box;
+/* Focused state */
+.modal-content input[type="text"]:focus,
+.modal-content input[type="number"]:focus,
+.modal-content select:focus {
+  border-color: #0A66C2;
+  box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.2);
+  outline: none;
+}
+
+/* Placeholder Styling */
+.modal-content input::placeholder,
+.modal-content select::placeholder {
+  color: #999;
+  font-size: 14px;
 }
 
 .modal-content input[type="text"]:focus,
@@ -206,6 +208,23 @@
 
 .delete-btn:hover {
   background-color: #c82333;
+}
+
+/* Input and Select Fields */
+.modal-content input[type="text"],
+.modal-content input[type="number"],
+.modal-content select {
+  width: 100%;
+  padding: 12px 16px;
+  margin: 10px 0 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #333;
+  background-color: #fff;
+  font-family: inherit;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
 }
 
 /* Responsive tweaks */

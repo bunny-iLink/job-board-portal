@@ -28,6 +28,10 @@ export const routes: Routes = [
       {
         path: 'my-listings',
         loadComponent: () => import('./components/employer/my-listings/my-listings').then(m => m.MyListingsComponent)
+      },
+      {
+        path: 'job/:id',
+        loadComponent: () => import('../app/components/employer/job-details/job-details').then(m => m.JobDetailsComponent)
       }
     ]
   },
@@ -52,9 +56,6 @@ export const routes: Routes = [
   },
 
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  {
-  path: 'job/:id',
-  loadComponent: () => import('../app/components/employer/job-details/job-details').then(m => m.JobDetailsComponent)
-}
+
 
 ];
