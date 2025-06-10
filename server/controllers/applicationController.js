@@ -103,14 +103,15 @@ export async function getUserAppliedJobs(req, res) {
             return res.status(400).json({ message: "User ID is required." });
         }
 
-        // Fetch all applications by the user, and populate job details
+        // Fetch all applications by the user, and populate full job details
         const applications = await Application.find({ userId })
-            .populate('jobId', 'title')  // Only bring `title` from the Job document
+            .populate('jobId')  // Populate full job object
             .exec();
 
+        // Combine job details with application status
         const appliedJobs = applications.map(app => ({
-            title: app.jobId?.title || 'Unknown',
-            status: app.status,
+            ...app.jobId?.toObject(), // Convert Mongoose document to plain object
+            status: app.status
         }));
 
         res.status(200).json(appliedJobs);
@@ -119,6 +120,7 @@ export async function getUserAppliedJobs(req, res) {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+
 
 
 
