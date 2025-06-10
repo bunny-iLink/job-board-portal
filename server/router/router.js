@@ -9,6 +9,8 @@ import { addJob, deleteJob, updateJob,
     getJobsForEmployer, searchJobsForUsers } from '../controllers/jobsController.js';
 import { applyForJob, updateApplicationStatus, getUserAppliedJobs, revokeApplication } from '../controllers/applicationController.js';
 import { getUserNotifications } from '../controllers/notificationController.js';
+import { verifyToken } from '../middleware/authMiddleware.js';
+import { requireRole } from '../middleware/authMiddleware.js';
 
 const router = Router();
 
@@ -187,7 +189,7 @@ router.post('/login', loginUser);
  *       400:
  *         description: Validation error
  */
-router.post('/addJob', addJob);
+router.post('/addJob', verifyToken, requireRole(["employer"]), addJob);
 
 /**
  * @swagger
@@ -218,7 +220,7 @@ router.post('/addJob', addJob);
  *       400:
  *         description: Invalid input
  */
-router.post('/applyForJob/', applyForJob)
+router.post('/applyForJob/', verifyToken, requireRole(["user"]), applyForJob)
 
 // GET methods
 
@@ -241,7 +243,7 @@ router.post('/applyForJob/', applyForJob)
  *       404:
  *         description: Employer or jobs not found
  */
-router.get('/getJobs/:employerId', getJobsForEmployer);
+router.get('/getJobs/:employerId', verifyToken, requireRole(["employer"]), getJobsForEmployer);
 
 /**
  * @swagger
@@ -304,7 +306,7 @@ router.get('/getUserData/:userId', getUserData);
  *       404:
  *         description: Employer not found
  */
-router.get('/employer/:employerId/jobs-summary', getJobsSummaryForEmployer);
+router.get('/employer/:employerId/jobs-summary', verifyToken, requireRole(["employer"]), getJobsSummaryForEmployer);
 
 /**
  * @swagger

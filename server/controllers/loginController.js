@@ -3,12 +3,10 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { userSchema } from "../models/users.js";
 import { employerSchema } from "../models/employer.js";
+import { JWT_SECRET } from '../config.js';
 
 const User = mongoose.model("User", userSchema);
 const Employer = mongoose.model("Employer", employerSchema);
-
-// Replace with your actual secret (store this securely in env in real apps)
-const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
 
 export async function loginUser(req, res) {
     try {
