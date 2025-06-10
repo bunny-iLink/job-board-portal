@@ -1,163 +1,217 @@
-/* Navbar Styles */
-.navbar {
-  background-color: #0A66C2;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  padding: 14px 24px;
-  align-items: center;
-  font-family: Arial, sans-serif;
-  position: sticky;
-  top: 0;
-  z-index: 999;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  flex-wrap: wrap; /* allow wrapping on small screens */
+/* Base reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* Left side of navbar */
-.navbar-left {
+.navbar {
+  background-color: #1e1e2f;
+  color: #fff;
+  padding: 1rem 1.5rem;
+  position: relative;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-container {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
 }
 
 .greeting {
-  font-weight: 500;
-  font-size: 16px;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 
 .clickable {
   cursor: pointer;
-  text-decoration: underline;
+  transition: color 0.3s;
+}
+.clickable:hover {
+  color: #00bcd4;
 }
 
-/* Navbar buttons */
-.nav-button,
 .icon-button {
-  background: white;
-  color: #0073e6;
+  background: none;
   border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
+  font-size: 1.4rem;
+  color: #fff;
   cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.2s;
+  margin-left: 1rem;
+  transition: transform 0.2s;
 }
-
-.nav-button:hover,
 .icon-button:hover {
-  background-color: #e6f0ff;
+  transform: scale(1.1);
 }
 
-/* Right side of navbar */
-.navbar-right {
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.hamburger span {
+  height: 3px;
+  background: #fff;
+  border-radius: 2px;
+  transition: 0.3s ease;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+.navbar-links {
   display: flex;
-  gap: 12px;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+  transition: max-height 0.3s ease-in-out, padding 0.3s;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #1e1e2f;
+  flex-direction: column;
+  align-items: flex-start;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0; /* Remove padding when hidden */
+  border: none;
+  box-shadow: none;
+}
+.navbar-links button {
+  background: none;
+  border: none;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.navbar-links button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.logout-btn {
+  color: #ff5252;
 }
 
-/* Notification Modal */
 .notification-modal {
   position: absolute;
-  top: 64px;
-  right: 24px;
-  background-color: white;
-  color: #333;
-  border: 1px solid #ddd;
+  top: 60px;
+  right: 1.5rem;
+  width: 300px;
+  background: #2a2a3f;
+  color: #fff;
   border-radius: 8px;
-  width: 280px;
-  padding: 16px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
-  font-family: Arial, sans-serif;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  z-index: 2000;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-.notification-modal h4 {
-  margin: 0 0 10px 0;
-  font-size: 16px;
-  color: #0073e6;
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #444;
 }
 
-.notification-modal ul {
-  list-style-type: disc;
-  padding-left: 18px;
-  margin: 0;
-  max-height: 240px;
+.notification-content {
+  padding: 1rem;
+  max-height: 300px;
   overflow-y: auto;
 }
 
-.notification-modal li {
-  margin-bottom: 8px;
-  font-size: 14px;
-  color: #444;
+.no-notifications {
+  color: #aaa;
+  font-size: 0.9rem;
+  text-align: center;
 }
 
-/* Scrollbar for notification list */
-.notification-modal ul::-webkit-scrollbar {
-  width: 6px;
-}
-
-.notification-modal ul::-webkit-scrollbar-thumb {
-  background-color: #ccc;
-  border-radius: 3px;
-}
-
-/* Hamburger menu */
-.hamburger {
-  display: none;
-  font-size: 24px;
+.close-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
   cursor: pointer;
-  padding: 4px 8px;
-  background-color: white;
-  color: #0A66C2;
-  border-radius: 6px;
-  margin-right: 10px;
 }
 
-/* Responsive navbar links container */
-.navbar-links {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.mobile-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 500;
 }
 
+/* Mobile Styles */
 @media (max-width: 768px) {
-  .navbar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .navbar-left {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .greeting {
-    font-size: 14px;
-  }
-
   .hamburger {
-    display: inline-block;
+    display: flex;
   }
 
   .navbar-links {
-    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #1e1e2f;
     flex-direction: column;
-    width: 100%;
-    gap: 8px;
-    margin-top: 10px;
+    align-items: flex-start;
+    padding: 1rem;
+    max-height: 0;
+    overflow: hidden;
   }
 
   .navbar-links.show {
-    display: flex;
+    max-height: 300px;
   }
 
-  .navbar-right {
-    margin-top: 10px;
+  .navbar-links button {
     width: 100%;
-    justify-content: flex-end;
-    gap: 10px;
+    text-align: left;
+    padding: 0.75rem 1rem;
   }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.navbar-left .greeting {
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 130px;
+  display: inline-block;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
