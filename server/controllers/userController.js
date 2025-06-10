@@ -132,49 +132,6 @@ export async function updateUserData(req, res) {
     }
 }
 
-// Update User profile picture 
-
-export async function uploadUserProfilePicture(req, res) {
-    try {
-        const userId = req.params.id;
-        if (!req.file) {
-            return res.status(400).json({ error: "No file uploaded" });
-        }
-
-        const profilePicture = req.file.filename;
-
-        const updatedUser = await User.findByIdAndUpdate(
-            userId, { profilePicture }, { new: true }
-        );
-
-        res.json({ user: updatedUser, filename: profilePicture });
-    } catch (err) {
-        res.status(500).json({ error: "Failed to upload profile picture" });
-    }
-}
-
-export async function uploadUserResume(req, res) {
-    try {
-        const userId = req.params.id;
-        if (!req.file) {
-            return res.status(400).json({ error: 'No file uploaded' });
-        }
-
-        const resume = req.file.filename;
-
-        const updatedUser = await User.findByIdAndUpdate(
-            userId,
-            { resume },
-            { new: true }
-        );
-
-        res.json({ user: updatedUser, filename: resume });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Failed to upload resume' });
-    }
-}
-
 // Delete user by ID
 
 export async function deleteUserData(req, res) {
@@ -328,29 +285,6 @@ export async function updateEmployerData(req, res) {
             message: "Error updating user data",
             error: err.message || err
         });
-    }
-}
-
-// Update Employer profile picture
-
-export async function uploadEmployerProfilePicture(req, res) {
-    try {
-        const employerId = req.params.id;
-        if (!req.file) {
-            return res.status(400).json({ error: "No file uploaded" });
-        }
-
-        const profilePicture = req.file.filename;
-
-        const updatedEmployer = await Employer.findByIdAndUpdate(
-            employerId, { profilePicture }, { new: true }
-        );
-
-        res.json({ employer: updatedEmployer, filename: profilePicture });
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ error: "Failed to upload profile picture" });
-
     }
 }
 

@@ -1,5 +1,4 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import cors from 'cors';
 import morgan from 'morgan';
 import { connect } from './database/connection.js'
@@ -7,6 +6,8 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import router from './router/router.js';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './swaggerConfig.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,8 +27,7 @@ app.get("/", (req, res) => {
     res.status(200).json("Welcome to the Job Portal API");
 });
 
-app.use('/api/uploads', express.static(path.join(process.cwd(), 'uploads')));
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api', router);
 
 connect().then(() => {
