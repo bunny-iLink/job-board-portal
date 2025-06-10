@@ -120,5 +120,29 @@ export async function getUserAppliedJobs(req, res) {
     }
 }
 
+export async function revokeApplication(req, res) {
+    try {
+        const application_id = req.params.application_id;
+
+        if (!application_id) {
+            return res.status(404).json({message: "Application ID is required"});
+        }
+
+        const deletedApplication = Application.findByIdAndDelete(application_id);
+
+        if (!deletedApplication) {
+            return res.status(404).json({message: "Application ID not found"})
+        }
+
+        return res.status(200).json({
+            message: "Application deleted successfully",
+        })
+
+    } catch (err) {
+        console.log("Error occured: ", err);
+        return res.status(500).json({message: "Some error occured"})
+    }
+}
+
 
 

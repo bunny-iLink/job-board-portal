@@ -8,17 +8,17 @@
         <!-- Profile Picture Display and Upload -->
         <div class="profile-picture-section">
             <div class="current-picture">
-                <img *ngIf="employer?.profilePicture" [src]="getProfilePictureUrl(employer.profilePicture)"
+                <img *ngIf="employer?.profilePicture?.data && employer?.profilePicture?.contentType"
+                    [src]="'data:' + employer.profilePicture.contentType + ';base64,' + employer.profilePicture.data"
                     alt="Profile Picture" class="profile-picture" />
-                <div *ngIf="!employer?.profilePicture" class="no-picture">
+
+                <div *ngIf="!employer?.profilePicture?.data" class="no-picture">
                     No profile picture
                 </div>
             </div>
+
             <div class="upload-section">
                 <input type="file" (change)="onProfilePictureSelected($event)" accept="image/*" />
-                <button type="button" (click)="uploadProfilePicture()">
-                    Upload Profile Picture
-                </button>
             </div>
         </div>
 

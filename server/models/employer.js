@@ -11,7 +11,10 @@ export const employerSchema = new mongoose.Schema({
     experience: { type: Number, default: null },
     designation: { type: String, default: null },
     domain: { type: String, default: null },
-    profilePicture: { type: String, default: null }
-}, {timestamps: true})
+    profilePicture: {
+        data: String,
+        contentType: String
+    },
+}, { timestamps: true })
 
 export const Employer = mongoose.model("Employer", employerSchema);

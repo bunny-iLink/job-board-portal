@@ -95,6 +95,12 @@ export class SearchJobsComponent implements OnInit {
       return;
     }
 
+    // Check if profile is complete
+    if (!this.isProfileComplete(user)) {
+      alert('Please complete your profile (name, email, and resume are required) before applying for jobs.');
+      return;
+    }
+
     const payload = {
       userId: user._id,
       jobId: job._id
@@ -116,5 +122,31 @@ export class SearchJobsComponent implements OnInit {
         this.closeModal();
       }
     });
+  }
+
+  // Add this new method to check profile completeness
+  isProfileComplete(user: any): boolean {
+    // Check basic info
+    if (!user?.name?.trim() || !user?.email?.trim()) {
+      return false;
+    }
+
+    // Check resume exists and has data
+    if (!user?.resume?.data) {
+      return false;
+    }
+
+    // Optionally check other important fields
+    const recommendedFields = ['phone', 'address', 'experience', 'preferredDomain'];
+    for (const field of recommendedFields) {
+      if (!user[field]) {
+        if (confirm('Your profile is missing some recommended information. Apply anyway?')) {
+          return true;
+        }
+        return false;
+      }
+    }
+
+    return true;
   }
 }

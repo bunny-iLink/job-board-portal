@@ -5,9 +5,11 @@ import {
     uploadEmployerProfilePicture, uploadUserProfilePicture, uploadUserResume,
 } from '../controllers/userController.js';
 import { loginUser } from '../controllers/loginController.js';
-import { addJob, deleteJob, updateJob, getJobsSummaryForEmployer, getJobsByDomain, getJobById, getJobsForEmployer, searchJobsForUsers } from '../controllers/jobsController.js';
+import { addJob, deleteJob, updateJob, 
+    getJobsSummaryForEmployer, getJobsByDomain, getJobById, 
+    getJobsForEmployer, searchJobsForUsers } from '../controllers/jobsController.js';
 import { upload, uploadResume } from '../controllers/upload.js';
-import { applyForJob, updateApplicationStatus, getUserAppliedJobs } from '../controllers/applicationController.js';
+import { applyForJob, updateApplicationStatus, getUserAppliedJobs, revokeApplication } from '../controllers/applicationController.js';
 import { getUserNotifications } from '../controllers/notificationController.js';
 
 const router = Router();
@@ -45,7 +47,7 @@ router.put('/:applicationId/status', updateApplicationStatus);
 router.delete('/deleteJob/:jobId', deleteJob);
 router.delete('/deleteUser/:userId', deleteUserData);
 router.delete('/deleteEmployer/:employerId', deleteEmployerData);
-
+router.delete('/revokeApplication/:application_id', revokeApplication);
 
 //PATCH methods
 router.patch('/application/update-status', async (req, res) => {
