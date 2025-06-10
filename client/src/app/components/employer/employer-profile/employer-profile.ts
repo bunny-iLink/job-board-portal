@@ -9,7 +9,7 @@ import { AuthService } from '../../service/auth.service';
   selector: 'app-employer-profile',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './employer-profile.html',
+  templateUrl: 'employer-profile.html',
   styleUrls: ['./employer-profile.css']
 })
 export class EmployerProfileComponent implements OnInit {
@@ -19,7 +19,9 @@ export class EmployerProfileComponent implements OnInit {
   error = '';
   success = '';
 
-  selectedProfilePicture: File | null = null;
+  selectedBase64: string | null = null;
+  selectedMimeType: string | null = null;
+  previewImage: string | null = null;
 
   apiBase = 'http://localhost:3000/api';
 
@@ -65,44 +67,31 @@ export class EmployerProfileComponent implements OnInit {
     const updatedEmployer = { ...this.employer };
     updatedEmployer.updatedAt = new Date().toISOString();
 
-    // Remove password if empty
     if (!updatedEmployer.password || updatedEmployer.password.trim() === '') {
       delete updatedEmployer.password;
+    }
+
+    // Attach profilePicture only if a new one was selected
+    if (this.selectedBase64 && this.selectedMimeType) {
+      updatedEmployer.profilePicture = {
+        data: this.selectedBase64,
+        contentType: this.selectedMimeType
+      };
     }
 
     this.http.put(`${this.apiBase}/updateEmployer/${this.employerId}`, updatedEmployer)
       .subscribe({
         next: () => {
           this.success = 'Profile updated successfully!';
+          this.previewImage = null;
+          this.selectedBase64 = null;
+          this.selectedMimeType = null;
         },
         error: () => {
           this.error = 'Failed to update profile.';
         }
       });
   }
-
-  uploadProfilePicture() {
-    if (!this.employerId || !this.selectedProfilePicture) {
-      alert('Please select a profile picture to upload.');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('profilePicture', this.selectedProfilePicture);
-
-    this.http.post(`${this.apiBase}/uploadEmployerProfilePicture/${this.employerId}`, formData)
-      .subscribe({
-        next: (response: any) => {
-          this.employer.profilePicture = response.filename;
-          this.success = 'Profile picture uploaded successfully!';
-        },
-        error: () => {
-          this.error = 'Failed to upload profile picture.';
-        }
-      });
-  }
-
-
 
   deleteProfile() {
     if (!this.employerId) return;
@@ -127,13 +116,25 @@ export class EmployerProfileComponent implements OnInit {
       });
   }
 
-  getProfilePictureUrl(filename: string): string {
-    return `${this.apiBase}/uploads/${filename}`;
-  }
-
   onProfilePictureSelected(event: any) {
-    if (event.target.files && event.target.files.length > 0) {
-      this.selectedProfilePicture = event.target.files[0];
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert('File size must be less than 2MB');
+      return;
     }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = (reader.result as string).split(',')[1];
+      this.selectedBase64 = base64;
+      this.selectedMimeType = file.type;
+      this.previewImage = `data:${file.type};base64,${base64}`;
+    };
+    reader.onerror = () => {
+      this.error = 'Failed to read image file.';
+    };
+    reader.readAsDataURL(file);
   }
 }

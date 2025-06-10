@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-user-profile',
@@ -19,15 +20,15 @@ export class UserProfileComponent implements OnInit {
   error = '';
   success = '';
 
-  selectedProfilePicture: File | null = null;
-  selectedResume: File | null = null;
+  resumeURL: SafeResourceUrl | null = null;
 
   apiBase = 'http://localhost:3000/api';
 
   constructor(
     private http: HttpClient,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit() {
@@ -45,8 +46,14 @@ export class UserProfileComponent implements OnInit {
       .subscribe({
         next: (data: any) => {
           this.user = data.user;
+
           if (this.user) {
             this.user.password = '';
+            // Add this - create URL only after user data is loaded
+            if (this.user?.resume?.data) {
+              const url = `data:${this.user.resume.contentType};base64,${this.user.resume.data}`;
+              this.resumeURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+            }
           }
           this.loading = false;
         },
@@ -88,29 +95,6 @@ export class UserProfileComponent implements OnInit {
       });
   }
 
-
-  uploadProfilePicture() {
-    if (!this.userId || !this.selectedProfilePicture) {
-      alert('Please select a profile picture to upload.');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('profilePicture', this.selectedProfilePicture);
-
-    this.http.post(`${this.apiBase}/uploadUserProfilePicture/${this.userId}`, formData)
-      .subscribe({
-        next: (response: any) => {
-          this.user.profilePicture = response.filename;
-          this.success = 'Profile picture uploaded successfully!';
-        },
-        error: () => {
-          this.error = 'Failed to upload profile picture.';
-        }
-      });
-  }
-
-
   deleteProfile() {
     if (!this.userId) return;
 
@@ -134,15 +118,21 @@ export class UserProfileComponent implements OnInit {
       });
   }
 
-  getProfilePictureUrl(filename: string): string {
-    return `${this.apiBase}/uploads/${filename}`;
-  }
-
   onProfilePictureSelected(event: any) {
-    if (event.target.files && event.target.files.length > 0) {
-      this.selectedProfilePicture = event.target.files[0];
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = (reader.result as string).split(',')[1];
+        this.user.profilePicture = {
+          data: base64,
+          contentType: file.type
+        };
+      };
+      reader.readAsDataURL(file);
     }
   }
+
 
   onResumeSelected(event: any) {
     const file = event.target.files?.[0];
@@ -151,37 +141,57 @@ export class UserProfileComponent implements OnInit {
         alert('Only PDF files are allowed.');
         return;
       }
-      if (file.size > 2 * 1024 * 1024) { // 2MB
+      if (file.size > 2 * 1024 * 1024) {
         alert('File size must be less than 2MB.');
         return;
       }
-      this.selectedResume = file;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = (reader.result as string).split(',')[1];
+        this.user.resume = {
+          data: base64,
+          contentType: file.type
+        };
+        console.log(this.user.resume);
+
+      };
+      reader.readAsDataURL(file);
     }
   }
 
-  uploadResume() {
-    if (!this.userId || !this.selectedResume) {
-      alert('Please select a resume to upload.');
-      return;
+  openResume() {
+    if (!this.user?.resume?.data) return;
+
+    // Convert base64 to Blob
+    const byteCharacters = atob(this.user.resume.data);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: this.user.resume.contentType });
+
+    // Create object URL
+    const url = URL.createObjectURL(blob);
+
+    // Open in new tab
+    const win = window.open(url, '_blank');
+
+    // Fallback if blocked
+    if (!win || win.closed || typeof win.closed === 'undefined') {
+      // Alternative method if popup blocked
+      const a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.download = 'resume.pdf';  // Optional: forces download
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     }
 
-    const formData = new FormData();
-    formData.append('resume', this.selectedResume);
-
-    this.http.post(`${this.apiBase}/uploadUserResume/${this.userId}`, formData)
-      .subscribe({
-        next: (response: any) => {
-          this.user.resume = response.filename;
-          this.success = 'Resume uploaded successfully!';
-        },
-        error: () => {
-          this.error = 'Failed to upload resume.';
-        }
-      });
+    // Revoke the URL later
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
-
-  getResumeUrl(filename: string): string {
-    return `${this.apiBase}/uploads/${filename}`;
-  }
-
 }

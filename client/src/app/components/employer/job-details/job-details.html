@@ -52,8 +52,7 @@
         </select>
       </p>
       <p><strong>Applied At:</strong> {{ applicant.appliedAt | date:'medium' }}</p>
-      <a *ngIf="applicant.userId?.resume" [attr.href]="'http://localhost:3000/api/uploads/' + applicant.userId.resume"
-        target="_blank" rel="noopener noreferrer">
+      <a *ngIf="applicant.userId?.resume" (click)="openResume(applicant._id)" style="cursor: pointer;">
         View Resume
       </a>
     </div>

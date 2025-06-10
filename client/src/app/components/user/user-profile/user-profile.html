@@ -7,17 +7,17 @@
 
         <div class="profile-picture-section">
             <div class="current-picture">
-                <img *ngIf="user?.profilePicture" [src]="getProfilePictureUrl(user.profilePicture)"
+                <img *ngIf="user?.profilePicture?.data && user?.profilePicture?.contentType"
+                    [src]="'data:' + user.profilePicture.contentType + ';base64,' + user.profilePicture.data"
                     alt="Profile Picture" class="profile-picture" />
-                <div *ngIf="!user?.profilePicture" class="no-picture">
+
+                <div *ngIf="!user?.profilePicture?.data" class="no-picture">
                     No profile picture
                 </div>
             </div>
+
             <div class="upload-section">
                 <input type="file" (change)="onProfilePictureSelected($event)" accept="image/*" />
-                <button type="button" (click)="uploadProfilePicture()">
-                    Upload Profile Picture
-                </button>
             </div>
         </div>
 
@@ -78,14 +78,13 @@
 
         <div class="resume-section">
             <div class="current-resume">
-                <a *ngIf="user?.resume" [href]="getResumeUrl(user.resume)" target="_blank">
+                <a *ngIf="resumeURL" (click)="openResume()" target="_blank" rel="noopener noreferrer">
                     View Resume
                 </a>
-                <div *ngIf="!user?.resume">No resume uploaded</div>
+                <div *ngIf="!resumeURL">No resume uploaded</div>
             </div>
             <div class="upload-section">
                 <input type="file" (change)="onResumeSelected($event)" accept="application/pdf" />
-                <button type="button" (click)="uploadResume()">Upload Resume</button>
             </div>
         </div>
 

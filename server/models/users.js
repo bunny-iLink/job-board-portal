@@ -10,9 +10,15 @@ export const userSchema = new mongoose.Schema({
     updatedAt: { type: Date, default: Date.now },
     address: { type: String, default: null },
     phone: { type: String, default: null },
-    profilePicture: { type: String, default: null },
+    profilePicture: {
+        data: String, // base64 string
+        contentType: String
+    },
     experience: { type: Number, default: null },
-    resume: {type: String, default: ''}
+    resume: {
+        data: String, // base64 PDF
+        contentType: String
+    },
 })
 
 export const User = mongoose.model("User", userSchema);
