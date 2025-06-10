@@ -46,6 +46,10 @@ export class UserNavbar implements OnInit {
     this.router.navigate(['/user/dashboard']);
   }
 
+  goToAppliedJobs(): void {
+    this.router.navigate(['/user/applied-jobs']);
+  }
+
   toggleNotifications(): void {
     if (!this.showNotifications) {
       const userId = this.authService.getUserId(); // Ensure this method exists in AuthService

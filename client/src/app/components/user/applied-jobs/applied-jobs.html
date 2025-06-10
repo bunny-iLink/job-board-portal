@@ -1,41 +1,30 @@
-<div class="search-container">
-    <input [(ngModel)]="searchTerm" (input)="searchJobs()" placeholder="Search jobs..." />
+<div class="applied-jobs-container">
+  <h2>Your Applied Jobs</h2>
 
-    <div class="filters">
-        <label>Type:
-            <select [(ngModel)]="filters.type" (change)="searchJobs()">
-                <option value="">All</option>
-                <option value="Full-time">Full-time</option>
-                <option value="Part-time">Part-time</option>
-                <option value="Internship">Internship</option>
-            </select>
-        </label>
+  <div *ngIf="appliedJobs.length === 0" class="empty-message">
+    You haven't applied to any jobs yet.
+  </div>
 
-        <label>Experience:
-            <input type="number" [(ngModel)]="filters.experience" (input)="searchJobs()" placeholder="Years" />
-        </label>
+  <div *ngFor="let job of appliedJobs" class="job-card" (click)="openJobModal(job)">
+    <h3>{{ job.title }}</h3>
+    <p><strong>Company:</strong> {{ job.company }}</p>
+    <p><strong>Location:</strong> {{ job.location }}</p>
+    <p><strong>Status:</strong> {{ job.status || 'Under Review' }}</p>
+    <p><strong>Applied On:</strong> {{ job.createdAt | date:'mediumDate' }}</p>
 
-        <label>Min Salary:
-            <input type="number" [(ngModel)]="filters.minSalary" (input)="searchJobs()" />
-        </label>
-
-        <label>Max Salary:
-            <input type="number" [(ngModel)]="filters.maxSalary" (input)="searchJobs()" />
-        </label>
+    <div class="description">
+      <p><strong>Description:</strong> {{ job.description?.overview || 'No description available.' }}</p>
     </div>
+    <button class="revoke-btn" (click)="revokeApplication(job._id); $event.stopPropagation()">
+        Revoke Application
+    </button>
 
-
-    <div class="jobs-grid">
-        <div class="job-card" *ngFor="let job of filteredJobs" (click)="openJobModal(job)">
-            <h3>{{ job.title }}</h3>
-            <p><strong>{{ job.company }}</strong> - {{ job.location }}</p>
-            <p>{{ job.type }} | {{ job.salary }}</p>
-        </div>
-    </div>
+  </div>
 </div>
 
 <!-- Modal -->
 <div class="modal" *ngIf="showModal">
+    
     <div class="modal-content">
         <span class="close-btn" (click)="closeModal()">&times;</span>
 
@@ -73,6 +62,5 @@
             </ul>
         </div>
 
-        <button (click)="applyToJob(selectedJob)">Apply</button>
     </div>
 </div>

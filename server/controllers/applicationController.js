@@ -2,6 +2,7 @@ import { Application } from '../models/applications.js';
 import { Job } from '../models/jobs.js';
 import { User } from '../models/users.js';
 import { Notification } from '../models/notification.js';
+import mongoose from 'mongoose';
 
 export async function applyForJob(req, res) {
     try {
@@ -103,14 +104,16 @@ export async function getUserAppliedJobs(req, res) {
             return res.status(400).json({ message: "User ID is required." });
         }
 
-        // Fetch all applications by the user, and populate job details
+        // Fetch all applications by the user, and populate full job details
         const applications = await Application.find({ userId })
-            .populate('jobId', 'title')  // Only bring `title` from the Job document
+            .populate('jobId')  // Populate full job object
             .exec();
 
+        // Combine job details with application status
         const appliedJobs = applications.map(app => ({
-            title: app.jobId?.title || 'Unknown',
-            status: app.status,
+            applicationId: app._id,  
+            ...app.jobId?.toObject(), // Convert Mongoose document to plain object
+            status: app.status
         }));
 
         res.status(200).json(appliedJobs);
@@ -123,26 +126,35 @@ export async function getUserAppliedJobs(req, res) {
 export async function revokeApplication(req, res) {
     try {
         const application_id = req.params.application_id;
+        console.log("Received applicationId:", application_id); // Debug log
 
         if (!application_id) {
-            return res.status(404).json({message: "Application ID is required"});
+            return res.status(400).json({ message: "Application ID is required" });
         }
 
-        const deletedApplication = Application.findByIdAndDelete(application_id);
+        // Check if ID is a valid MongoDB ObjectId
+        if (!mongoose.Types.ObjectId.isValid(application_id)) {
+            return res.status(400).json({ message: "Invalid Application ID format" });
+        }
+
+        const deletedApplication = await Application.findByIdAndDelete(application_id);
+        console.log("Deleted document:", deletedApplication); // Debug log
 
         if (!deletedApplication) {
-            return res.status(404).json({message: "Application ID not found"})
+            return res.status(404).json({ message: "Application not found" });
         }
 
         return res.status(200).json({
             message: "Application deleted successfully",
-        })
+            deletedApplication,
+        });
 
     } catch (err) {
-        console.log("Error occured: ", err);
-        return res.status(500).json({message: "Some error occured"})
+        console.error("Error in revokeApplication:", err);
+        return res.status(500).json({ message: "Internal server error" });
     }
 }
+
 
 
 
