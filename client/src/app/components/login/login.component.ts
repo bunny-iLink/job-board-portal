@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-
+import { environment } from '../../../environments/environment';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -41,7 +41,7 @@ export class LoginComponent {
 
     const loginData = this.loginForm.value;
 
-    this.http.post('http://localhost:3000/api/login', loginData).subscribe({
+    this.http.post(environment.apiUrl +'/api/login', loginData).subscribe({
       next: (response: any) => {
         alert('Login successful!');
         console.log(response);

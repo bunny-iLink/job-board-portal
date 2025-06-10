@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../service/auth.service';
-
+import { environment } from '../../../../environments/environment';
 @Component({
   selector: 'app-user-navbar',
   standalone: true,
@@ -16,7 +16,7 @@ export class UserNavbar implements OnInit {
   token: string | null = null;
   notifications: any[] = [];
   showNotifications = false;
-
+  showMobileMenu = false;
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -53,7 +53,7 @@ export class UserNavbar implements OnInit {
   toggleNotifications(): void {
     if (!this.showNotifications) {
       const userId = this.authService.getUserId(); // Ensure this method exists in AuthService
-      this.http.get(`http://localhost:3000/api/notifications/${userId}`).subscribe({
+      this.http.get(environment.apiUrl +`/api/notifications/${userId}`).subscribe({
         next: (data: any) => {
           this.notifications = data.notifications;
           this.showNotifications = true;
@@ -66,5 +66,8 @@ export class UserNavbar implements OnInit {
       this.showNotifications = false;
     }
   }
-
+  
+  toggleMobileMenu() {
+  this.showMobileMenu = !this.showMobileMenu;
+}
 }

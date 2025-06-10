@@ -64,7 +64,7 @@
 }
 
 .title .highlight {
-  color: #2dd4bf; /* Teal for innovation */
+  color: #0A66C2; /* Teal for innovation */
   position: relative;
 }
 
@@ -110,13 +110,13 @@
 }
 
 .primary-btn {
-  background: #2dd4bf; /* Teal for trust and innovation */
+  background: #0A66C2; /* Teal for trust and innovation */
   color: #ffffff;
   box-shadow: 0 3px 12px rgba(45, 212, 191, 0.2);
 }
 
 .primary-btn:hover {
-  background: #26a69a; /* Slightly darker teal */
+  background: #074787; /* Slightly darker teal */
   transform: translateY(-2px);
   box-shadow: 0 5px 18px rgba(45, 212, 191, 0.3);
 }
@@ -124,7 +124,7 @@
 .secondary-btn {
   background: #f5e8c7; /* Warm beige for approachability */
   color: #1f2937;
-  border: 1.5px solid #2dd4bf; /* Teal border for cohesion */
+  border: 1.5px solid #0A66C2; /* Teal border for cohesion */
   box-shadow: 0 2px 8px rgba(45, 212, 191, 0.1);
 }
 

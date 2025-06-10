@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-
+import { environment } from '../../../../environments/environment';
 @Component({
   selector: 'app-search-jobs',
   standalone: true,
@@ -68,7 +68,7 @@ export class SearchJobsComponent implements OnInit {
 
     const queryString = new URLSearchParams(queryParams).toString();
 
-    this.http.get(`http://localhost:3000/api/searchJobs?${queryString}`)
+    this.http.get(environment.apiUrl +`/api/searchJobs?${queryString}`)
       .subscribe({
         next: (res: any) => {
           this.allJobs = res;
@@ -106,7 +106,7 @@ export class SearchJobsComponent implements OnInit {
       jobId: job._id
     };
 
-    this.http.post('http://localhost:3000/api/applyForJob', payload).subscribe({
+    this.http.post(environment.apiUrl +'/api/applyForJob', payload).subscribe({
       next: (res: any) => {
         alert(res.message || 'Application submitted!');
         this.closeModal();

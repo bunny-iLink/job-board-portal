@@ -1,11 +1,30 @@
-<nav class="navbar" *ngIf="token">
-    <div class="navbar-left">
-        <span class="greeting clickable" (click)="goToDashboard()">Hello, {{ userName }}!</span>
-        <button class="nav-button" (click)="goToListings()">My Listings</button>
-        <button class="nav-button" (click)="goToProfile()">Profile</button>
+<nav class="navbar" *ngIf="token" aria-label="Main navigation">
+    <div class="navbar-left" role="menubar" aria-label="Primary navigation actions">
+        <span class="greeting clickable" 
+              role="button"
+              tabindex="0"
+              (click)="goToDashboard()"
+              (keyup.enter)="goToDashboard()"
+              [attr.aria-label]="'Go to dashboard, logged in as ' + userName">
+            Hello, {{ userName }}!
+        </span>
+        <button class="nav-button" 
+                (click)="goToListings()"
+                aria-label="View my job listings">
+            My Listings
+        </button>
+        <button class="nav-button" 
+                (click)="goToProfile()"
+                aria-label="View my profile">
+            Profile
+        </button>
     </div>
-    <div class="navbar-right">
-        <!-- <button class="icon-button" title="Notifications">🔔</button> -->
-        <button class="icon-button" (click)="logout()" title="Logout">🚪 Logout</button>
+    <div class="navbar-right" role="menubar" aria-label="User actions">
+        <button class="icon-button" 
+                (click)="logout()"
+                aria-label="Logout"
+                title="Logout">
+            <span aria-hidden="true">🚪</span> Logout
+        </button>
     </div>
 </nav>

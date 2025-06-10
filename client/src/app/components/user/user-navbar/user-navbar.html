@@ -1,19 +1,46 @@
 <nav class="navbar" *ngIf="token">
+  <div class="navbar-container">
     <div class="navbar-left">
-        <span class="greeting clickable" (click)="goToDashboard()">Hello, {{ userName }}!</span>
-        <button class="nav-button" (click)="goToListings()">Jobs</button>
-        <button class="nav-button" (click)="goToProfile()">Profile</button>
-        <button class="nav-button" (click)="goToAppliedJobs()">Applied Jobs</button>
+      <span class="greeting clickable" (click)="goToDashboard()">Hello, {{ userName }}!</span>
     </div>
+
     <div class="navbar-right">
-        <button class="icon-button" (click)="toggleNotifications()" title="Notifications">🔔</button>
-        <button class="icon-button" (click)="logout()" title="Logout">🚪 Logout</button>
+      <button class="icon-button notifications-btn" (click)="toggleNotifications()" title="Notifications">
+        🔔
+      </button>
+      <button class="hamburger" (click)="toggleMobileMenu()" [class.active]="showMobileMenu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
+  </div>
+
+  <div class="navbar-links" [class.show]="showMobileMenu">
+    <button class="nav-button" (click)="goToListings()">Jobs</button>
+    <button class="nav-button" (click)="goToProfile()">Profile</button>
+    <button class="nav-button" (click)="goToAppliedJobs()">Applied Jobs</button>
+    <button class="nav-button logout-btn" (click)="logout()" title="Logout">
+      🚪 Logout
+    </button>
+  </div>
 </nav>
 
+<!-- Notifications Modal -->
 <div *ngIf="showNotifications" class="notification-modal">
+  <div class="notification-header">
     <h4>Notifications</h4>
-    <ul>
-        <li *ngFor="let notification of notifications">{{ notification.message }}</li>
+    <button class="close-btn" (click)="toggleNotifications()">×</button>
+  </div>
+  <div class="notification-content">
+    <ul *ngIf="notifications && notifications.length > 0">
+      <li *ngFor="let notification of notifications">{{ notification.message }}</li>
     </ul>
+    <p *ngIf="!notifications || notifications.length === 0" class="no-notifications">
+      No new notifications
+    </p>
+  </div>
 </div>
+
+<!-- Overlay for mobile menu -->
+<div *ngIf="showMobileMenu" class="mobile-overlay" (click)="toggleMobileMenu()"></div>

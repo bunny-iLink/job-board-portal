@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-
+import { environment } from '../../../../environments/environment';
 @Component({
   selector: 'app-user-profile',
   standalone: true,
@@ -22,7 +22,7 @@ export class UserProfileComponent implements OnInit {
 
   resumeURL: SafeResourceUrl | null = null;
 
-  apiBase = 'http://localhost:3000/api';
+  apiBase = environment.apiUrl +'/api';
 
   constructor(
     private http: HttpClient,

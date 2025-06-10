@@ -1,90 +1,152 @@
-<div *ngIf="loading" class="loading">Loading profile...</div>
-<div *ngIf="error" class="error">{{ error }}</div>
+<div *ngIf="loading" class="loading" aria-live="polite" aria-busy="true">Loading profile...</div>
+<div *ngIf="error" class="error" aria-live="assertive">{{ error }}</div>
 
 <div class="profile-container">
-    <form *ngIf="!loading && !error" (ngSubmit)="updateProfile()">
-        <h2>Employer Profile</h2>
+    <form *ngIf="!loading && !error" (ngSubmit)="updateProfile()" aria-labelledby="profileHeading">
+        <h2 id="profileHeading">Employer Profile</h2>
 
         <!-- Profile Picture Display and Upload -->
         <div class="profile-picture-section">
             <div class="current-picture">
                 <img *ngIf="employer?.profilePicture?.data && employer?.profilePicture?.contentType"
                     [src]="'data:' + employer.profilePicture.contentType + ';base64,' + employer.profilePicture.data"
-                    alt="Profile Picture" class="profile-picture" />
+                    alt="Profile Picture" 
+                    class="profile-picture" 
+                    aria-describedby="pictureDescription" />
 
-                <div *ngIf="!employer?.profilePicture?.data" class="no-picture">
+                <div *ngIf="!employer?.profilePicture?.data" 
+                     class="no-picture" 
+                     id="pictureDescription">
                     No profile picture
                 </div>
             </div>
 
             <div class="upload-section">
-                <input type="file" (change)="onProfilePictureSelected($event)" accept="image/*" />
+                <label for="profilePictureUpload" class="visually-hidden">Upload profile picture</label>
+                <input id="profilePictureUpload" 
+                       type="file" 
+                       (change)="onProfilePictureSelected($event)" 
+                       accept="image/*"
+                       aria-describedby="pictureUploadHelp" />
+                <span id="pictureUploadHelp" class="visually-hidden">Accepts JPG, PNG or GIF images</span>
             </div>
         </div>
 
         <!-- Profile Information -->
-        <label>
-            Name:
-            <input type="text" [(ngModel)]="employer.name" name="name" required />
-        </label>
+        <div class="form-group">
+            <label for="name">
+                Name:
+                <input id="name" 
+                       type="text" 
+                       [(ngModel)]="employer.name" 
+                       name="name" 
+                       required
+                       aria-required="true" />
+            </label>
+        </div>
 
-        <label>
-            Email:
-            <input type="email" [(ngModel)]="employer.email" name="email" required />
-        </label>
+        <div class="form-group">
+            <label for="email">
+                Email:
+                <input id="email" 
+                       type="email" 
+                       [(ngModel)]="employer.email" 
+                       name="email" 
+                       required
+                       aria-required="true" />
+            </label>
+        </div>
 
-        <label>
-            Password:
-            <input type="password" [(ngModel)]="employer.password" name="password" />
-        </label>
+        <div class="form-group">
+            <label for="password">
+                Password:
+                <input id="password" 
+                       type="password" 
+                       [(ngModel)]="employer.password" 
+                       name="password"
+                       aria-describedby="passwordHelp" />
+                <span id="passwordHelp" class="visually-hidden">Leave blank to keep current password</span>
+            </label>
+        </div>
 
-        <label>
-            Role:
-            <input type="text" [(ngModel)]="employer.role" name="role" readonly />
-        </label>
+        <div class="form-group">
+            <label for="role">
+                Role:
+                <input id="role" 
+                       type="text" 
+                       [(ngModel)]="employer.role" 
+                       name="role" 
+                       readonly
+                       aria-readonly="true" />
+            </label>
+        </div>
 
-        <label>
-            Company:
-            <input type="text" [(ngModel)]="employer.company" name="companyName" />
-        </label>
+        <div class="form-group">
+            <label for="company">
+                Company:
+                <input id="company" 
+                       type="text" 
+                       [(ngModel)]="employer.company" 
+                       name="companyName" />
+            </label>
+        </div>
 
-        <label>
-            Experience (years):
-            <input type="number" [(ngModel)]="employer.experience" name="experience" />
-        </label>
+        <div class="form-group">
+            <label for="experience">
+                Experience (years):
+                <input id="experience" 
+                       type="number" 
+                       [(ngModel)]="employer.experience" 
+                       name="experience" />
+            </label>
+        </div>
 
-        <label>
-            Designation:
-            <input type="text" [(ngModel)]="employer.designation" name="designation" />
-        </label>
+        <div class="form-group">
+            <label for="designation">
+                Designation:
+                <input id="designation" 
+                       type="text" 
+                       [(ngModel)]="employer.designation" 
+                       name="designation" />
+            </label>
+        </div>
 
-        <label>
-            Domain:
-            <select [(ngModel)]="employer.domain" name="domain">
-                <option value="">Select preferred domain</option>
-                <option value="Technology & IT">Technology & IT</option>
-                <option value="Sales & Marketing">Sales & Marketing</option>
-                <option value="Business & Management">Business & Management</option>
-                <option value="Finance & Accounting">Finance & Accounting</option>
-                <option value="Human Resources & Recruitment">Human Resources & Recruitment</option>
-                <option value="Healthcare & Life Sciences">Healthcare & Life Sciences</option>
-                <option value="Education & Training">Education & Training</option>
-                <option value="Engineering & Manufacturing">Engineering & Manufacturing</option>
-                <option value="Creative & Design">Creative & Design</option>
-                <option value="Legal & Compliance">Legal & Compliance</option>
-                <option value="Media & Communication">Media & Communication</option>
-                <option value="Logistics & Supply Chain">Logistics & Supply Chain</option>
-                <option value="Customer Service & Support">Customer Service & Support</option>
-            </select>
-        </label>
+        <div class="form-group">
+            <label for="domain">
+                Domain:
+                <select id="domain" 
+                        [(ngModel)]="employer.domain" 
+                        name="domain"
+                        aria-describedby="domainHelp">
+                    <option value="">Select preferred domain</option>
+                    <option value="Technology & IT">Technology & IT</option>
+                    <option value="Sales & Marketing">Sales & Marketing</option>
+                    <option value="Business & Management">Business & Management</option>
+                    <option value="Finance & Accounting">Finance & Accounting</option>
+                    <option value="Human Resources & Recruitment">Human Resources & Recruitment</option>
+                    <option value="Healthcare & Life Sciences">Healthcare & Life Sciences</option>
+                    <option value="Education & Training">Education & Training</option>
+                    <option value="Engineering & Manufacturing">Engineering & Manufacturing</option>
+                    <option value="Creative & Design">Creative & Design</option>
+                    <option value="Legal & Compliance">Legal & Compliance</option>
+                    <option value="Media & Communication">Media & Communication</option>
+                    <option value="Logistics & Supply Chain">Logistics & Supply Chain</option>
+                    <option value="Customer Service & Support">Customer Service & Support</option>
+                </select>
+                <span id="domainHelp" class="visually-hidden">Select your primary business domain</span>
+            </label>
+        </div>
 
-        <div class="buttons">
+        <div class="buttons" role="group" aria-label="Form actions">
             <button type="submit">Save Changes</button>
-            <button type="button" (click)="deleteProfile()" class="delete-btn">
+            <button type="button" 
+                    (click)="deleteProfile()" 
+                    class="delete-btn"
+                    aria-label="Delete profile permanently">
                 Delete Profile
             </button>
         </div>
 
-        <div *ngIf="success" class="success">{{ success }}</div>
+        <div *ngIf="success" class="success" aria-live="polite">{{ success }}</div>
     </form>
 </div>

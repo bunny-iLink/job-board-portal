@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-
+import { environment } from '../../../../environments/environment';
 @Component({
   selector: 'app-job-details',
   standalone: true,
@@ -27,7 +27,7 @@ export class JobDetailsComponent implements OnInit {
   }
 
   loadJobDetails() {
-    this.http.get<{ job: any; applicants: any[] }>(`http://localhost:3000/api/getJobById/${this.jobId}`)
+    this.http.get<{ job: any; applicants: any[] }>(environment.apiUrl +`/api/getJobById/${this.jobId}`)
       .subscribe({
         next: res => {
           this.job = res.job;
@@ -87,7 +87,7 @@ export class JobDetailsComponent implements OnInit {
     const confirmed = window.confirm(`Are you sure you want to change the status to "${newStatus}"?`);
     if (!confirmed) return;
 
-    this.http.put(`http://localhost:3000/api/${applicationId}/status`, {
+    this.http.put(environment.apiUrl +`/api/${applicationId}/status`, {
       status: newStatus
     }).subscribe({
       next: () => {

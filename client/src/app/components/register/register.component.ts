@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -39,8 +40,8 @@ export class RegisterComponent {
     const userData = this.registerForm.value;
 
     const url = this.selectedRole === 'candidate' 
-      ? 'http://localhost:3000/api/addUser'
-      : 'http://localhost:3000/api/addEmployer';
+      ? environment.apiUrl + '/api/addUser'
+      : environment.apiUrl +'/api/addEmployer';
 
     this.http.post(url, userData).subscribe({
       next: res => {

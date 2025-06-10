@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
+import { environment } from '../../../../environments/environment';
 
 interface JobSummary {
   _id: string;
@@ -47,7 +47,7 @@ export class EmployerDashboardComponent implements OnInit {
   fetchEmployerData() {
     if (!this.employerId) return;
 
-    this.http.get(`http://localhost:3000/api/getEmployerData/${this.employerId}`).subscribe({
+    this.http.get(environment.apiUrl + `/api/getEmployerData/${this.employerId}`).subscribe({
       next: (res: any) => {
         this.employer = res.employer;
         console.log('Employer loaded:', this.employer);
@@ -61,7 +61,7 @@ export class EmployerDashboardComponent implements OnInit {
   fetchJobSummaries() {
     if (!this.employerId) return;
 
-    this.http.get<JobSummary[]>(`http://localhost:3000/api/employer/${this.employerId}/jobs-summary`).subscribe({
+    this.http.get<JobSummary[]>(environment.apiUrl +`/api/employer/${this.employerId}/jobs-summary`).subscribe({
       next: res => {
         this.jobs = res;
         console.log('Jobs with applicant count:', this.jobs);

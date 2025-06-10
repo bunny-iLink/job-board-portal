@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-employer-profile',
@@ -23,7 +24,7 @@ export class EmployerProfileComponent implements OnInit {
   selectedMimeType: string | null = null;
   previewImage: string | null = null;
 
-  apiBase = 'http://localhost:3000/api';
+  apiBase = environment.apiUrl + '/api';
 
   constructor(
     private http: HttpClient,

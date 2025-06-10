@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../../environments/environment';
 @Component({
   selector: 'app-applied-jobs',
   imports: [CommonModule],
@@ -32,7 +33,7 @@ export class AppliedJobsComponent implements OnInit {
         const userObject = JSON.parse(storedData); // ✅ full object
         this.userId = userObject._id;              // ✅ extract the ID
 
-        this.http.get(`http://localhost:3000/api/getUserData/${this.userId}`).subscribe({
+        this.http.get(environment.apiUrl +`/api/getUserData/${this.userId}`).subscribe({
           next: (res: any) => {
             this.user = res.user;
 
@@ -50,7 +51,7 @@ export class AppliedJobsComponent implements OnInit {
   }
   loadAppliedJobs() {
     if (!this.userId) return;
-    this.http.get(`http://localhost:3000/api/appliedJobs/${this.userId}`).subscribe({
+    this.http.get(environment.apiUrl +`/api/appliedJobs/${this.userId}`).subscribe({
       next: (res: any) => {
         this.appliedJobs = res.jobs || res;
         console.log('Applied jobs:', this.appliedJobs);
@@ -86,7 +87,7 @@ revokeApplication(jobId: string) {
   const confirmRevoke = confirm("Are you sure you want to revoke your application for this job?");
   if (!confirmRevoke) return;
 
-  this.http.delete(`http://localhost:3000/api/revokeApplication/${application.applicationId}`).subscribe({
+  this.http.delete(environment.apiUrl +`/api/revokeApplication/${application.applicationId}`).subscribe({
     next: (res: any) => {
       alert("Application revoked successfully!");
       this.appliedJobs = this.appliedJobs.filter(job => job._id !== jobId);

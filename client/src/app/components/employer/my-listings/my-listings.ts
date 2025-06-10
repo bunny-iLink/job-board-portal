@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../service/auth.service';
 import { log } from 'console';
+import { environment } from '../../../../environments/environment';
 
 interface Job {
   _id?: string;
@@ -45,7 +46,7 @@ export class MyListingsComponent implements OnInit {
 
   jobForm: Job = this.getEmptyJob();
 
-  readonly baseUrl = 'http://localhost:3000/api'; // Replace with your backend host
+  readonly baseUrl = environment.apiUrl + '/api'; 
 
   ngOnInit() {
     if (typeof window !== 'undefined') {

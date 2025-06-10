@@ -1,7 +1,7 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-
+import { environment } from '../../../../environments/environment';
 @Component({
   selector: 'app-user-dashboard',
   standalone: true,
@@ -29,7 +29,7 @@ export class UserDashboardComponent implements AfterViewInit {
         const userObject = JSON.parse(storedData); // ✅ full object
         this.userId = userObject._id;              // ✅ extract the ID
 
-        this.http.get(`http://localhost:3000/api/getUserData/${this.userId}`).subscribe({
+        this.http.get(environment.apiUrl +`/api/getUserData/${this.userId}`).subscribe({
           next: (res: any) => {
             this.user = res.user;
 
@@ -49,7 +49,7 @@ export class UserDashboardComponent implements AfterViewInit {
   loadAppliedJobs() {
 
     if (!this.userId) return;
-    this.http.get(`http://localhost:3000/api/appliedJobs/${this.userId}`).subscribe({
+    this.http.get(environment.apiUrl +`/api/appliedJobs/${this.userId}`).subscribe({
       next: (res: any) => {
         this.appliedJobs = res.jobs || res;
         console.log('Applied jobs:', this.appliedJobs);
