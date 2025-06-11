@@ -7,9 +7,16 @@
     <div class="modal-content">
         <h2>{{ isEditMode ? 'Edit Job' : 'Add New Job' }}</h2>
         <form (ngSubmit)="saveJob()" #jobFormEl="ngForm">
-            <input type="text" [(ngModel)]="jobForm.title" name="title" placeholder="Title" required />
-            <input type="text" [(ngModel)]="jobForm.employerName" name="employerName" placeholder="Employer Name" required />
-            <select [(ngModel)]="jobForm.domain" name="domain" placeholder="Domain" required>
+
+            <label for="title">Title</label>
+            <input id="title" type="text" [(ngModel)]="jobForm.title" name="title" placeholder="Title" required />
+
+            <label for="employerName">Employer Name</label>
+            <input id="employerName" type="text" [(ngModel)]="jobForm.employerName" name="employerName"
+                placeholder="Employer Name" required />
+
+            <label for="domain">Domain</label>
+            <select id="domain" [(ngModel)]="jobForm.domain" name="domain" required>
                 <option value="">Select domain</option>
                 <option value="Technology & IT">Technology & IT</option>
                 <option value="Sales & Marketing">Sales & Marketing</option>
@@ -25,35 +32,58 @@
                 <option value="Logistics & Supply Chain">Logistics & Supply Chain</option>
                 <option value="Customer Service & Support">Customer Service & Support</option>
             </select>
-            <input type="text" [(ngModel)]="jobForm.description.overview" name="overview" placeholder="Overview" required />
-            <input type="text" [(ngModel)]="jobForm.company" name="company" placeholder="Company" required />
-            <input type="text" [(ngModel)]="jobForm.location" name="location" placeholder="Location" required />
-            <input [(ngModel)]="jobForm.salary" name="salary" type="number" min="0" placeholder="Enter salary (in LPA)"
+
+            <label for="overview">Overview</label>
+            <input id="overview" type="text" [(ngModel)]="jobForm.description.overview" name="overview"
+                placeholder="Overview" required />
+
+            <label for="company">Company</label>
+            <input id="company" type="text" [(ngModel)]="jobForm.company" name="company" placeholder="Company"
                 required />
-            <input type="text" [(ngModel)]="jobForm.type" name="type" placeholder="Job Type (e.g. Full-Time)" required />
-            <input type="text" [(ngModel)]="jobForm.experience" name="experience" placeholder="Experience" required />
-            <input [(ngModel)]="jobForm.vacancies" name="vacancies" type="number" min="0"
+
+            <label for="location">Location</label>
+            <input id="location" type="text" [(ngModel)]="jobForm.location" name="location" placeholder="Location"
+                required />
+
+            <label for="salary">Salary (in LPA)</label>
+            <input id="salary" [(ngModel)]="jobForm.salary" name="salary" type="number" min="0"
+                placeholder="Enter salary (in LPA)" required />
+
+            <label for="type">Job Type</label>
+            <input id="type" type="text" [(ngModel)]="jobForm.type" name="type" placeholder="Job Type (e.g. Full-Time)"
+                required />
+
+            <label for="experience">Experience (in years)</label>
+            <input id="experience" type="number" [(ngModel)]="jobForm.experience" name="experience"
+                placeholder="Experience" min="0" />
+
+            <label for="vacancies">Number of Vacancies</label>
+            <input id="vacancies" [(ngModel)]="jobForm.vacancies" name="vacancies" type="number" min="0"
                 placeholder="Enter number of vacancies" required />
+
             <label for="status">Status</label>
-            <select [(ngModel)]="jobForm.status" name="status" id="status" required>
+            <select id="status" [(ngModel)]="jobForm.status" name="status" required>
                 <option value="open">Open</option>
                 <option value="close">Close</option>
             </select>
 
-
-            <input type="text" [ngModel]="fromArray(jobForm.description.responsibilities)"
+            <label for="responsibilities">Responsibilities</label>
+            <input id="responsibilities" type="text" [ngModel]="fromArray(jobForm.description.responsibilities)"
                 (ngModelChange)="jobForm.description.responsibilities = toArray($event)" name="responsibilities"
                 placeholder="Responsibilities (comma separated)" />
 
-            <input type="text" [ngModel]="fromArray(jobForm.description.requiredSkills)"
+            <label for="requiredSkills">Required Skills</label>
+            <input id="requiredSkills" type="text" [ngModel]="fromArray(jobForm.description.requiredSkills)"
                 (ngModelChange)="jobForm.description.requiredSkills = toArray($event)" name="requiredSkills"
                 placeholder="Required Skills (comma separated)" />
 
-            <input type="text" [ngModel]="fromArray(jobForm.description.preferredSkills)"
+            <label for="preferredSkills">Preferred Skills</label>
+            <input id="preferredSkills" type="text" [ngModel]="fromArray(jobForm.description.preferredSkills)"
                 (ngModelChange)="jobForm.description.preferredSkills = toArray($event)" name="preferredSkills"
                 placeholder="Preferred Skills (comma separated)" />
 
-            <input type="text" [ngModel]="fromArray(jobForm.description.whatWeOffer)"
+            <label for="whatWeOffer">What We Offer</label>
+            <input id="whatWeOffer" type="text" [ngModel]="fromArray(jobForm.description.whatWeOffer)"
                 (ngModelChange)="jobForm.description.whatWeOffer = toArray($event)" name="whatWeOffer"
                 placeholder="What We Offer (comma separated)" />
 
@@ -62,6 +92,7 @@
         </form>
     </div>
 </div>
+
 
 <!-- Job List -->
 <div class="job-list">
