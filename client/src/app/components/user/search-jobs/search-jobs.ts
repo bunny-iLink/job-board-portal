@@ -23,6 +23,8 @@ export class SearchJobsComponent implements OnInit {
   selectedJob: any = null;
   // Modal state
   showModal: boolean = false;
+  showDomainWarning: boolean = false;
+
 
   // Filter options for job type, experience, and expected salary
   filters = {
@@ -66,6 +68,30 @@ export class SearchJobsComponent implements OnInit {
       return;
     }
 
+    const hasFilters = this.filters.type || this.filters.experience || this.filters.expectedSalary;
+    const hasSearch = this.searchTerm.trim().length > 0;
+    const hasPreferredDomain = user.preferredDomain?.trim().length > 0;
+
+    // If nothing is set — show all jobs and show a message
+    if (!hasFilters && !hasSearch && !hasPreferredDomain) {
+      this.showDomainWarning = true;
+
+      // Fetch all jobs manually
+      this.http.get(environment.apiUrl + `/api/searchJobs`)
+        .subscribe({
+          next: (res: any) => {
+            this.allJobs = res;
+            this.filteredJobs = [...res];
+          },
+          error: (err) => console.error('Error fetching all jobs:', err)
+        });
+
+      return;
+    }
+
+    this.showDomainWarning = false;
+
+    // Build query with filters and preferred domain
     const queryParams: any = {
       userId: user._id,
       domain: user.preferredDomain,
@@ -74,10 +100,7 @@ export class SearchJobsComponent implements OnInit {
 
     if (this.filters.type) queryParams.type = this.filters.type;
     if (this.filters.experience) queryParams.experience = this.filters.experience;
-    if (this.filters.expectedSalary) {
-      queryParams.expectedSalary = this.filters.expectedSalary;
-    }
-
+    if (this.filters.expectedSalary) queryParams.expectedSalary = this.filters.expectedSalary;
 
     const queryString = new URLSearchParams(queryParams).toString();
 
@@ -90,6 +113,8 @@ export class SearchJobsComponent implements OnInit {
         error: (err) => console.error('Error fetching jobs:', err)
       });
   }
+
+
 
   openJobModal(job: any) {
     this.selectedJob = job;

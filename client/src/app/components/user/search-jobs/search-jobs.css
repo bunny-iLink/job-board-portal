@@ -18,6 +18,19 @@
     font-size: 15px;
 }
 
+.warning-message {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 0.1em;
+  border: 1px solid #ffeeba;
+  border-radius: 5px;
+  margin-bottom: 0.5em;
+}
+
+.warning-message p {
+    margin-left: 5px;
+}
+
 .filters {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

@@ -25,6 +25,13 @@
         </label>
     </div>
 
+    <div *ngIf="showDomainWarning" class="warning-message">
+        <p>
+            Please <strong>set your preferred domain</strong> in your profile, or
+            <strong>use the search box or filters</strong> to find relevant jobs.
+        </p>
+    </div>
+
 
     <!-- Grid of filtered job cards -->
     <div class="jobs-grid">
