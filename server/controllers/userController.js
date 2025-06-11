@@ -141,18 +141,26 @@ export async function deleteUserData(req, res) {
 
         if (!userId) {
             console.warn("User ID not provided for deletion");
-            return res.status(404).json({ message: "User ID is required" });
+            return res.status(400).json({ message: "User ID is required" }); // 400 is more appropriate here
         }
 
-        const result = await User.deleteOne({ _id: userId });
+        // First, delete all applications associated with the user
+        const appDeleteResult = await Application.deleteMany({ userId });
+        console.log(`Deleted ${appDeleteResult.deletedCount} applications for user ID: ${userId}`);
 
-        if (result.deletedCount === 0) {
+        // Then, delete the user
+        const userDeleteResult = await User.deleteOne({ _id: userId });
+
+        if (userDeleteResult.deletedCount === 0) {
             console.warn(`Failed to delete user with ID: ${userId}`);
             return res.status(404).json({ message: "Failed to delete user" });
         }
 
         console.log(`User with ID ${userId} deleted successfully`);
-        return res.status(200).json({ message: "User deleted successfully" });
+        return res.status(200).json({
+            message: "User and associated applications deleted successfully",
+            deletedApplications: appDeleteResult.deletedCount
+        });
 
     } catch (err) {
         console.error("Error deleting user:", err);
@@ -305,9 +313,14 @@ export async function deleteEmployerData(req, res) {
 
         if (!employerId) {
             console.warn("No employerId provided for deletion");
-            return res.status(404).json({ message: "Employer not found" });
+            return res.status(400).json({ message: "Employer ID is required" });
         }
 
+        // Step 1: Delete all jobs posted by this employer
+        const jobDeleteResult = await Job.deleteMany({ employerId });
+        console.log(`Deleted ${jobDeleteResult.deletedCount} job(s) for employer ID: ${employerId}`);
+
+        // Step 2: Delete the employer
         const result = await Employer.deleteOne({ _id: employerId });
 
         if (result.deletedCount === 0) {
@@ -316,7 +329,10 @@ export async function deleteEmployerData(req, res) {
         }
 
         console.log("Employer deleted successfully:", employerId);
-        return res.status(200).json({ message: "Employer deleted successfully" });
+        return res.status(200).json({
+            message: "Employer and associated jobs deleted successfully",
+            deletedJobs: jobDeleteResult.deletedCount
+        });
 
     } catch (err) {
         console.error("Error occurred while deleting employer:", err);
@@ -326,3 +342,4 @@ export async function deleteEmployerData(req, res) {
         });
     }
 }
+
