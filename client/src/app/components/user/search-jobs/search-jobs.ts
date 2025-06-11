@@ -20,9 +20,9 @@ export class SearchJobsComponent implements OnInit {
   filters = {
     type: '',
     experience: '',
-    minSalary: '',
-    maxSalary: ''
+    expectedSalary: '' // new field
   };
+
 
   constructor(private http: HttpClient) { }
 
@@ -63,12 +63,14 @@ export class SearchJobsComponent implements OnInit {
 
     if (this.filters.type) queryParams.type = this.filters.type;
     if (this.filters.experience) queryParams.experience = this.filters.experience;
-    if (this.filters.minSalary) queryParams.minSalary = this.filters.minSalary;
-    if (this.filters.maxSalary) queryParams.maxSalary = this.filters.maxSalary;
+    if (this.filters.expectedSalary) {
+      queryParams.expectedSalary = this.filters.expectedSalary;
+    }
+
 
     const queryString = new URLSearchParams(queryParams).toString();
 
-    this.http.get(environment.apiUrl +`/api/searchJobs?${queryString}`)
+    this.http.get(environment.apiUrl + `/api/searchJobs?${queryString}`)
       .subscribe({
         next: (res: any) => {
           this.allJobs = res;
@@ -106,7 +108,7 @@ export class SearchJobsComponent implements OnInit {
       jobId: job._id
     };
 
-    this.http.post(environment.apiUrl +'/api/applyForJob', payload).subscribe({
+    this.http.post(environment.apiUrl + '/api/applyForJob', payload).subscribe({
       next: (res: any) => {
         alert(res.message || 'Application submitted!');
         this.closeModal();

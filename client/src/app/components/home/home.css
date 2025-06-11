@@ -176,6 +176,12 @@ body {
   animation: popIn 0.5s ease forwards;
 }
 
+.feature-icon {
+  width: 150%;
+  max-width: 200px;
+  height: auto;
+}
+
 @keyframes reveal {
   to {
     opacity: 1;

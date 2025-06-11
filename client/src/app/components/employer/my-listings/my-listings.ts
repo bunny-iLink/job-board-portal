@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../service/auth.service';
-import { log } from 'console';
 import { environment } from '../../../../environments/environment';
 
 interface Job {
@@ -41,20 +40,27 @@ export class MyListingsComponent implements OnInit {
   isModalOpen = false;
   isEditMode = false;
   selectedJobId: string | null = null;
-  employerId !: string;
+  employerId!: string;
   employer: any;
+  token: string | null = null;
 
   jobForm: Job = this.getEmptyJob();
-
-  readonly baseUrl = environment.apiUrl + '/api'; 
+  readonly baseUrl = environment.apiUrl + '/api';
 
   ngOnInit() {
     if (typeof window !== 'undefined') {
-      this.employer = localStorage.getItem('user');
-      console.log(this.employer);
+      const employerStr = localStorage.getItem('user');
+      this.token = localStorage.getItem('token');
 
+      if (employerStr) {
+        this.employer = JSON.parse(employerStr);
+      }
     }
-    this.employerId = this.authService.getUserId() ?? ''; // fallback to empty string if null
+
+    this.employerId = this.authService.getUserId() ?? '';
+    console.log('Employer ID from AuthService:', this.employerId);
+    console.log('Token:', this.token);
+
     this.fetchJobs();
   }
 
@@ -73,32 +79,40 @@ export class MyListingsComponent implements OnInit {
       },
       company: '',
       location: '',
-      salary: null as any, // use null to remove default 0
+      salary: null as any,
       type: '',
       experience: '',
-      vacancies: null as any, // same for vacancies
+      vacancies: null as any,
       status: 'open'
     };
   }
 
-
-
   fetchJobs() {
-    if (!this.employerId) {
-      console.warn('Cannot fetch jobs: employerId is missing');
+    const token = this.token;
+    const employerId = this.employerId;
+
+    if (!employerId || !token) {
+      console.warn('Cannot fetch jobs: employerId or token is missing');
       return;
     }
 
-    this.http.get<Job[]>(`${this.baseUrl}/getJobs/${this.employerId}`).subscribe({
-      next: (res) => this.jobs = res,
-      error: (err) => console.error('Failed to fetch jobs:', err)
+    this.http.get<Job[]>(`${this.baseUrl}/getJobs/${employerId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).subscribe({
+      next: (res) => {
+        this.jobs = res;
+        console.log('Jobs fetched:', res);
+      },
+      error: (err) => {
+        console.error('Failed to fetch jobs:', err);
+      }
     });
   }
 
-
   openModal(job?: Job) {
     this.isModalOpen = true;
-    console.log('Modal Opened:', this.isModalOpen);  // Debugging log
     this.isEditMode = !!job;
 
     if (job) {
@@ -108,17 +122,13 @@ export class MyListingsComponent implements OnInit {
       this.selectedJobId = null;
       this.jobForm = this.getEmptyJob();
 
-      if (typeof this.employer === 'string') {
-        this.employer = JSON.parse(this.employer);
+      if (this.employer) {
+        this.jobForm.employerId = this.employer._id;
+        this.jobForm.employerName = this.employer.name;
+        this.jobForm.company = this.employer.company;
       }
-
-      this.jobForm.employerId = this.employer._id;
-      this.jobForm.employerName = this.employer.name;
-      this.jobForm.company = this.employer.company;
     }
   }
-
-
 
   closeModal() {
     this.isModalOpen = false;
@@ -166,11 +176,10 @@ export class MyListingsComponent implements OnInit {
     if (!confirm('Are you sure you want to delete this job? This action cannot be undone.')) {
       return;
     }
-    else {
-      this.http.delete(`${this.baseUrl}/deleteJob/${jobId}`).subscribe({
-        next: () => this.fetchJobs(),
-        error: (err) => console.error('Failed to delete job:', err)
-      });
-    }
+
+    this.http.delete(`${this.baseUrl}/deleteJob/${jobId}`).subscribe({
+      next: () => this.fetchJobs(),
+      error: (err) => console.error('Failed to delete job:', err)
+    });
   }
 }

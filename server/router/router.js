@@ -189,7 +189,7 @@ router.post('/login', loginUser);
  *       400:
  *         description: Validation error
  */
-router.post('/addJob', verifyToken, requireRole(["employer"]), addJob);
+router.post('/addJob', verifyToken, requireRole("employer"), addJob);
 
 /**
  * @swagger
@@ -220,7 +220,7 @@ router.post('/addJob', verifyToken, requireRole(["employer"]), addJob);
  *       400:
  *         description: Invalid input
  */
-router.post('/applyForJob/', verifyToken, requireRole(["user"]), applyForJob)
+router.post('/applyForJob/', verifyToken, requireRole("user"), applyForJob)
 
 // GET methods
 
@@ -243,7 +243,7 @@ router.post('/applyForJob/', verifyToken, requireRole(["user"]), applyForJob)
  *       404:
  *         description: Employer or jobs not found
  */
-router.get('/getJobs/:employerId', verifyToken, requireRole(["employer"]), getJobsForEmployer);
+router.get('/getJobs/:employerId', verifyToken, requireRole("employer"), getJobsForEmployer);
 
 /**
  * @swagger
@@ -264,7 +264,7 @@ router.get('/getJobs/:employerId', verifyToken, requireRole(["employer"]), getJo
  *       404:
  *         description: Employer not found
  */
-router.get('/getEmployerData/:employerId', getEmployerData);
+router.get('/getEmployerData/:employerId', verifyToken, requireRole("employer"), getEmployerData);
 
 /**
  * @swagger
@@ -327,7 +327,7 @@ router.get('/employer/:employerId/jobs-summary', verifyToken, requireRole(["empl
  *       404:
  *         description: User or notifications not found
  */
-router.get('/notifications/:userId', getUserNotifications)
+router.get('/notifications/:userId', verifyToken, requireRole("user"), getUserNotifications)
 
 /**
  * @swagger

@@ -11,16 +11,12 @@
             </select>
         </label>
 
-        <label>Experience:
+        <label>Experience (in Years):
             <input type="number" [(ngModel)]="filters.experience" (input)="searchJobs()" placeholder="Years" />
         </label>
 
-        <label>Min Salary:
-            <input type="number" [(ngModel)]="filters.minSalary" (input)="searchJobs()" />
-        </label>
-
-        <label>Max Salary:
-            <input type="number" [(ngModel)]="filters.maxSalary" (input)="searchJobs()" />
+        <label>Expected Salary (in LPA):
+            <input type="number" [(ngModel)]="filters.expectedSalary" (input)="searchJobs()" />
         </label>
     </div>
 

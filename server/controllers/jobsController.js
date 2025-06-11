@@ -229,8 +229,7 @@ export async function searchJobsForUsers(req, res) {
 
     try {
         const {
-            domain, experience, minSalary, maxSalary,
-            type, search, userId
+            domain, experience, expectedSalary, type, search, userId
         } = req.query;
 
         const query = { status: 'open' };
@@ -243,10 +242,8 @@ export async function searchJobsForUsers(req, res) {
         if (type) query.type = type;
         if (experience) query.experience = { $lte: Number(experience) };
 
-        if (minSalary || maxSalary) {
-            query.salary = {};
-            if (minSalary) query.salary.$gte = Number(minSalary);
-            if (maxSalary) query.salary.$lte = Number(maxSalary);
+        if (expectedSalary) {
+            query.salary = { $gte: Number(expectedSalary) };
         }
 
         if (search) {
@@ -268,9 +265,12 @@ export async function searchJobsForUsers(req, res) {
         const jobs = await Job.find(query);
         console.log(`[searchJobsForUsers] Found ${jobs.length} matching jobs`);
         res.status(200).json(jobs);
+
     } catch (error) {
         console.error("[searchJobsForUsers] Error:", error.message);
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 }
+
+
 
