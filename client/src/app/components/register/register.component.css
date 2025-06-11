@@ -1,36 +1,45 @@
-/* Register Page Styles */
+/* Register Container */
 .container {
-  max-width: 480px;
-  background-color: #ffffff;
-  padding: 36px 32px;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-  margin: 50px auto;
+  max-width: 500px;
+  margin: 60px auto;
+  padding: 0 16px;
+  font-family: Arial, sans-serif;
 }
 
-.card .header {
+/* Card Styling */
+.card {
+  background-color: #ffffff;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+.header h1 {
   text-align: center;
+  font-size: 28px;
+  color: #0073e6;
+  margin-bottom: 8px;
+}
+
+.header p {
+  text-align: center;
+  font-size: 14px;
+  color: #555;
   margin-bottom: 24px;
 }
 
-.card .header h1 {
-  margin-bottom: 8px;
-  color: #333;
-}
-
-.card .form {
-  display: flex;
-  flex-direction: column;
-}
-
+/* Form Elements */
 .form-group {
   margin-bottom: 18px;
 }
 
-.form-group label {
-  font-weight: 500;
+label {
   display: block;
+  font-size: 14px;
+  color: #333;
   margin-bottom: 6px;
+  font-weight: 500;
 }
 
 input[type="text"],
@@ -39,87 +48,113 @@ input[type="password"],
 select {
   width: 100%;
   padding: 10px 12px;
+  font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 6px;
-  font-size: 14px;
   box-sizing: border-box;
+  transition: border-color 0.3s;
 }
 
+input:focus,
+select:focus {
+  border-color: #0073e6;
+  outline: none;
+}
+
+/* Password Visibility Toggle */
+.password-wrapper {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #0073e6;
+  cursor: pointer;
+}
+
+/* Error Message */
+.error {
+  color: #dc3545;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+/* Role Selection Buttons */
 .role-buttons {
   display: flex;
-  justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
   margin-top: 8px;
 }
 
 .role-buttons button {
   flex: 1;
-  padding: 10px;
-  background-color: #e9ecef;
+  padding: 10px 12px;
+  background-color: #f0f0f0;
   border: 1px solid #ccc;
   border-radius: 6px;
+  font-size: 14px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background-color 0.2s, border-color 0.2s;
 }
 
-.role-buttons button.selected {
+.role-buttons button:hover {
+  background-color: #7cbbfe;
+}
+
+.role-buttons .selected {
   background-color: #0073e6;
   color: white;
   border-color: #0073e6;
 }
 
-.password-wrapper {
-  display: flex;
-  align-items: center;
-}
-
-.password-wrapper input {
-  flex: 1;
-}
-
-.toggle-password {
-  background: none;
-  border: none;
-  color: #0073e6;
-  margin-left: 8px;
-  cursor: pointer;
-}
-
-.error {
-  color: red;
-  font-size: 12px;
-  margin-top: 4px;
-}
-
+/* Submit Button */
 .submit-btn {
-  margin-top: 12px;
-  padding: 12px;
   width: 100%;
-  background-color: #28a745;
-  border: none;
+  padding: 12px;
+  background-color: #0073e6;
   color: white;
   font-size: 16px;
+  font-weight: bold;
+  border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background-color 0.3s;
 }
 
 .submit-btn:hover {
-  background-color: #218838;
+  background-color: #005bb5;
 }
 
+.submit-btn:disabled {
+  background-color: #9ec9f5;
+  cursor: not-allowed;
+}
+
+/* Footer */
 .footer {
   text-align: center;
   margin-top: 20px;
   font-size: 14px;
+  color: #444;
 }
 
 .footer a {
   color: #0073e6;
-  text-decoration: none;
-  margin-left: 4px;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .footer a:hover {
-  text-decoration: underline;
+  text-decoration: none;
+}
+@media (max-width: 480px) {
+  .card {
+    padding: 24px;
+  }
 }

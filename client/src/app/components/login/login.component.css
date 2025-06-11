@@ -1,92 +1,119 @@
-/* Login Page Styles */
-
-
+/* Login Container */
 .login-container {
-  max-width: 380px;
+  max-width: 400px;
+  margin: 60px auto;
+  padding: 32px;
   background-color: #ffffff;
-  padding: 32px 28px;
   border-radius: 12px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-  margin: 50px auto;
+  font-family: Arial, sans-serif;
 }
 
+/* Form Heading */
 .login-container h2 {
-  margin-bottom: 20px;
   text-align: center;
-  color: #333;
+  margin-bottom: 24px;
+  font-size: 26px;
+  color: #0073e6;
 }
 
+/* Form Label */
 .login-container label {
   display: block;
-  margin-top: 12px;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   font-weight: 500;
+  color: #333;
+  font-size: 14px;
 }
 
+/* Input Fields */
 .login-container input[type="email"],
 .login-container input[type="password"],
 .login-container input[type="text"] {
   width: 100%;
   padding: 10px 12px;
+  margin-bottom: 16px;
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 14px;
   box-sizing: border-box;
+  transition: border 0.3s;
 }
 
+.login-container input:focus {
+  outline: none;
+  border-color: #0073e6;
+}
+
+/* Password Wrapper */
 .password-wrapper {
-  display: flex;
-  align-items: center;
-}
-
-.password-wrapper input {
-  flex: 1;
+  position: relative;
 }
 
 .password-wrapper button {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
   background: none;
   border: none;
-  cursor: pointer;
   font-size: 18px;
-  margin-left: 8px;
+  cursor: pointer;
+  color: #666;
 }
 
-button[type="submit"] {
-  margin-top: 20px;
+/* Submit Button */
+.login-container button[type="submit"] {
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   background-color: #0073e6;
   color: white;
   border: none;
   border-radius: 6px;
   font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background-color 0.3s;
 }
 
-button[type="submit"]:hover {
+.login-container button[type="submit"]:hover {
   background-color: #005bb5;
 }
 
-.invalid-feedback {
-  color: red;
-  font-size: 12px;
-  margin-top: 4px;
+.login-container button[type="submit"]:disabled {
+  background-color: #9ec9f5;
+  cursor: not-allowed;
 }
 
+/* Error Feedback */
+.invalid-feedback {
+  color: #dc3545;
+  font-size: 13px;
+  margin-top: -12px;
+  margin-bottom: 12px;
+  display: block;
+}
+
+/* Register Link */
 .register-link {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 16px;
   font-size: 14px;
+  color: #333;
 }
 
 .register-link a {
   color: #0073e6;
-  text-decoration: none;
-  margin-left: 4px;
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .register-link a:hover {
-  text-decoration: underline;
-  cursor: pointer;
+  text-decoration: none;
+}
+@media (max-width: 480px) {
+  .login-container {
+    margin: 40px 16px;
+    padding: 24px;
+  }
 }
