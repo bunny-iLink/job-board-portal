@@ -55,7 +55,11 @@ export class EmployerDashboardComponent implements OnInit {
   fetchEmployerData() {
     if (!this.employerId) return;
 
-    this.http.get(environment.apiUrl + `/api/getEmployerData/${this.employerId}`).subscribe({
+    this.http.get(environment.apiUrl + `/api/getEmployerData/${this.employerId}`, {
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      }
+    }).subscribe({
       next: (res: any) => {
         this.employer = res.employer;
         console.log('Employer loaded:', this.employer);

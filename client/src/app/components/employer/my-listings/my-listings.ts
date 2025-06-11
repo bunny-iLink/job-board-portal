@@ -170,7 +170,11 @@ export class MyListingsComponent implements OnInit {
     };
 
     if (this.isEditMode && this.selectedJobId) {
-      this.http.put(`${this.baseUrl}/updateJob/${this.selectedJobId}`, payload).subscribe({
+      this.http.put(`${this.baseUrl}/updateJob/${this.selectedJobId}`, payload, {
+        headers: {
+          Authorization: `Bearer ${this.token}`
+        }
+      }).subscribe({
         next: () => {
           this.fetchJobs();
           this.closeModal();
@@ -178,7 +182,11 @@ export class MyListingsComponent implements OnInit {
         error: (err) => console.error('Failed to update job:', err)
       });
     } else {
-      this.http.post(`${this.baseUrl}/addJob`, payload).subscribe({
+      this.http.post(`${this.baseUrl}/addJob`, payload, {
+        headers: {
+          Authorization: `Bearer ${this.token}`
+        }
+      }).subscribe({
         next: () => {
           this.fetchJobs();
           this.closeModal();
@@ -194,7 +202,11 @@ export class MyListingsComponent implements OnInit {
       return;
     }
 
-    this.http.delete(`${this.baseUrl}/deleteJob/${jobId}`).subscribe({
+    this.http.delete(`${this.baseUrl}/deleteJob/${jobId}`, {
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      }
+    }).subscribe({
       next: () => this.fetchJobs(),
       error: (err) => console.error('Failed to delete job:', err)
     });

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../../environments/environment';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-applied-jobs',
@@ -20,16 +21,17 @@ export class AppliedJobsComponent implements OnInit {
   appliedJobs: any[] = [];
   // User's unique ID
   userId: string | null = null;
-
+  token: string | null = null;
   // Modal state and selected job for details
   selectedJob: any = null;
   showModal: boolean = false;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   // On component initialization, load user and applied jobs data
   ngOnInit(): void {
     this.loadUserData();
+    this.token = this.authService.getToken();
   }
 
   // Load user data from localStorage and fetch from backend
@@ -99,7 +101,11 @@ export class AppliedJobsComponent implements OnInit {
     const confirmRevoke = confirm("Are you sure you want to revoke your application for this job?");
     if (!confirmRevoke) return;
 
-    this.http.delete(environment.apiUrl +`/api/revokeApplication/${application.applicationId}`).subscribe({
+    this.http.delete(environment.apiUrl +`/api/revokeApplication/${application.applicationId}`, {
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      }
+    }).subscribe({
       next: (res: any) => {
         alert("Application revoked successfully!");
         this.appliedJobs = this.appliedJobs.filter(job => job._id !== jobId);

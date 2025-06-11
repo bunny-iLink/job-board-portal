@@ -19,6 +19,7 @@ export class EmployerProfileComponent implements OnInit {
   loading = false;
   error = '';
   success = '';
+  token: string | null = null;
 
   selectedBase64: string | null = null;
   selectedMimeType: string | null = null;
@@ -34,6 +35,7 @@ export class EmployerProfileComponent implements OnInit {
 
   ngOnInit() {
     this.employerId = this.authService.getUserId();
+    this.token = this.authService.getToken();
     if (!this.employerId) {
       this.error = 'No employer ID found.';
       return;
@@ -80,7 +82,11 @@ export class EmployerProfileComponent implements OnInit {
       };
     }
 
-    this.http.put(`${this.apiBase}/updateEmployer/${this.employerId}`, updatedEmployer)
+    this.http.put(`${this.apiBase}/updateEmployer/${this.employerId}`, updatedEmployer, {
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      }
+    })
       .subscribe({
         next: () => {
           this.success = 'Profile updated successfully!';
@@ -104,7 +110,11 @@ export class EmployerProfileComponent implements OnInit {
     }
 
     // Send DELETE request to backend to remove employer profile
-    this.http.delete(`${this.apiBase}/deleteEmployer/${this.employerId}`)
+    this.http.delete(`${this.apiBase}/deleteEmployer/${this.employerId}`, {
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      }
+    })
       .subscribe({
         next: () => {
           alert('Profile deleted successfully.');

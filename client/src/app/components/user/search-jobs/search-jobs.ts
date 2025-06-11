@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-search-jobs',
@@ -22,6 +23,7 @@ export class SearchJobsComponent implements OnInit {
   // Currently selected job for modal
   selectedJob: any = null;
   // Modal state
+  token: string | null = null;
   showModal: boolean = false;
   showDomainWarning: boolean = false;
 
@@ -34,11 +36,12 @@ export class SearchJobsComponent implements OnInit {
   };
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   // On component initialization, fetch and display jobs
   ngOnInit() {
     this.searchJobs();
+    this.token = this.authService.getToken();
   }
 
   // Utility: Check if running in browser
@@ -144,7 +147,11 @@ export class SearchJobsComponent implements OnInit {
       jobId: job._id
     };
 
-    this.http.post(environment.apiUrl + '/api/applyForJob', payload).subscribe({
+    this.http.post(environment.apiUrl + '/api/applyForJob', payload, {
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      }
+    }).subscribe({
       next: (res: any) => {
         alert(res.message || 'Application submitted!');
         this.closeModal();

@@ -33,12 +33,12 @@
     <button class="close-btn" (click)="toggleNotifications()">×</button>
   </div>
   <div class="notification-content">
-    <ul *ngIf="notifications && notifications.length > 0">
-      <li *ngFor="let notification of notifications">{{ notification.message }}</li>
-    </ul>
     <p *ngIf="!notifications || notifications.length === 0" class="no-notifications">
       No new notifications
     </p>
+    <ul *ngIf="notifications && notifications.length > 0">
+      <li *ngFor="let notification of notifications">{{ notification.message }}</li>
+    </ul>
   </div>
 </div>
 

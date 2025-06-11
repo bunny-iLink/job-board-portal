@@ -68,7 +68,11 @@ export class UserNavbar implements OnInit {
   toggleNotifications(): void {
     if (!this.showNotifications) {
       const userId = this.authService.getUserId(); // Ensure this method exists in AuthService
-      this.http.get(environment.apiUrl +`/api/notifications/${userId}`).subscribe({
+      this.http.get(environment.apiUrl + `/api/notifications/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${this.token}`
+        }
+      }).subscribe({
         next: (data: any) => {
           this.notifications = data.notifications;
           this.showNotifications = true;
@@ -81,7 +85,7 @@ export class UserNavbar implements OnInit {
       this.showNotifications = false;
     }
   }
-  
+
   // Toggle mobile menu visibility
   toggleMobileMenu() {
     this.showMobileMenu = !this.showMobileMenu;

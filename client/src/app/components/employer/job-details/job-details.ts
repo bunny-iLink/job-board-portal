@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
+import { AuthService } from '../../service/auth.service';
 @Component({
   selector: 'app-job-details',
   standalone: true,
@@ -16,12 +17,14 @@ export class JobDetailsComponent implements OnInit {
   job: any = null;
   applicants: any[] = [];
   resumeBlobUrls: { [key: string]: string } = {}; // Store blob URLs by applicant ID
+  token: string | null = null;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) { }
+  constructor(private route: ActivatedRoute, private http: HttpClient, private authService: AuthService) { }
 
   ngOnInit(): void {
     // Get job ID from route parameters and load job details
     this.jobId = this.route.snapshot.paramMap.get('id') || '';
+    this.token = this.authService.getToken();
     if (this.jobId) {
       this.loadJobDetails();
     }
@@ -94,6 +97,10 @@ export class JobDetailsComponent implements OnInit {
 
     this.http.put(environment.apiUrl +`/api/${applicationId}/status`, {
       status: newStatus
+    }, {
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      }
     }).subscribe({
       next: () => {
         const applicant = this.applicants.find(a => a._id === applicationId);
