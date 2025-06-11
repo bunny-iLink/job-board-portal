@@ -15,24 +15,20 @@ const SALT_ROUNDS = 10;
 export async function addUser(req, res) {
     try {
         const { name, email, password } = req.body;
+        console.log("Attempting to add user:", { name, email });
 
-        // Check if user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
+            console.warn(`User already exists with email: ${email}`);
             return res.status(400).json({ message: "User already exists with this email" });
         }
 
-        // Hash the password
         const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
-
-        // Create and save the new user
-        const newUser = new User({
-            name,
-            email,
-            password: hashedPassword
-        });
+        const newUser = new User({ name, email, password: hashedPassword });
 
         const savedUser = await newUser.save();
+        console.log("User successfully saved:", savedUser._id);
+
         const userToReturn = savedUser.toObject();
         delete userToReturn.password;
 
@@ -40,7 +36,6 @@ export async function addUser(req, res) {
             message: "User added successfully",
             user: userToReturn
         });
-
     } catch (err) {
         console.error("Error adding user:", err);
         return res.status(500).json({
@@ -55,21 +50,23 @@ export async function addUser(req, res) {
 export async function getUserData(req, res) {
     try {
         const userId = req.params.userId;
+        console.log("Fetching user data for ID:", userId);
 
-        // Validate userId
         if (!userId) {
+            console.warn("No userId provided in request");
             return res.status(400).json({ message: "User ID is required" });
         }
 
-        // Find the user by ID
         const user = await User.findById(userId);
         if (!user) {
+            console.warn(`User not found for ID: ${userId}`);
             return res.status(404).json({ message: "User not found" });
         }
 
-        // Return the user data
         const userToReturn = user.toObject();
         delete userToReturn.password;
+
+        console.log("User data retrieved successfully for:", userId);
         return res.status(200).json({
             message: "User data retrieved successfully",
             user: userToReturn
@@ -88,20 +85,21 @@ export async function getUserData(req, res) {
 export async function updateUserData(req, res) {
     try {
         const userId = req.params.userId;
-        const updatedData = { ...req.body };
+        let updatedData = { ...req.body };
+        console.log("Updating user data for ID:", userId, "with data:", updatedData);
 
         if (!userId) {
+            console.warn("No userId provided for update");
             return res.status(400).json({ message: "User ID is required" });
         }
 
-        // Remove unmodifiable/system fields
         delete updatedData._id;
         delete updatedData.__v;
         delete updatedData.createdAt;
         delete updatedData.updatedAt;
 
-        // If password is being updated, hash it first
         if (updatedData.password) {
+            console.log("Hashing updated password for user ID:", userId);
             updatedData.password = await bcrypt.hash(updatedData.password, SALT_ROUNDS);
         }
 
@@ -112,12 +110,14 @@ export async function updateUserData(req, res) {
         );
 
         if (!updatedUser) {
+            console.warn(`User not found for update with ID: ${userId}`);
             return res.status(404).json({ message: "User not found" });
         }
 
         const userToReturn = updatedUser.toObject();
         delete userToReturn.password;
 
+        console.log("User updated successfully for ID:", userId);
         return res.status(200).json({
             message: "User updated successfully",
             user: userToReturn
@@ -137,22 +137,27 @@ export async function updateUserData(req, res) {
 export async function deleteUserData(req, res) {
     try {
         const userId = req.params.userId;
+        console.log("Attempting to delete user with ID:", userId);
 
         if (!userId) {
+            console.warn("User ID not provided for deletion");
             return res.status(404).json({ message: "User ID is required" });
         }
 
         const result = await User.deleteOne({ _id: userId });
 
         if (result.deletedCount === 0) {
+            console.warn(`Failed to delete user with ID: ${userId}`);
             return res.status(404).json({ message: "Failed to delete user" });
         }
 
+        console.log(`User with ID ${userId} deleted successfully`);
         return res.status(200).json({ message: "User deleted successfully" });
 
     } catch (err) {
+        console.error("Error deleting user:", err);
         return res.status(500).json({
-            message: "Some error occured",
+            message: "Some error occurred",
             error: err.message || err
         });
     }
@@ -165,31 +170,26 @@ export async function deleteUserData(req, res) {
 export async function addEmployer(req, res) {
     try {
         const { name, email, password, companyName } = req.body;
+        console.log("Adding new employer:", { name, email, companyName });
 
-        // Check for existing employer with same email or company name
         const existingEmployer = await Employer.findOne({
             $or: [{ email }, { companyName }]
         });
 
         if (existingEmployer) {
-            let conflictField = existingEmployer.email === email ? "email" : "company name";
+            const conflictField = existingEmployer.email === email ? "email" : "company name";
+            console.warn(`Conflict: Employer already exists with ${conflictField}:`, conflictField === "email" ? email : companyName);
             return res.status(400).json({
                 message: `Employer already exists with this ${conflictField}`
             });
         }
 
-        // Hash the password
         const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
-
-        // Create and save the new employer
-        const newEmployer = new Employer({
-            name,
-            email,
-            password: hashedPassword,
-            companyName
-        });
+        const newEmployer = new Employer({ name, email, password: hashedPassword, companyName });
 
         const savedEmployer = await newEmployer.save();
+        console.log("Employer successfully saved with ID:", savedEmployer._id);
+
         const employerToReturn = savedEmployer.toObject();
         delete employerToReturn.password;
 
@@ -207,27 +207,29 @@ export async function addEmployer(req, res) {
     }
 }
 
+
 // Get employer data by ID
 
 export async function getEmployerData(req, res) {
     try {
         const employerId = req.params.employerId;
+        console.log("Fetching employer data for ID:", employerId);
 
-        // Validate employerId
         if (!employerId) {
+            console.warn("No employerId provided in request");
             return res.status(400).json({ message: "Employer ID is required" });
         }
 
-        // Find the employer by ID
         const employer = await Employer.findById(employerId);
         if (!employer) {
+            console.warn("Employer not found for ID:", employerId);
             return res.status(404).json({ message: "Employer not found" });
         }
 
         const employerToReturn = employer.toObject();
         delete employerToReturn.password;
 
-        // Return the employer data
+        console.log("Employer data successfully retrieved for ID:", employerId);
         return res.status(200).json({
             message: "Employer data retrieved successfully",
             employer: employerToReturn
@@ -247,9 +249,11 @@ export async function getEmployerData(req, res) {
 export async function updateEmployerData(req, res) {
     try {
         const employerId = req.params.employerId;
-        const updatedData = { ...req.body };
+        let updatedData = { ...req.body };
+        console.log("Updating employer data for ID:", employerId, "Data:", updatedData);
 
         if (!employerId) {
+            console.warn("No employerId provided for update");
             return res.status(400).json({ message: "Employer ID is required" });
         }
 
@@ -259,6 +263,7 @@ export async function updateEmployerData(req, res) {
         delete updatedData.updatedAt;
 
         if (updatedData.password) {
+            console.log("Hashing new password for employer ID:", employerId);
             updatedData.password = await bcrypt.hash(updatedData.password, SALT_ROUNDS);
         }
 
@@ -267,20 +272,23 @@ export async function updateEmployerData(req, res) {
             { $set: updatedData },
             { new: true, runValidators: true }
         );
+
         if (!updatedUser) {
+            console.warn("Employer not found for update:", employerId);
             return res.status(404).json({ message: "User not found" });
         }
 
         const userToReturn = updatedUser.toObject();
         delete userToReturn.password;
 
+        console.log("Employer updated successfully:", employerId);
         return res.status(200).json({
             message: "User updated successfully",
             user: userToReturn
         });
 
     } catch (err) {
-        console.error("Error updating user data:", err);
+        console.error("Error updating employer data:", err);
         return res.status(500).json({
             message: "Error updating user data",
             error: err.message || err
@@ -293,24 +301,28 @@ export async function updateEmployerData(req, res) {
 export async function deleteEmployerData(req, res) {
     try {
         const employerId = req.params.employerId;
+        console.log("Attempting to delete employer with ID:", employerId);
 
         if (!employerId) {
+            console.warn("No employerId provided for deletion");
             return res.status(404).json({ message: "Employer not found" });
         }
 
         const result = await Employer.deleteOne({ _id: employerId });
 
         if (result.deletedCount === 0) {
-            res.status(404).json({ message: "Failed to delete employer" });
+            console.warn("Failed to delete employer - not found:", employerId);
+            return res.status(404).json({ message: "Failed to delete employer" });
         }
 
+        console.log("Employer deleted successfully:", employerId);
         return res.status(200).json({ message: "Employer deleted successfully" });
 
     } catch (err) {
-        console.log("Error occured: ", err);
+        console.error("Error occurred while deleting employer:", err);
         return res.status(500).json({
-            message: "Some error occured",
-            error: err
-        })
+            message: "Some error occurred",
+            error: err.message || err
+        });
     }
-} 
+}

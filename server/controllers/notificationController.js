@@ -4,35 +4,45 @@ import { Job } from '../models/jobs.js';  // import Job model
 export const getUserNotifications = async (req, res) => {
     try {
         const { userId } = req.params;
+        console.log(`Fetching notifications for userId: ${userId}`);
 
-        // Fetch notifications for the user
+        // Fetch notifications
         const notifications = await Notification.find({ userId }).sort({ createdAt: -1 });
+        console.log(`Fetched ${notifications.length} notifications`);
 
-        // Extract all jobIds from notifications message
-        // Assuming the jobId is embedded in the message like "job ID 6846645a95ebb5928273ecb8"
+        // Extract job IDs from messages
         const jobIds = notifications.map(n => {
             const match = n.message.match(/job ID (\w+)/);
             return match ? match[1] : null;
         }).filter(id => id !== null);
 
-        // Fetch all jobs by these ids
-        const jobs = await Job.find({ _id: { $in: jobIds } });
+        console.log(`Extracted ${jobIds.length} job IDs from notification messages:`, jobIds);
 
-        // Create a map of jobId -> title for quick lookup
+        // Fetch corresponding jobs
+        const jobs = await Job.find({ _id: { $in: jobIds } });
+        console.log(`Fetched ${jobs.length} jobs for extracted job IDs`);
+
+        // Create map of jobId to title
         const jobIdToTitle = {};
         jobs.forEach(job => {
             jobIdToTitle[job._id] = job.title;
         });
 
-        // Replace jobId with job title in each notification message
+        console.log("Job ID to title mapping created:", jobIdToTitle);
+
+        // Update messages
         const updatedNotifications = notifications.map(n => {
+            const updatedMessage = n.message.replace(/job ID (\w+)/, (_, id) => {
+                return jobIdToTitle[id] || id;
+            });
+
             return {
                 ...n.toObject(),
-                message: n.message.replace(/job ID (\w+)/, (_, id) => {
-                    return jobIdToTitle[id] || id; // replace with title if found, else keep id
-                })
+                message: updatedMessage
             };
         });
+
+        console.log(`Returning ${updatedNotifications.length} updated notifications`);
 
         res.status(200).json({ notifications: updatedNotifications });
     } catch (error) {

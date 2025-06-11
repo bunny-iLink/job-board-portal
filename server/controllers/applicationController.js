@@ -5,22 +5,30 @@ import { Notification } from '../models/notification.js';
 import mongoose from 'mongoose';
 
 export async function applyForJob(req, res) {
+    console.log("[applyForJob] Request received:", req.body);
     try {
         const { userId, jobId } = req.body;
 
         if (!userId || !jobId) {
+            console.warn("[applyForJob] Missing userId or jobId");
             return res.status(400).json({ message: 'User ID and Job ID are required.' });
         }
 
         const user = await User.findById(userId);
         const job = await Job.findById(jobId);
 
-        if (!user) return res.status(404).json({ message: 'User not found.' });
-        if (!job) return res.status(404).json({ message: 'Job not found.' });
+        if (!user) {
+            console.warn(`[applyForJob] User not found: ${userId}`);
+            return res.status(404).json({ message: 'User not found.' });
+        }
+        if (!job) {
+            console.warn(`[applyForJob] Job not found: ${jobId}`);
+            return res.status(404).json({ message: 'Job not found.' });
+        }
 
         const existingApplication = await Application.findOne({ userId, jobId });
-
         if (existingApplication) {
+            console.warn(`[applyForJob] Duplicate application found for user ${userId} and job ${jobId}`);
             return res.status(409).json({ message: 'You have already applied for this job.' });
         }
 
@@ -29,78 +37,85 @@ export async function applyForJob(req, res) {
             jobId,
             employer: job.employerName,
         });
-
         await application.save();
+        console.info(`[applyForJob] Application saved for user ${userId} and job ${jobId}`);
 
         job.applicantCount += 1;
         await job.save();
+        console.info(`[applyForJob] Job applicantCount updated to ${job.applicantCount}`);
 
         res.status(201).json({ message: 'Application submitted successfully.', application });
 
     } catch (error) {
-        console.error('Error applying for job:', error);
+        console.error("[applyForJob] Error applying for job:", error);
         res.status(500).json({ message: 'Internal server error.' });
     }
 };
 
 export const updateApplicationStatus = async (req, res) => {
+    console.log("[updateApplicationStatus] Request received for applicationId:", req.params.applicationId, "with body:", req.body);
     try {
         const applicationId = req.params.applicationId;
-        console.log("applicationId:", applicationId);
-
         const { status } = req.body;
-
         const validStatuses = ["In Progress", "Accepted", "Rejected"];
         if (!validStatuses.includes(status)) {
+            console.warn(`[updateApplicationStatus] Invalid status value: ${status}`);
             return res.status(400).json({ message: "Invalid status value." });
         }
 
         const application = await Application.findById(applicationId);
         if (!application) {
+            console.warn(`[updateApplicationStatus] Application not found for id: ${applicationId}`);
             return res.status(404).json({ message: "Application not found." });
         }
 
+        console.info(`[updateApplicationStatus] Current status for application ${applicationId}: ${application.status}`);
         const previousStatus = application.status;
 
         // If status is changing to Accepted, reduce job vacancy
         if (status === "Accepted" && previousStatus !== "Accepted") {
             const job = await Job.findById(application.jobId);
             if (!job) {
+                console.warn(`[updateApplicationStatus] Associated job not found for application ${applicationId}`);
                 return res.status(404).json({ message: "Associated job not found." });
             }
 
             if (job.vacancies <= 0) {
+                console.warn(`[updateApplicationStatus] No vacancies available for job ${job._id}`);
                 return res.status(400).json({ message: "No vacancies available for this job." });
             }
 
             job.vacancies -= 1;
             await job.save();
+            console.info(`[updateApplicationStatus] Decreased vacancies for job ${job._id}, new vacancies: ${job.vacancies}`);
         }
 
         application.status = status;
         await application.save();
+        console.info(`[updateApplicationStatus] Application ${applicationId} status updated to ${status}`);
 
-        // ✅ Create a notification for the user
+        // Create a notification for the user
         const notification = new Notification({
             userId: application.userId,
             message: `Your application for job ID ${application.jobId} has been updated to '${status}'.`
         });
-
         await notification.save();
+        console.info(`[updateApplicationStatus] Notification created for user ${application.userId}`);
 
         res.status(200).json({ message: "Application status updated and user notified.", application });
 
     } catch (error) {
-        console.error("Error updating application status:", error);
+        console.error("[updateApplicationStatus] Error updating application status:", error);
         res.status(500).json({ message: "Internal server error." });
     }
 };
 
 export async function getUserAppliedJobs(req, res) {
+    console.log("[getUserAppliedJobs] Request received for user:", req.params.userId);
     try {
         const { userId } = req.params;
-
         if (!userId) {
+            console.warn("[getUserAppliedJobs] Missing userId");
             return res.status(400).json({ message: "User ID is required." });
         }
 
@@ -109,52 +124,53 @@ export async function getUserAppliedJobs(req, res) {
             .populate('jobId')  // Populate full job object
             .exec();
 
+        console.info(`[getUserAppliedJobs] Retrieved ${applications.length} applications for user ${userId}`);
+
         // Combine job details with application status
         const appliedJobs = applications.map(app => ({
-            applicationId: app._id,  
+            applicationId: app._id,
             ...app.jobId?.toObject(), // Convert Mongoose document to plain object
             status: app.status
         }));
 
         res.status(200).json(appliedJobs);
     } catch (err) {
-        console.error('Error fetching applied jobs:', err);
+        console.error("[getUserAppliedJobs] Error fetching applied jobs:", err);
         res.status(500).json({ message: 'Internal server error' });
     }
 }
 
 export async function revokeApplication(req, res) {
+    console.log("[revokeApplication] Request received with application_id:", req.params.application_id);
     try {
         const application_id = req.params.application_id;
-        console.log("Received applicationId:", application_id); // Debug log
 
         if (!application_id) {
+            console.warn("[revokeApplication] Application ID is missing.");
             return res.status(400).json({ message: "Application ID is required" });
         }
 
         // Check if ID is a valid MongoDB ObjectId
         if (!mongoose.Types.ObjectId.isValid(application_id)) {
+            console.warn(`[revokeApplication] Invalid Application ID format: ${application_id}`);
             return res.status(400).json({ message: "Invalid Application ID format" });
         }
 
         const deletedApplication = await Application.findByIdAndDelete(application_id);
-        console.log("Deleted document:", deletedApplication); // Debug log
+        console.info("[revokeApplication] Deleted application:", deletedApplication);
 
         if (!deletedApplication) {
+            console.warn(`[revokeApplication] No application found with id: ${application_id}`);
             return res.status(404).json({ message: "Application not found" });
         }
 
-        return res.status(200).json({
+        res.status(200).json({
             message: "Application deleted successfully",
             deletedApplication,
         });
 
     } catch (err) {
-        console.error("Error in revokeApplication:", err);
-        return res.status(500).json({ message: "Internal server error" });
+        console.error("[revokeApplication] Error in revokeApplication:", err);
+        res.status(500).json({ message: "Internal server error" });
     }
 }
-
-
-
-
