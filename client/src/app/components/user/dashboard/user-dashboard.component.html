@@ -1,16 +1,17 @@
+<!-- User dashboard main container -->
 <div class="dashboard-container">
-    <!-- Header with User Details -->
+    <!-- Header section displaying user details if logged in -->
     <header class="dashboard-header" *ngIf="user">
         <h1>Welcome, {{ user.name }}</h1>
         <p><strong>Email:</strong> {{ user.email }}</p>
     </header>
 
-    <!-- Fallback if user data is missing -->
+    <!-- Fallback message if user data is missing -->
     <div *ngIf="!user" class="no-data">
         <p>Loading user data or not logged in...</p>
     </div>
 
-    <!-- Applied Jobs Table -->
+    <!-- Table of jobs the user has applied to -->
     <section class="applied-jobs" *ngIf="appliedJobs.length > 0">
         <h2>Your Applied Jobs</h2>
         <table class="job-table">
@@ -24,6 +25,7 @@
                 <tr *ngFor="let job of appliedJobs">
                     <td>{{ job.title }}</td>
                     <td>
+                        <!-- Status with color coding -->
                         <span [ngClass]="{
               'accepted': job.status === 'Accepted',
               'rejected': job.status === 'Rejected',
@@ -37,6 +39,7 @@
         </table>
     </section>
 
+    <!-- Message if user has not applied to any jobs -->
     <div *ngIf="appliedJobs.length === 0 && user" class="not-applied">
         <p>You haven’t applied for any jobs yet.</p>
     </div>

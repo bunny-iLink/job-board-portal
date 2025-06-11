@@ -1,7 +1,9 @@
+// Angular component for displaying jobs the user has applied to
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../../environments/environment';
+
 @Component({
   selector: 'app-applied-jobs',
   imports: [CommonModule],
@@ -10,35 +12,41 @@ import { environment } from '../../../../environments/environment';
   styleUrls: ['./applied-jobs.css']
 })
 export class AppliedJobsComponent implements OnInit {
+  // User profile data
   user: any = null;
+  // List of jobs the user has saved (not shown in template)
   savedJobs: any[] = [];
+  // List of jobs the user has applied to
   appliedJobs: any[] = [];
+  // User's unique ID
   userId: string | null = null;
 
+  // Modal state and selected job for details
   selectedJob: any = null;
   showModal: boolean = false;
 
-
   constructor(private http: HttpClient) { }
 
+  // On component initialization, load user and applied jobs data
   ngOnInit(): void {
     this.loadUserData();
   }
 
-    loadUserData() {
+  // Load user data from localStorage and fetch from backend
+  loadUserData() {
     if (typeof window !== 'undefined') {
       const storedData = localStorage.getItem('user');
 
       if (storedData && storedData !== 'null') {
-        const userObject = JSON.parse(storedData); // ✅ full object
-        this.userId = userObject._id;              // ✅ extract the ID
+        const userObject = JSON.parse(storedData); // Parse user object
+        this.userId = userObject._id;              // Extract user ID
 
+        // Fetch user profile from backend
         this.http.get(environment.apiUrl +`/api/getUserData/${this.userId}`).subscribe({
           next: (res: any) => {
             this.user = res.user;
-
             console.log('User data:', this.user);
-            this.loadAppliedJobs();
+            this.loadAppliedJobs(); // Load jobs the user has applied to
           },
           error: err => {
             console.error('Failed to load user data:', err);
@@ -49,6 +57,7 @@ export class AppliedJobsComponent implements OnInit {
       }
     }
   }
+  // Load jobs that the user has applied to from the backend
   loadAppliedJobs() {
     if (!this.userId) return;
     this.http.get(environment.apiUrl +`/api/appliedJobs/${this.userId}`).subscribe({
@@ -62,6 +71,7 @@ export class AppliedJobsComponent implements OnInit {
     });
   }
 
+  // Open the modal to show job details
   openJobModal(job: any) {
     this.selectedJob = job;
     this.showModal = true;
@@ -69,34 +79,36 @@ export class AppliedJobsComponent implements OnInit {
 
   }
 
+  // Close the job details modal
   closeModal() {
     this.selectedJob = null;
     this.showModal = false;
   }
 
-revokeApplication(jobId: string) {
-  if (!jobId) return;
+  // Revoke an application for a job
+  revokeApplication(jobId: string) {
+    if (!jobId) return;
 
-  // Find the application to get the applicationId
-  const application = this.appliedJobs.find(job => job._id === jobId);
-  if (!application) {
-    alert("Application not found!");
-    return;
-  }
-
-  const confirmRevoke = confirm("Are you sure you want to revoke your application for this job?");
-  if (!confirmRevoke) return;
-
-  this.http.delete(environment.apiUrl +`/api/revokeApplication/${application.applicationId}`).subscribe({
-    next: (res: any) => {
-      alert("Application revoked successfully!");
-      this.appliedJobs = this.appliedJobs.filter(job => job._id !== jobId);
-    },
-    error: err => {
-      console.error('Error revoking application:', err);
-      alert(`Failed to revoke application: ${err.error?.message || 'Unknown error'}`);
+    // Find the application to get the applicationId
+    const application = this.appliedJobs.find(job => job._id === jobId);
+    if (!application) {
+      alert("Application not found!");
+      return;
     }
-  });
-}
+
+    const confirmRevoke = confirm("Are you sure you want to revoke your application for this job?");
+    if (!confirmRevoke) return;
+
+    this.http.delete(environment.apiUrl +`/api/revokeApplication/${application.applicationId}`).subscribe({
+      next: (res: any) => {
+        alert("Application revoked successfully!");
+        this.appliedJobs = this.appliedJobs.filter(job => job._id !== jobId);
+      },
+      error: err => {
+        console.error('Error revoking application:', err);
+        alert(`Failed to revoke application: ${err.error?.message || 'Unknown error'}`);
+      }
+    });
+  }
 
 }

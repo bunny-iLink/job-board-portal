@@ -1,10 +1,13 @@
+<!-- Container for displaying all jobs the user has applied to -->
 <div class="applied-jobs-container">
   <h2>Your Applied Jobs</h2>
 
+  <!-- Message if user hasn't applied to any jobs -->
   <div *ngIf="appliedJobs.length === 0" class="empty-message">
     You haven't applied to any jobs yet.
   </div>
 
+  <!-- List of applied jobs as cards -->
   <div *ngFor="let job of appliedJobs" class="job-card" (click)="openJobModal(job)">
     <h3>{{ job.title }}</h3>
     <p><strong>Company:</strong> {{ job.company }}</p>
@@ -15,16 +18,15 @@
     <div class="description">
       <p><strong>Description:</strong> {{ job.description?.overview || 'No description available.' }}</p>
     </div>
+    <!-- Button to revoke application, stops event propagation to avoid opening modal -->
     <button class="revoke-btn" (click)="revokeApplication(job._id); $event.stopPropagation()">
         Revoke Application
     </button>
-
   </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal for detailed job information -->
 <div class="modal" *ngIf="showModal">
-    
     <div class="modal-content">
         <span class="close-btn" (click)="closeModal()">&times;</span>
 
@@ -37,6 +39,7 @@
         <p><strong>Vacancies:</strong> {{ selectedJob.vacancies }}</p>
         <p><strong>Status:</strong> {{ selectedJob.status }}</p>
 
+        <!-- Job description details -->
         <div *ngIf="selectedJob.description">
             <p><strong>Overview:</strong></p>
             <p>{{ selectedJob.description.overview }}</p>

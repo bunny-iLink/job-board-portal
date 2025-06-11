@@ -95,20 +95,25 @@ export class EmployerProfileComponent implements OnInit {
   }
 
   deleteProfile() {
+    // If employer ID is missing, do nothing
     if (!this.employerId) return;
 
+    // Confirm with the user before deleting the profile
     if (!confirm('Are you sure you want to delete your profile? This action cannot be undone.')) {
       return;
     }
 
+    // Send DELETE request to backend to remove employer profile
     this.http.delete(`${this.apiBase}/deleteEmployer/${this.employerId}`)
       .subscribe({
         next: () => {
           alert('Profile deleted successfully.');
+          // Remove session data from localStorage
           if (typeof window !== 'undefined') {
             localStorage.removeItem('id');
             localStorage.removeItem('token');
           }
+          // Redirect to login page
           this.router.navigate(['/login']);
         },
         error: () => {

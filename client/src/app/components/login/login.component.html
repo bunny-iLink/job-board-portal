@@ -1,32 +1,39 @@
-
+<!-- Login page container with overlay for visual effect -->
 <div class="auth-page"> 
   <div class="auth-overlay"></div>
-<div class="login-container">
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <h2>Login</h2>
+  <div class="login-container">
+    <!-- Login form using Angular Reactive Forms -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <h2>Login</h2>
 
-    <label>Email:</label>
-    <input type="email" formControlName="email" required />
-    <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-      <small class="invalid-feedback">Email is required and must be valid.</small>
-    </div>
+      <!-- Email input field with validation feedback -->
+      <label>Email:</label>
+      <input type="email" formControlName="email" required />
+      <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+        <small class="invalid-feedback">Email is required and must be valid.</small>
+      </div>
 
-    <label>Password:</label>
-    <div class="password-wrapper">
-      <input [type]="showPassword ? 'text' : 'password'" formControlName="password" required />
-      <button type="button" (click)="togglePassword()">👁</button>
-    </div>
+      <!-- Password input field with show/hide toggle and validation -->
+      <label>Password:</label>
+      <div class="password-wrapper">
+        <input [type]="showPassword ? 'text' : 'password'" formControlName="password" required />
+        <button type="button" (click)="togglePassword()">
+          <!-- Eye icon for toggling password visibility -->
+          👁
+        </button>
+      </div>
+      <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+        <small class="invalid-feedback">Password is required.</small>
+      </div>
 
-    <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-      <small class="invalid-feedback">Password is required.</small>
-    </div>
+      <!-- Submit button, disabled if form is invalid -->
+      <button type="submit" [disabled]="loginForm.invalid">Login</button>
 
-    <button type="submit" [disabled]="loginForm.invalid">Login</button>
-
-    <div class="register-link">
-      <span>New user? </span>
-      <a (click)="goToRegister()">Click here</a>
-    </div>
-  </form>
-</div>
+      <!-- Link to registration page for new users -->
+      <div class="register-link">
+        <span>New user? </span>
+        <a (click)="goToRegister()">Click here</a>
+      </div>
+    </form>
+  </div>
 </div>
