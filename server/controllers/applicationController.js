@@ -36,6 +36,7 @@ export async function applyForJob(req, res) {
             userId,
             jobId,
             employer: job.employerName,
+            employerId: job.employerId
         });
         await application.save();
         console.info(`[applyForJob] Application saved for user ${userId} and job ${jobId}`);

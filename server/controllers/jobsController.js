@@ -235,14 +235,20 @@ export async function searchJobsForUsers(req, res) {
 
         const query = { status: 'open' };
 
-        if (domain) query.domain = domain;
+        // Only filter by domain if there's no search query
+        if (domain && !search) {
+            query.domain = domain;
+        }
+
         if (type) query.type = type;
         if (experience) query.experience = { $lte: Number(experience) };
+
         if (minSalary || maxSalary) {
             query.salary = {};
             if (minSalary) query.salary.$gte = Number(minSalary);
             if (maxSalary) query.salary.$lte = Number(maxSalary);
         }
+
         if (search) {
             const regex = new RegExp(search, 'i');
             query.$or = [
@@ -267,3 +273,4 @@ export async function searchJobsForUsers(req, res) {
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 }
+

@@ -4,6 +4,7 @@ export const applicationSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     jobId: { type: mongoose.Schema.Types.ObjectId, ref: "Job", required: true },
     employer: { type: String, required: true },
+    employerId: {type: mongoose.Schema.Types.ObjectId, ref: "Employer", required: true},
     status: { type: String, enum: ["In Progress", "Accepted", "Rejected"], default: 'In Progress' },
     appliedAt: { type: Date, default: Date.now },
 })
