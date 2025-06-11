@@ -161,9 +161,10 @@ export class UserProfileComponent implements OnInit {
   }
 
   openResume() {
+    // If no resume data, do nothing
     if (!this.user?.resume?.data) return;
 
-    // Convert base64 to Blob
+    // Convert base64-encoded resume data to a Blob for viewing/downloading
     const byteCharacters = atob(this.user.resume.data);
     const byteNumbers = new Array(byteCharacters.length);
     for (let i = 0; i < byteCharacters.length; i++) {
@@ -172,15 +173,14 @@ export class UserProfileComponent implements OnInit {
     const byteArray = new Uint8Array(byteNumbers);
     const blob = new Blob([byteArray], { type: this.user.resume.contentType });
 
-    // Create object URL
+    // Create a temporary object URL for the Blob
     const url = URL.createObjectURL(blob);
 
-    // Open in new tab
+    // Attempt to open the resume in a new browser tab
     const win = window.open(url, '_blank');
 
-    // Fallback if blocked
+    // Fallback: If popup is blocked, trigger a download instead
     if (!win || win.closed || typeof win.closed === 'undefined') {
-      // Alternative method if popup blocked
       const a = document.createElement('a');
       a.href = url;
       a.target = '_blank';
@@ -191,7 +191,7 @@ export class UserProfileComponent implements OnInit {
       document.body.removeChild(a);
     }
 
-    // Revoke the URL later
+    // Revoke the object URL after a short delay to free memory
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 }

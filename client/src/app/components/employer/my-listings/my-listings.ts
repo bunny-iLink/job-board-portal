@@ -27,6 +27,7 @@ interface Job {
   status?: string;
 }
 
+// Angular component for managing the employer's job listings (CRUD operations)
 @Component({
   selector: 'app-my-listings',
   templateUrl: 'my-listings.html',
@@ -34,20 +35,28 @@ interface Job {
   imports: [CommonModule, FormsModule]
 })
 export class MyListingsComponent implements OnInit {
-  constructor(private http: HttpClient, private authService: AuthService) { }
-
+  // List of jobs for the employer
   jobs: Job[] = [];
+  // Modal state for add/edit job
   isModalOpen = false;
+  // Edit mode flag
   isEditMode = false;
+  // Currently selected job ID for editing
   selectedJobId: string | null = null;
+  // Employer ID and profile
   employerId!: string;
   employer: any;
+  // JWT token for authentication
   token: string | null = null;
-
+  // Form model for job creation/editing
   jobForm: Job = this.getEmptyJob();
+  // API base URL
   readonly baseUrl = environment.apiUrl + '/api';
 
+  constructor(private http: HttpClient, private authService: AuthService) { }
+
   ngOnInit() {
+    // Load employer and token from localStorage and AuthService
     if (typeof window !== 'undefined') {
       const employerStr = localStorage.getItem('user');
       this.token = localStorage.getItem('token');
@@ -64,6 +73,7 @@ export class MyListingsComponent implements OnInit {
     this.fetchJobs();
   }
 
+  // Returns a blank job object for form reset
   getEmptyJob(): Job {
     return {
       title: '',
@@ -87,6 +97,7 @@ export class MyListingsComponent implements OnInit {
     };
   }
 
+  // Fetch all jobs for the current employer from backend
   fetchJobs() {
     const token = this.token;
     const employerId = this.employerId;
@@ -111,6 +122,7 @@ export class MyListingsComponent implements OnInit {
     });
   }
 
+  // Open the modal for adding or editing a job
   openModal(job?: Job) {
     this.isModalOpen = true;
     this.isEditMode = !!job;
@@ -130,19 +142,23 @@ export class MyListingsComponent implements OnInit {
     }
   }
 
+  // Close the job modal and reset the form
   closeModal() {
     this.isModalOpen = false;
     this.jobForm = this.getEmptyJob();
   }
 
+  // Convert comma-separated string to array for form fields
   toArray(str: string): string[] {
     return str.split(',').map(s => s.trim()).filter(Boolean);
   }
 
+  // Convert array to comma-separated string for form fields
   fromArray(arr?: string[]): string {
     return arr?.join(', ') ?? '';
   }
 
+  // Save a new job or update an existing job
   saveJob() {
     const payload = {
       ...this.jobForm,
@@ -172,6 +188,7 @@ export class MyListingsComponent implements OnInit {
     }
   }
 
+  // Delete a job after confirmation
   deleteJob(jobId: string) {
     if (!confirm('Are you sure you want to delete this job? This action cannot be undone.')) {
       return;

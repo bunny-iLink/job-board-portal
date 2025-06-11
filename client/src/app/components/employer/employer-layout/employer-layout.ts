@@ -1,3 +1,4 @@
+// Angular layout component for employer pages, providing a shared navbar and router outlet
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { EmployerNavbar } from '../employer-navbar/employer-navbar';
@@ -10,5 +11,5 @@ import { EmployerNavbar } from '../employer-navbar/employer-navbar';
   styleUrl: './employer-layout.css'
 })
 export class EmployerLayoutComponent {
-
+  // This component acts as a shell for all employer-related routes
 }

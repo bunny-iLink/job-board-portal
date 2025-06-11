@@ -20,19 +20,21 @@ export class JobDetailsComponent implements OnInit {
   constructor(private route: ActivatedRoute, private http: HttpClient) { }
 
   ngOnInit(): void {
+    // Get job ID from route parameters and load job details
     this.jobId = this.route.snapshot.paramMap.get('id') || '';
     if (this.jobId) {
       this.loadJobDetails();
     }
   }
 
+  // Fetch job details and list of applicants from backend
   loadJobDetails() {
     this.http.get<{ job: any; applicants: any[] }>(environment.apiUrl +`/api/getJobById/${this.jobId}`)
       .subscribe({
         next: res => {
           this.job = res.job;
           this.applicants = res.applicants;
-          // Pre-create blob URLs for all resumes
+          // Pre-create blob URLs for all resumes for quick access
           this.applicants.forEach(applicant => {
             if (applicant.userId?.resume?.data) {
               this.createResumeBlobUrl(applicant);
@@ -43,6 +45,7 @@ export class JobDetailsComponent implements OnInit {
       });
   }
 
+  // Create a blob URL for an applicant's resume (PDF) for viewing/downloading
   createResumeBlobUrl(applicant: any) {
     try {
       const byteCharacters = atob(applicant.userId.resume.data);
@@ -58,13 +61,14 @@ export class JobDetailsComponent implements OnInit {
     }
   }
 
+  // Open an applicant's resume in a new tab or trigger download if blocked
   openResume(applicantId: string) {
     const url = this.resumeBlobUrls[applicantId];
     if (url) {
       // Try to open in new tab
       const win = window.open(url, '_blank');
 
-      // Fallback if blocked
+      // Fallback if popup is blocked
       if (!win || win.closed || typeof win.closed === 'undefined') {
         const a = document.createElement('a');
         a.href = url;
@@ -79,10 +83,11 @@ export class JobDetailsComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    // Clean up blob URLs when component is destroyed
+    // Clean up blob URLs when component is destroyed to free memory
     Object.values(this.resumeBlobUrls).forEach(url => URL.revokeObjectURL(url));
   }
 
+  // Change the status of an applicant's application (e.g., Accept/Reject)
   onStatusChange(applicationId: string, newStatus: string) {
     const confirmed = window.confirm(`Are you sure you want to change the status to "${newStatus}"?`);
     if (!confirmed) return;

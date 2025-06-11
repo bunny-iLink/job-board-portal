@@ -1,8 +1,10 @@
+// Angular component for searching and filtering available jobs
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
+
 @Component({
   selector: 'app-search-jobs',
   standalone: true,
@@ -11,12 +13,18 @@ import { environment } from '../../../../environments/environment';
   styleUrls: ['search-jobs.css']
 })
 export class SearchJobsComponent implements OnInit {
+  // All jobs fetched from backend
   allJobs: any[] = [];
+  // Jobs filtered by search and filters
   filteredJobs: any[] = [];
+  // Search term entered by user
   searchTerm: string = '';
+  // Currently selected job for modal
   selectedJob: any = null;
+  // Modal state
   showModal: boolean = false;
 
+  // Filter options for job type, experience, and expected salary
   filters = {
     type: '',
     experience: '',
@@ -26,14 +34,17 @@ export class SearchJobsComponent implements OnInit {
 
   constructor(private http: HttpClient) { }
 
+  // On component initialization, fetch and display jobs
   ngOnInit() {
     this.searchJobs();
   }
 
+  // Utility: Check if running in browser
   isBrowser(): boolean {
     return typeof window !== 'undefined';
   }
 
+  // Utility: Get stored user from localStorage
   getStoredUser() {
     if (this.isBrowser()) {
       const userStr = localStorage.getItem('user');

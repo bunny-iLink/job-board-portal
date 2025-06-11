@@ -1,7 +1,9 @@
+<!-- Employer profile page: view and edit employer details, including profile picture upload -->
 <div *ngIf="loading" class="loading" aria-live="polite" aria-busy="true">Loading profile...</div>
 <div *ngIf="error" class="error" aria-live="assertive">{{ error }}</div>
 
 <div class="profile-container">
+    <!-- Profile form for updating employer details -->
     <form *ngIf="!loading && !error" (ngSubmit)="updateProfile()" aria-labelledby="profileHeading">
         <h2 id="profileHeading">Employer Profile</h2>
 
@@ -32,7 +34,7 @@
             </div>
         </div>
 
-        <!-- Profile Information -->
+        <!-- Profile Information Fields -->
         <div class="form-group">
             <label for="name">
                 Name:

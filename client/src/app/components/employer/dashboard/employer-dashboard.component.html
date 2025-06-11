@@ -1,18 +1,22 @@
+<!-- Employer dashboard main container -->
 <div class="dashboard-container" role="main">
-  <!-- Header with Employer Details -->
+  <!-- Header section displaying employer details if logged in -->
   <header class="dashboard-header" *ngIf="token && employer">
     <h1>Welcome, {{ employer?.name }}</h1>
     <p><strong>Email:</strong> {{ employer?.email }}</p>
     <p *ngIf="employer?.company"><strong>Company:</strong> {{ employer?.company }}</p>
   </header>
 
+  <!-- Section for listing employer's job postings -->
   <section *ngIf="token" aria-labelledby="jobListingsHeading">
     <h2 id="jobListingsHeading" class="section-title">My Job Listings</h2>
 
+    <!-- Message if no jobs are posted -->
     <div *ngIf="jobs.length === 0" class="no-jobs">
       <p>No jobs posted yet.</p>
     </div>
 
+    <!-- Grid of job tiles, each clickable for details -->
     <div class="job-grid" role="list">
       <div *ngFor="let job of jobs" 
            class="job-tile" 
@@ -28,6 +32,7 @@
     </div>
   </section>
 
+  <!-- Message for users who are not logged in -->
   <div *ngIf="!token" class="no-data" aria-live="polite">
     <p>Please login to access the site.</p>
   </div>

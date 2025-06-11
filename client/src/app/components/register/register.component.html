@@ -1,94 +1,102 @@
+<!-- Registration page container with overlay for visual effect -->
 <div class="auth-page">
   <div class="auth-overlay"></div>
 
-<div class="container">
-  <div class="card">
-    <div class="header">
-      <h1>Create Account</h1>
-      <p>Join our platform today</p>
-    </div>
-
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="form">
-      <!-- Role Selection -->
-      <div class="form-group">
-        <label>I am a:</label>
-        <div class="role-buttons">
-          <button type="button" (click)="selectRole('candidate')"
-            [class.selected]="selectedRole === 'candidate'">Candidate</button>
-          <button type="button" (click)="selectRole('employer')"
-            [class.selected]="selectedRole === 'employer'">Employer</button>
-        </div>
+  <div class="container">
+    <div class="card">
+      <div class="header">
+        <h1>Create Account</h1>
+        <p>Join our platform today</p>
       </div>
 
-      <!-- Dynamic Fields -->
-      <div *ngIf="selectedRole">
+      <!-- Registration form using Angular Reactive Forms -->
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="form">
+        <!-- Role Selection Buttons (Candidate or Employer) -->
         <div class="form-group">
-          <label for="name">Full Name *</label>
-          <input id="name" type="text" formControlName="name" placeholder="Enter your full name" />
-          <div *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched" class="error">
-            Name is required
+          <label>I am a:</label>
+          <div class="role-buttons">
+            <button type="button" (click)="selectRole('candidate')"
+              [class.selected]="selectedRole === 'candidate'">Candidate</button>
+            <button type="button" (click)="selectRole('employer')"
+              [class.selected]="selectedRole === 'employer'">Employer</button>
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="email">Email Address *</label>
-          <input id="email" type="email" formControlName="email" placeholder="Enter your email" />
-          <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="error">
-            <span *ngIf="registerForm.get('email')?.errors?.['required']">Email is required</span>
-            <span *ngIf="registerForm.get('email')?.errors?.['email']">Please enter a valid email</span>
+        <!-- Dynamic Fields: Only show if a role is selected -->
+        <div *ngIf="selectedRole">
+          <!-- Full Name Field with Validation -->
+          <div class="form-group">
+            <label for="name">Full Name *</label>
+            <input id="name" type="text" formControlName="name" placeholder="Enter your full name" />
+            <div *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched" class="error">
+              Name is required
+            </div>
+          </div>
+
+          <!-- Email Field with Validation -->
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input id="email" type="email" formControlName="email" placeholder="Enter your email" />
+            <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="error">
+              <span *ngIf="registerForm.get('email')?.errors?.['required']">Email is required</span>
+              <span *ngIf="registerForm.get('email')?.errors?.['email']">Please enter a valid email</span>
+            </div>
+          </div>
+
+          <!-- Password Field with Show/Hide Toggle and Validation -->
+          <div class="form-group">
+            <label for="password">Password *</label>
+            <div class="password-wrapper">
+              <input id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password"
+                placeholder="Create a password" />
+              <button type="button" (click)="togglePassword()" class="toggle-password">
+                {{ showPassword ? 'Hide' : 'Show' }}
+              </button>
+            </div>
+            <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error">
+              <span *ngIf="registerForm.get('password')?.errors?.['required']">Password is required</span>
+              <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 6
+                characters</span>
+            </div>
+          </div>
+
+          <!-- Candidate-Specific Field: Preferred Domain -->
+          <div *ngIf="selectedRole === 'candidate'" class="form-group">
+            <label for="preferredDomain">Preferred Domain</label>
+            <select id="preferredDomain" formControlName="preferredDomain">
+              <option value="">Select preferred domain</option>
+              <option value="Technology & IT">Technology & IT</option>
+              <option value="Sales & Marketing">Sales & Marketing</option>
+              <option value="Business & Management">Business & Management</option>
+              <option value="Finance & Accounting">Finance & Accounting</option>
+              <option value="Human Resources & Recruitment">Human Resources & Recruitment</option>
+              <option value="Healthcare & Life Sciences">Healthcare & Life Sciences</option>
+              <option value="Education & Training">Education & Training</option>
+              <option value="Engineering & Manufacturing">Engineering & Manufacturing</option>
+              <option value="Creative & Design">Creative & Design</option>
+              <option value="Legal & Compliance">Legal & Compliance</option>
+              <option value="Media & Communication">Media & Communication</option>
+              <option value="Logistics & Supply Chain">Logistics & Supply Chain</option>
+              <option value="Customer Service & Support">Customer Service & Support</option>
+            </select>
+
+          </div>
+
+          <!-- Employer-Specific Field: Company Name -->
+          <div *ngIf="selectedRole === 'employer'" class="form-group">
+            <label for="company">Company Name</label>
+            <input id="company" type="text" formControlName="company" placeholder="Enter your company name" />
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="password">Password *</label>
-          <div class="password-wrapper">
-            <input id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password"
-              placeholder="Create a password" />
-            <button type="button" (click)="togglePassword()" class="toggle-password">
-              {{ showPassword ? 'Hide' : 'Show' }}
-            </button>
-          </div>
-          <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error">
-            <span *ngIf="registerForm.get('password')?.errors?.['required']">Password is required</span>
-            <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 6
-              characters</span>
-          </div>
-        </div>
+        <!-- Submit Button: Create Account -->
+        <button type="submit" [disabled]="!registerForm.valid || !selectedRole" class="submit-btn">Create Account</button>
+      </form>
 
-        <div *ngIf="selectedRole === 'candidate'" class="form-group">
-          <label for="preferredDomain">Preferred Domain</label>
-          <select id="preferredDomain" formControlName="preferredDomain">
-            <option value="">Select preferred domain</option>
-            <option value="Technology & IT">Technology & IT</option>
-            <option value="Sales & Marketing">Sales & Marketing</option>
-            <option value="Business & Management">Business & Management</option>
-            <option value="Finance & Accounting">Finance & Accounting</option>
-            <option value="Human Resources & Recruitment">Human Resources & Recruitment</option>
-            <option value="Healthcare & Life Sciences">Healthcare & Life Sciences</option>
-            <option value="Education & Training">Education & Training</option>
-            <option value="Engineering & Manufacturing">Engineering & Manufacturing</option>
-            <option value="Creative & Design">Creative & Design</option>
-            <option value="Legal & Compliance">Legal & Compliance</option>
-            <option value="Media & Communication">Media & Communication</option>
-            <option value="Logistics & Supply Chain">Logistics & Supply Chain</option>
-            <option value="Customer Service & Support">Customer Service & Support</option>
-          </select>
-
-        </div>
-
-        <div *ngIf="selectedRole === 'employer'" class="form-group">
-          <label for="company">Company Name</label>
-          <input id="company" type="text" formControlName="company" placeholder="Enter your company name" />
-        </div>
+      <!-- Footer: Link to Sign In page -->
+      <div class="footer">
+        <p>Already have an account? <a href="/login">Sign in</a></p>
       </div>
-
-      <!-- Submit -->
-      <button type="submit" [disabled]="!registerForm.valid || !selectedRole" class="submit-btn">Create Account</button>
-    </form>
-
-    <div class="footer">
-      <p>Already have an account? <a href="/login">Sign in</a></p>
     </div>
   </div>
-</div>
 </div>
