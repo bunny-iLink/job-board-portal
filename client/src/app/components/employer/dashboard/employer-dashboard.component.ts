@@ -59,9 +59,19 @@ export class EmployerDashboardComponent implements OnInit {
   }
 
   fetchJobSummaries() {
-    if (!this.employerId) return;
+    if (!this.employerId || !this.token) {
+      console.warn('Cannot fetch job summaries: employerId or token missing');
+      return;
+    }
 
-    this.http.get<JobSummary[]>(environment.apiUrl +`/api/employer/${this.employerId}/jobs-summary`).subscribe({
+    this.http.get<JobSummary[]>(
+      environment.apiUrl + `/api/employer/${this.employerId}/jobs-summary`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.token}`
+        }
+      }
+    ).subscribe({
       next: res => {
         this.jobs = res;
         console.log('Jobs with applicant count:', this.jobs);
@@ -71,8 +81,10 @@ export class EmployerDashboardComponent implements OnInit {
       }
     });
   }
+
+
   viewJobDetails(jobId: string) {
-  this.router.navigate(['employer//job', jobId]); // redirects to /job/:id
-}
+    this.router.navigate(['employer//job', jobId]); // redirects to /job/:id
+  }
 
 }

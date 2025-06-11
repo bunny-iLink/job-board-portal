@@ -306,7 +306,7 @@ router.get('/getUserData/:userId', getUserData);
  *       404:
  *         description: Employer not found
  */
-router.get('/employer/:employerId/jobs-summary', verifyToken, requireRole(["employer"]), getJobsSummaryForEmployer);
+router.get('/employer/:employerId/jobs-summary', verifyToken, requireRole("employer"), getJobsSummaryForEmployer);
 
 /**
  * @swagger
