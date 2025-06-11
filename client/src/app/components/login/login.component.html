@@ -1,3 +1,6 @@
+
+<div class="auth-page"> 
+  <div class="auth-overlay"></div>
 <div class="login-container">
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <h2>Login</h2>
@@ -21,8 +24,9 @@
     <button type="submit" [disabled]="loginForm.invalid">Login</button>
 
     <div class="register-link">
-      <span>New user?</span>
+      <span>New user? </span>
       <a (click)="goToRegister()">Click here</a>
     </div>
   </form>
+</div>
 </div>
