@@ -68,9 +68,19 @@ export class EmployerDashboardComponent implements OnInit {
 
   // Fetch job summaries for this employer from backend
   fetchJobSummaries() {
-    if (!this.employerId) return;
+    if (!this.employerId || !this.token) {
+      console.warn('Cannot fetch job summaries: employerId or token missing');
+      return;
+    }
 
-    this.http.get<JobSummary[]>(environment.apiUrl +`/api/employer/${this.employerId}/jobs-summary`).subscribe({
+    this.http.get<JobSummary[]>(
+      environment.apiUrl + `/api/employer/${this.employerId}/jobs-summary`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.token}`
+        }
+      }
+    ).subscribe({
       next: res => {
         this.jobs = res;
         console.log('Jobs with applicant count:', this.jobs);

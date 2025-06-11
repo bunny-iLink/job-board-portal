@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { Routes, Route } from '@angular/router';
 import { authGuard } from './auth/auth-guard'; 
 // Import the eagerly loaded EmployerLayoutComponent since we need to use it as `component` (not lazy-loaded)
 import { EmployerLayoutComponent } from './components/employer/employer-layout/employer-layout';
@@ -37,7 +37,8 @@ export const routes: Routes = [
       },
       {
         path: 'job/:id',
-        loadComponent: () => import('../app/components/employer/job-details/job-details').then(m => m.JobDetailsComponent)
+        loadComponent: () => import('../app/components/employer/job-details/job-details').then(m => m.JobDetailsComponent),
+        // renderMode: 'direct'
       }
     ]
   },
