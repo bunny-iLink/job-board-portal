@@ -50,9 +50,14 @@
                 placeholder="Enter salary (in LPA)" required />
 
             <label for="type">Job Type</label>
-            <input id="type" type="text" [(ngModel)]="jobForm.type" name="type" placeholder="Job Type (e.g. Full-Time)"
+            <select id="type" type="text" [(ngModel)]="jobForm.type" name="type">
+                <option value="">All</option>
+                <option value="Full-Time">Full-Iime</option>
+                <option value="Part-Time">Part-Time</option>
+                <option value="Internship">Internship</option>
+                <option value="Remote">Remote</option>
                 required />
-
+            </select>
             <label for="experience">Experience (in years)</label>
             <input id="experience" type="number" [(ngModel)]="jobForm.experience" name="experience"
                 placeholder="Experience" min="0" />

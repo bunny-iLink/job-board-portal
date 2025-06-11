@@ -16,7 +16,7 @@ export const jobsSchema = new mongoose.Schema({
     location: { type: String, required: true },
     salary: { type: Number, required: true },
     type: { type: String, required: true },  // e.g., Full-Time, Contract, Remote
-    experience: { type: String, required: true },
+    experience: { type: Number, required: true },
     vacancies: { type: Number, required: true },
     status: { type: String, default: 'open' },
     createdAt: { type: Date, default: Date.now },

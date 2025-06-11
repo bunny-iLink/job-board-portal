@@ -251,8 +251,8 @@ export async function searchJobsForUsers(req, res) {
 
         if (type) query.type = type;
 
-        if (experience) {
-            query.experience = { $lte: Number(experience) };
+        if(experience) {
+            query.experience = { $lte: Number(experience)}
         }
 
         if (expectedSalary) {
