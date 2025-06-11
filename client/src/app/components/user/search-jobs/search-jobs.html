@@ -11,6 +11,8 @@
                 <option value="Full-time">Full-time</option>
                 <option value="Part-time">Part-time</option>
                 <option value="Internship">Internship</option>
+                <option value="Remote">Remote</option>
+
             </select>
         </label>
 
@@ -29,7 +31,7 @@
         <div class="job-card" *ngFor="let job of filteredJobs" (click)="openJobModal(job)">
             <h3>{{ job.title }}</h3>
             <p><strong>{{ job.company }}</strong> - {{ job.location }}</p>
-            <p>{{ job.type }} | {{ job.salary }}</p>
+            <p>{{ job.type }} | {{ job.salary }} LPA</p>
         </div>
     </div>
 </div>
