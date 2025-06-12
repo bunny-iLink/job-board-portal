@@ -1,10 +1,13 @@
 <!-- Employer profile page: view and edit employer details, including profile picture upload -->
-<div *ngIf="loading" class="loading" aria-live="polite" aria-busy="true">Loading profile...</div>
+<div *ngIf="loading" class="spinner-container" aria-live="polite" aria-busy="true">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading profile...</div>
+</div>
 <div *ngIf="error" class="error" aria-live="assertive">{{ error }}</div>
 
-<div class="profile-container">
+<div *ngIf="!loading && !error" class="profile-container">
     <!-- Profile form for updating employer details -->
-    <form *ngIf="!loading && !error" (ngSubmit)="updateProfile()" aria-labelledby="profileHeading">
+    <form (ngSubmit)="updateProfile()" aria-labelledby="profileHeading">
         <h2 id="profileHeading">Employer Profile</h2>
 
         <!-- Profile Picture Display and Upload -->
@@ -12,24 +15,17 @@
             <div class="current-picture">
                 <img *ngIf="employer?.profilePicture?.data && employer?.profilePicture?.contentType"
                     [src]="'data:' + employer.profilePicture.contentType + ';base64,' + employer.profilePicture.data"
-                    alt="Profile Picture" 
-                    class="profile-picture" 
-                    aria-describedby="pictureDescription" />
+                    alt="Profile Picture" class="profile-picture" aria-describedby="pictureDescription" />
 
-                <div *ngIf="!employer?.profilePicture?.data" 
-                     class="no-picture" 
-                     id="pictureDescription">
+                <div *ngIf="!employer?.profilePicture?.data" class="no-picture" id="pictureDescription">
                     No profile picture
                 </div>
             </div>
 
             <div class="upload-section">
                 <label for="profilePictureUpload" class="visually-hidden">Upload profile picture</label>
-                <input id="profilePictureUpload" 
-                       type="file" 
-                       (change)="onProfilePictureSelected($event)" 
-                       accept="image/*"
-                       aria-describedby="pictureUploadHelp" />
+                <input id="profilePictureUpload" type="file" (change)="onProfilePictureSelected($event)"
+                    accept="image/*" aria-describedby="pictureUploadHelp" />
                 <span id="pictureUploadHelp" class="visually-hidden">Accepts JPG, PNG or GIF images</span>
             </div>
         </div>
@@ -38,35 +34,23 @@
         <div class="form-group">
             <label for="name">
                 Name:
-                <input id="name" 
-                       type="text" 
-                       [(ngModel)]="employer.name" 
-                       name="name" 
-                       required
-                       aria-required="true" />
+                <input id="name" type="text" [(ngModel)]="employer.name" name="name" required aria-required="true" />
             </label>
         </div>
 
         <div class="form-group">
             <label for="email">
                 Email:
-                <input id="email" 
-                       type="email" 
-                       [(ngModel)]="employer.email" 
-                       name="email" 
-                       required
-                       aria-required="true" />
+                <input id="email" type="email" [(ngModel)]="employer.email" name="email" required
+                    aria-required="true" />
             </label>
         </div>
 
         <div class="form-group">
             <label for="password">
                 Password:
-                <input id="password" 
-                       type="password" 
-                       [(ngModel)]="employer.password" 
-                       name="password"
-                       aria-describedby="passwordHelp" />
+                <input id="password" type="password" [(ngModel)]="employer.password" name="password"
+                    aria-describedby="passwordHelp" />
                 <span id="passwordHelp" class="visually-hidden">Leave blank to keep current password</span>
             </label>
         </div>
@@ -74,52 +58,35 @@
         <div class="form-group">
             <label for="role">
                 Role:
-                <input id="role" 
-                       type="text" 
-                       [(ngModel)]="employer.role" 
-                       name="role" 
-                       readonly
-                       aria-readonly="true" />
+                <input id="role" type="text" [(ngModel)]="employer.role" name="role" readonly aria-readonly="true" />
             </label>
         </div>
 
         <div class="form-group">
             <label for="company">
                 Company:
-                <input id="company" 
-                       type="text" 
-                       [(ngModel)]="employer.company" 
-                       name="companyName" />
+                <input id="company" type="text" [(ngModel)]="employer.company" name="companyName" />
             </label>
         </div>
 
         <div class="form-group">
             <label for="experience">
                 Experience (years):
-                <input id="experience" 
-                       type="number" 
-                       [(ngModel)]="employer.experience" 
-                       name="experience" />
+                <input id="experience" type="number" [(ngModel)]="employer.experience" name="experience" />
             </label>
         </div>
 
         <div class="form-group">
             <label for="designation">
                 Designation:
-                <input id="designation" 
-                       type="text" 
-                       [(ngModel)]="employer.designation" 
-                       name="designation" />
+                <input id="designation" type="text" [(ngModel)]="employer.designation" name="designation" />
             </label>
         </div>
 
         <div class="form-group">
             <label for="domain">
                 Domain:
-                <select id="domain" 
-                        [(ngModel)]="employer.domain" 
-                        name="domain"
-                        aria-describedby="domainHelp">
+                <select id="domain" [(ngModel)]="employer.domain" name="domain" aria-describedby="domainHelp">
                     <option value="">Select preferred domain</option>
                     <option value="Technology & IT">Technology & IT</option>
                     <option value="Sales & Marketing">Sales & Marketing</option>
@@ -141,10 +108,7 @@
 
         <div class="buttons" role="group" aria-label="Form actions">
             <button type="submit">Save Changes</button>
-            <button type="button" 
-                    (click)="deleteProfile()" 
-                    class="delete-btn"
-                    aria-label="Delete profile permanently">
+            <button type="button" (click)="deleteProfile()" class="delete-btn" aria-label="Delete profile permanently">
                 Delete Profile
             </button>
         </div>

@@ -1,8 +1,14 @@
-<div *ngIf="loading" class="loading">Loading profile...</div>
+<div *ngIf="loading" class="spinner-container">
+    <div class="spinner"></div>
+    <div class="loading-text">
+        Loading profile...
+    </div>
+</div>
+
 <div *ngIf="error" class="error">{{ error }}</div>
 
-<div class="profile-container">
-    <form *ngIf="!loading && !error" (ngSubmit)="updateProfile()">
+<div *ngIf="!loading && !error" class="profile-container">
+    <form (ngSubmit)="updateProfile()">
         <h2>User Profile</h2>
 
         <div class="profile-picture-section">

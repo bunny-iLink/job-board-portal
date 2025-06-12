@@ -98,8 +98,9 @@
     </div>
 </div>
 
-<div class="loading" *ngIf="loading">
-    Loading job listings...
+<div class="spinner-container" *ngIf="loading">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading job listings...</div>
 </div>
 
 <!-- Job List -->

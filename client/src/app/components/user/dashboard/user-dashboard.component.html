@@ -2,8 +2,9 @@
 <div class="dashboard-container">
 
     <!-- Loading user data -->
-    <div *ngIf="isUserLoading" class="loading-container">
-        <p>Loading user data...</p>
+    <div *ngIf="isUserLoading" class="spinner-container">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading user data...</div>
     </div>
 
     <!-- Display user info -->
@@ -13,8 +14,9 @@
     </header>
 
     <!-- Loading applied jobs -->
-    <div *ngIf="isJobsLoading" class="loading-container">
-        <p>Loading your applied jobs...</p>
+    <div *ngIf="isJobsLoading" class="spinner-container">
+        <div class="spinner"></div>
+        <div>Loading your applied jobs...</div>
     </div>
 
     <!-- Message if no applied jobs -->

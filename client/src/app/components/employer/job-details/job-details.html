@@ -1,5 +1,6 @@
-<div *ngIf="loadingJobDetails" class="loading-container" aria-busy="true">
-  <p>Loading job details and applicants...</p>
+<div *ngIf="loadingJobDetails" class="spinner-container" aria-busy="true">
+  <div class="spinner"></div>
+  <div class="loading-text">Loading job details and applicants...</div>
   <!-- You can replace with a spinner icon or animation -->
 </div>
 
@@ -62,7 +63,5 @@
         </select>
       </p>
     </div>
-
-
   </section>
 </div>

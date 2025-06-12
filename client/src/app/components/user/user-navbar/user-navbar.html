@@ -35,9 +35,10 @@
 
   <div class="notification-content">
     <!-- Loading State -->
-    <p *ngIf="loadingNotifications" class="loading-msg">
-      Loading notifications...
-    </p>
+    <div *ngIf="loadingNotifications" class="spinner-container">
+      <div class="spinner"></div>
+      <div class="loading-text">Loading notifications...</div>
+    </div>
 
     <!-- No Notifications -->
     <p *ngIf="!loadingNotifications && (!notifications || notifications.length === 0)" class="no-notifications">

@@ -32,8 +32,9 @@
     </div>
 
     <!-- Loading indicator -->
-    <div *ngIf="loadingJobs" class="loading-message">
-        <p>Loading jobs, please wait...</p>
+    <div *ngIf="loadingJobs" class="spinner-container">
+        <div class="spinner"></div>
+        <div>Loading jobs, please wait...</div>
     </div>
 
     <!-- Grid of filtered job cards -->

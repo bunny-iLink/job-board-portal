@@ -3,8 +3,9 @@
   <h2>Your Applied Jobs</h2>
 
   <!-- Show loading spinner -->
-  <div *ngIf="loading" class="loading-spinner">
-    Loading applied jobs...
+  <div *ngIf="loading" class="apinner-container">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading applied jobs...</div>
   </div>
 
   <!-- Message if user hasn't applied to any jobs -->
@@ -40,6 +41,7 @@
 
     <h2>{{ selectedJob.title }}</h2>
     <p><strong>Company:</strong> {{ selectedJob.company }}</p>
+    <p><strong>Employer Name:</strong> {{ selectedJob.employerName }}</p>
     <p><strong>Location:</strong> {{ selectedJob.location }}</p>
     <p><strong>Type:</strong> {{ selectedJob.type }}</p>
     <p><strong>Salary:</strong> ₹{{ selectedJob.salary }} LPA</p>
