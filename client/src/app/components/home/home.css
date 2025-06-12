@@ -5,18 +5,10 @@
   padding: 0;
 }
 
-html, body {
-  height: 100%;
-  overflow-x: hidden;
-}
-
 body {
   background-color: #f9f9f9;
   color: #333;
   line-height: 1.6;
-  font-family: Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
 }
 
 /* Hero Section */
@@ -61,7 +53,7 @@ body {
 }
 
 .title {
-  font-size: 2.25rem;
+  font-size: 36px;
   font-weight: bold;
   margin-bottom: 16px;
 }
@@ -71,7 +63,7 @@ body {
 }
 
 .subtitle {
-  font-size: 1.125rem;
+  font-size: 18px;
   margin-bottom: 32px;
 }
 
@@ -79,20 +71,17 @@ body {
 .action-buttons {
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
   gap: 16px;
 }
 
 .btn {
   padding: 12px 24px;
-  font-size: 1rem;
+  font-size: 16px;
   border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
   border: none;
   transition: background-color 0.3s ease;
-  flex: 1 1 150px;
-  min-width: 60px;
 }
 
 .primary-btn {
@@ -121,7 +110,7 @@ body {
 }
 
 .section-title {
-  font-size: 1.75rem;
+  font-size: 28px;
   color: #0073e6;
   margin-bottom: 40px;
 }
@@ -163,7 +152,7 @@ body {
   background-color: #f1f1f1;
   font-size: 14px;
   color: #555;
-  margin-top: auto;
+  margin-top: 40px;
 }
 
 /* Animations (optional) */
@@ -198,49 +187,5 @@ body {
   to {
     opacity: 1;
     transform: scale(1);
-  }
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-  .title {
-    font-size: 1.75rem;
-  }
-
-  .subtitle {
-    font-size: 1rem;
-  }
-
-  .hero-section {
-    padding: 60px 16px;
-  }
-
-  .features-container {
-    grid-template-columns: 1fr;
-  }
-
-  .action-buttons {
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .btn {
-    width: 100%;
-    max-width: 300px;
-  }
-}
-
-@media (max-width: 480px) {
-  .title {
-    font-size: 1.5rem;
-  }
-
-  .section-title {
-    font-size: 1.5rem;
-  }
-
-  .feature-card {
-    padding: 16px;
   }
 }
