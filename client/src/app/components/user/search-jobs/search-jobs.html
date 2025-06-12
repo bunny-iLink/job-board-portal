@@ -24,7 +24,7 @@
         </label>
     </div>
 
-    <div *ngIf="showDomainWarning" class="warning-message">
+    <div *ngIf="showDomainWarning && !loadingJobs" class="warning-message">
         <p>
             Please <strong>set your preferred domain</strong> in your profile, or
             <strong>use the search box or filters</strong> to find relevant jobs.
@@ -53,6 +53,7 @@
 
         <h2>{{ selectedJob.title }}</h2>
         <p><strong>Company:</strong> {{ selectedJob.company }}</p>
+        <p><strong>Employer Name:</strong> {{ selectedJob.employerName}}</p>
         <p><strong>Location:</strong> {{ selectedJob.location }}</p>
         <p><strong>Type:</strong> {{ selectedJob.type }}</p>
         <p><strong>Salary:</strong> ₹{{ selectedJob.salary }} LPA</p>

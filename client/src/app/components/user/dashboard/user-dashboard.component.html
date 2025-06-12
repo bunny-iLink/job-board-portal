@@ -2,29 +2,28 @@
 <div class="dashboard-container">
 
     <!-- Loading user data -->
-    <div *ngIf="loadingUserData" class="loading-container">
+    <div *ngIf="isUserLoading" class="loading-container">
         <p>Loading user data...</p>
     </div>
 
-    <!-- Fallback message ONLY if user loading has been tried and failed -->
-    <div *ngIf="!loadingUserData && hasTriedLoadingUser && !user" class="no-user">
-        <p>Unable to load user data.</p>
-    </div>
-
     <!-- Display user info -->
-    <header class="dashboard-header" *ngIf="!loadingUserData && user">
+    <header class="dashboard-header" *ngIf="!isUserLoading && user">
         <h1>Welcome, {{ user.name }}</h1>
         <p><strong>Email:</strong> {{ user.email }}</p>
     </header>
 
-
     <!-- Loading applied jobs -->
-    <div *ngIf="loadingUserAppliedJobs" class="loading-container">
+    <div *ngIf="isJobsLoading" class="loading-container">
         <p>Loading your applied jobs...</p>
     </div>
 
+    <!-- Message if no applied jobs -->
+    <div *ngIf="!isJobsLoading && appliedJobs.length === 0 && user" class="not-applied">
+        <p>You haven’t applied for any jobs yet.</p>
+    </div>
+
     <!-- Applied jobs section -->
-    <section class="applied-jobs" *ngIf="!loadingUserAppliedJobs && appliedJobs.length > 0">
+    <section class="applied-jobs" *ngIf="!isJobsLoading && appliedJobs.length > 0">
         <h2>Your Applied Jobs</h2>
         <table class="job-table">
             <thead>
@@ -49,9 +48,4 @@
             </tbody>
         </table>
     </section>
-
-    <!-- Message if no applied jobs -->
-    <div *ngIf="!loadingUserAppliedJobs && appliedJobs.length === 0 && user" class="not-applied">
-        <p>You haven’t applied for any jobs yet.</p>
-    </div>
 </div>
