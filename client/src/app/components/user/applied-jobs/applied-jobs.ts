@@ -25,6 +25,7 @@ export class AppliedJobsComponent implements OnInit {
   // Modal state and selected job for details
   selectedJob: any = null;
   showModal: boolean = false;
+  loading: boolean = true; 
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
@@ -44,7 +45,7 @@ export class AppliedJobsComponent implements OnInit {
         this.userId = userObject._id;              // Extract user ID
 
         // Fetch user profile from backend
-        this.http.get(environment.apiUrl +`/api/getUserData/${this.userId}`).subscribe({
+        this.http.get(environment.apiUrl + `/api/getUserData/${this.userId}`).subscribe({
           next: (res: any) => {
             this.user = res.user;
             console.log('User data:', this.user);
@@ -62,16 +63,22 @@ export class AppliedJobsComponent implements OnInit {
   // Load jobs that the user has applied to from the backend
   loadAppliedJobs() {
     if (!this.userId) return;
-    this.http.get(environment.apiUrl +`/api/appliedJobs/${this.userId}`).subscribe({
+
+    this.loading = true; // Start loading
+
+    this.http.get(environment.apiUrl + `/api/appliedJobs/${this.userId}`).subscribe({
       next: (res: any) => {
         this.appliedJobs = res.jobs || res;
         console.log('Applied jobs:', this.appliedJobs);
+        this.loading = false; // Stop loading on success
       },
       error: err => {
         console.error('Failed to load applied jobs:', err);
+        this.loading = false; // Stop loading on error
       }
     });
   }
+
 
   // Open the modal to show job details
   openJobModal(job: any) {
@@ -101,7 +108,7 @@ export class AppliedJobsComponent implements OnInit {
     const confirmRevoke = confirm("Are you sure you want to revoke your application for this job?");
     if (!confirmRevoke) return;
 
-    this.http.delete(environment.apiUrl +`/api/revokeApplication/${application.applicationId}`, {
+    this.http.delete(environment.apiUrl + `/api/revokeApplication/${application.applicationId}`, {
       headers: {
         Authorization: `Bearer ${this.token}`
       }

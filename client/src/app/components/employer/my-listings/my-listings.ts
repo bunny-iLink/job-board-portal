@@ -52,6 +52,8 @@ export class MyListingsComponent implements OnInit {
   jobForm: Job = this.getEmptyJob();
   // API base URL
   readonly baseUrl = environment.apiUrl + '/api';
+  
+  loading = false;
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
@@ -107,6 +109,8 @@ export class MyListingsComponent implements OnInit {
       return;
     }
 
+    this.loading = true;
+
     this.http.get<Job[]>(`${this.baseUrl}/getJobs/${employerId}`, {
       headers: {
         Authorization: `Bearer ${token}`
@@ -115,9 +119,11 @@ export class MyListingsComponent implements OnInit {
       next: (res) => {
         this.jobs = res;
         console.log('Jobs fetched:', res);
+        this.loading = false;
       },
       error: (err) => {
         console.error('Failed to fetch jobs:', err);
+        this.loading = false;
       }
     });
   }

@@ -24,6 +24,25 @@
   color: #444;
 }
 
+.loading-container {
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.no-user {
+  text-align: center;
+  padding: 1rem;
+  color: #a00;
+}
+
+.not-applied {
+  text-align: center;
+  padding: 1rem;
+  font-style: italic;
+}
+
 .applied-jobs {
   margin-top: 20px;
 }
@@ -80,6 +99,7 @@
   color: #666;
   margin-top: 40px;
 }
-.not-applied{
+
+.not-applied {
   text-align: center;
 }

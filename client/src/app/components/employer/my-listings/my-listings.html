@@ -98,6 +98,9 @@
     </div>
 </div>
 
+<div class="loading" *ngIf="loading">
+    Loading job listings...
+</div>
 
 <!-- Job List -->
 <div class="job-list">
@@ -113,4 +116,9 @@
             <button class="delete-btn" (click)="deleteJob(job._id!)">Delete</button>
         </div>
     </div>
+</div>
+
+<!-- No jobs -->
+<div *ngIf="!loading && jobs.length === 0">
+    No job listings found.
 </div>

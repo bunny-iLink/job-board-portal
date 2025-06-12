@@ -6,7 +6,6 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
   background-color: #f9f9f9;
   color: #333;
   line-height: 1.6;
@@ -174,12 +173,6 @@ body {
   opacity: 0;
   transform: scale(0.95);
   animation: popIn 0.5s ease forwards;
-}
-
-.feature-icon {
-  width: 150%;
-  max-width: 200px;
-  height: auto;
 }
 
 @keyframes reveal {

@@ -19,6 +19,7 @@ export class JobDetailsComponent implements OnInit {
   resumeBlobUrls: { [key: string]: string } = {}; // Store blob URLs by applicant ID
   token: string | null = null;
 
+  loadingJobDetails = false;
   constructor(private route: ActivatedRoute, private http: HttpClient, private authService: AuthService) { }
 
   ngOnInit(): void {
@@ -37,7 +38,8 @@ export class JobDetailsComponent implements OnInit {
   }
 
   // Fetch job details and list of applicants from backend
-  loadJobDetails() {
+  loadJobDetails(): void {
+    this.loadingJobDetails = true;
     this.http.get<{ job: any; applicants: any[] }>(environment.apiUrl + `/api/getJobById/${this.jobId}`)
       .subscribe({
         next: res => {
@@ -49,8 +51,14 @@ export class JobDetailsComponent implements OnInit {
               this.createResumeBlobUrl(applicant);
             }
           });
+          this.loadingJobDetails = false;
+          console.log(this.applicants);
+          
         },
-        error: err => console.error('Failed to load job details:', err)
+        error: err => {
+          console.error('Failed to load job details:', err);
+          this.loadingJobDetails = false;
+        }
       });
   }
 

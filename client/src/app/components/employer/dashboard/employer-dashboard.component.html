@@ -1,36 +1,38 @@
 <!-- Employer dashboard main container -->
 <div class="dashboard-container" role="main">
   <!-- Header section displaying employer details if logged in -->
-  <header class="dashboard-header" *ngIf="token && employer">
-    <h1>Welcome, {{ employer?.name }}</h1>
-    <p><strong>Email:</strong> {{ employer?.email }}</p>
-    <p *ngIf="employer?.company"><strong>Company:</strong> {{ employer?.company }}</p>
+  <header class="dashboard-header" *ngIf="token">
+    <div *ngIf="isEmployerLoading" class="loading-message">Loading employer data...</div>
+    <div *ngIf="!isEmployerLoading && employer">
+      <h1>Welcome, {{ employer?.name }}</h1>
+      <p><strong>Email:</strong> {{ employer?.email }}</p>
+      <p *ngIf="employer?.company"><strong>Company:</strong> {{ employer?.company }}</p>
+    </div>
   </header>
 
   <!-- Section for listing employer's job postings -->
   <section *ngIf="token" aria-labelledby="jobListingsHeading">
     <h2 id="jobListingsHeading" class="section-title">My Job Listings</h2>
 
-    <!-- Message if no jobs are posted -->
-    <div *ngIf="jobs.length === 0" class="no-jobs">
+    <div *ngIf="isJobsLoading" class="loading-message">
+      Loading job listings...
+    </div>
+
+    <div *ngIf="!isJobsLoading && jobs.length === 0" class="no-jobs">
       <p>No jobs posted yet.</p>
     </div>
 
-    <!-- Grid of job tiles, each clickable for details -->
-    <div class="job-grid" role="list">
-      <div *ngFor="let job of jobs" 
-           class="job-tile" 
-           role="listitem"
-           tabindex="0"
-           (click)="viewJobDetails(job._id)"
-           (keyup.enter)="viewJobDetails(job._id)"
-           [attr.aria-label]="'Job listing for ' + job.title + ' with ' + job.applicantCount + ' applicants and ' + job.vacancies + ' vacancies'">
+    <div *ngIf="!isJobsLoading && jobs.length > 0" class="job-grid" role="list">
+      <div *ngFor="let job of jobs" class="job-tile" role="listitem" tabindex="0" (click)="viewJobDetails(job._id)"
+        (keyup.enter)="viewJobDetails(job._id)"
+        [attr.aria-label]="'Job listing for ' + job.title + ' with ' + job.applicantCount + ' applicants and ' + job.vacancies + ' vacancies'">
         <h3>{{ job.title }}</h3>
         <p><strong>Applicants:</strong> {{ job.applicantCount }}</p>
         <p><strong>Vacancies:</strong> {{ job.vacancies }}</p>
       </div>
     </div>
   </section>
+
 
   <!-- Message for users who are not logged in -->
   <div *ngIf="!token" class="no-data" aria-live="polite">

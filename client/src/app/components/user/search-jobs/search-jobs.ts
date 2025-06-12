@@ -26,7 +26,7 @@ export class SearchJobsComponent implements OnInit {
   token: string | null = null;
   showModal: boolean = false;
   showDomainWarning: boolean = false;
-
+  loadingJobs: boolean = false;
 
   // Filter options for job type, experience, and expected salary
   filters = {
@@ -71,22 +71,25 @@ export class SearchJobsComponent implements OnInit {
       return;
     }
 
+    this.loadingJobs = true; // ✅ Start loading
     const hasFilters = this.filters.type || this.filters.experience || this.filters.expectedSalary;
     const hasSearch = this.searchTerm.trim().length > 0;
     const hasPreferredDomain = user.preferredDomain?.trim().length > 0;
 
-    // If nothing is set — show all jobs and show a message
     if (!hasFilters && !hasSearch && !hasPreferredDomain) {
       this.showDomainWarning = true;
 
-      // Fetch all jobs manually
       this.http.get(environment.apiUrl + `/api/searchJobs`)
         .subscribe({
           next: (res: any) => {
             this.allJobs = res;
             this.filteredJobs = [...res];
+            this.loadingJobs = false; // ✅ Stop loading
           },
-          error: (err) => console.error('Error fetching all jobs:', err)
+          error: (err) => {
+            console.error('Error fetching all jobs:', err);
+            this.loadingJobs = false;
+          }
         });
 
       return;
@@ -94,7 +97,6 @@ export class SearchJobsComponent implements OnInit {
 
     this.showDomainWarning = false;
 
-    // Build query with filters and preferred domain
     const queryParams: any = {
       userId: user._id,
       domain: user.preferredDomain,
@@ -112,12 +114,14 @@ export class SearchJobsComponent implements OnInit {
         next: (res: any) => {
           this.allJobs = res;
           this.filteredJobs = [...res];
+          this.loadingJobs = false; // ✅ Stop loading
         },
-        error: (err) => console.error('Error fetching jobs:', err)
+        error: (err) => {
+          console.error('Error fetching jobs:', err);
+          this.loadingJobs = false;
+        }
       });
   }
-
-
 
   openJobModal(job: any) {
     this.selectedJob = job;

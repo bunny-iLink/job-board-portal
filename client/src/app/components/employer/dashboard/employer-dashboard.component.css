@@ -33,6 +33,12 @@
   padding-bottom: 4px;
 }
 
+.loading-message {
+  padding: 1rem;
+  font-weight: bold;
+  color: #555;
+}
+
 .job-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));

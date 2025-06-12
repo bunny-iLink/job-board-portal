@@ -20,6 +20,13 @@
   transition: background-color 0.3s ease;
 }
 
+.loading {
+  text-align: center;
+  font-size: 18px;
+  margin-top: 20px;
+  color: #555;
+}
+
 .add-btn:hover {
   background-color: #004a8c;
 }
@@ -222,7 +229,6 @@
   font-size: 15px;
   color: #333;
   background-color: #fff;
-  font-family: inherit;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
   box-sizing: border-box;
 }

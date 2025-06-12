@@ -1,3 +1,8 @@
+<div *ngIf="loadingJobDetails" class="loading-container" aria-busy="true">
+  <p>Loading job details and applicants...</p>
+  <!-- You can replace with a spinner icon or animation -->
+</div>
+
 <div class="job-details-container" *ngIf="job">
   <h1>{{ job.title }}</h1>
   <p><strong>Company:</strong> {{ job.company }}</p>
@@ -43,6 +48,11 @@
     <div *ngFor="let applicant of applicants" class="applicant-card">
       <p><strong>Name:</strong> {{ applicant.userId?.name || 'N/A' }}</p>
       <p><strong>Email:</strong> {{ applicant.userId?.email || 'N/A' }}</p>
+      <p><strong>Contact Number:</strong> {{ applicant.userId?.phone || 'N/A'}}</p>
+      <p><strong>Applied At:</strong> {{ applicant.appliedAt | date:'medium' }}</p>
+      <a *ngIf="applicant.userId?.resume" (click)="openResume(applicant._id)" style="cursor: pointer;">
+        View Resume
+      </a>
       <p><strong>Status:</strong>
         <select [ngModel]="applicant.status" (ngModelChange)="onStatusChange(applicant._id, $event)"
           class="status-dropdown">
@@ -51,10 +61,6 @@
           <option value="Rejected">Rejected</option>
         </select>
       </p>
-      <p><strong>Applied At:</strong> {{ applicant.appliedAt | date:'medium' }}</p>
-      <a *ngIf="applicant.userId?.resume" (click)="openResume(applicant._id)" style="cursor: pointer;">
-        View Resume
-      </a>
     </div>
 
 

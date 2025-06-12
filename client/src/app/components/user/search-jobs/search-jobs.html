@@ -31,11 +31,15 @@
         </p>
     </div>
 
+    <!-- Loading indicator -->
+    <div *ngIf="loadingJobs" class="loading-message">
+        <p>Loading jobs, please wait...</p>
+    </div>
 
     <!-- Grid of filtered job cards -->
     <div class="jobs-grid">
         <div class="job-card" *ngFor="let job of filteredJobs" (click)="openJobModal(job)">
-            <h3>{{ job.title }}</h3>
+            <h4>{{ job.title }}</h4>
             <p><strong>{{ job.company }}</strong> - {{ job.location }}</p>
             <p>{{ job.type }} | {{ job.salary }} LPA</p>
         </div>

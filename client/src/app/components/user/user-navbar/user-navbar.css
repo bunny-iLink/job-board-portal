@@ -2,7 +2,6 @@
 .navbar {
   background-color: #0A66C2;
   color: white;
-  font-family: Arial, sans-serif;
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -127,7 +126,7 @@
     gap: 10px;
     padding: 12px 24px;
     background-color: #0A66C2;
-    width: 100%;
+    width: 85%;
   }
 
   .navbar-links.show {

@@ -25,6 +25,8 @@ export class UserNavbar implements OnInit {
   // Controls mobile menu visibility
   showMobileMenu = false;
 
+  loadingNotifications = false;
+
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -66,24 +68,29 @@ export class UserNavbar implements OnInit {
 
   // Toggle notification dropdown and fetch notifications from backend if opening
   toggleNotifications(): void {
-    if (!this.showNotifications) {
-      const userId = this.authService.getUserId(); // Ensure this method exists in AuthService
-      this.http.get(environment.apiUrl + `/api/notifications/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${this.token}`
-        }
-      }).subscribe({
-        next: (data: any) => {
-          this.notifications = data.notifications;
-          this.showNotifications = true;
-        },
-        error: (error) => {
-          console.error('Error fetching notifications', error);
-        }
-      });
-    } else {
-      this.showNotifications = false;
-    }
+    // Toggle visibility ON
+    this.showNotifications = true;
+    this.loadingNotifications = true;
+
+    const userId = this.authService.getUserId();
+    this.http.get(environment.apiUrl + `/api/notifications/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      }
+    }).subscribe({
+      next: (data: any) => {
+        this.notifications = data.notifications || [];
+        this.loadingNotifications = false;
+      },
+      error: (error) => {
+        console.error('Error fetching notifications', error);
+        this.loadingNotifications = false;
+      }
+    });
+  }
+
+  closeNotifications(): void {
+    this.showNotifications = false;
   }
 
   // Toggle mobile menu visibility
