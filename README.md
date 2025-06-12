@@ -77,6 +77,15 @@ node server.js
 4. **Access the site**
 - Access the frontend at http://localhost:4200/ and backend at http://localhost:3000/
 
+---
+
+## 🚀 Want to Try Our Hosted Website?  
+
+Check out the live version of our application here:  
+
+[🔗 Job Board Portal](https://bunny-ilink.github.io/job-board-portal/)
+
+- Explore job listings, post new opportunities, and experience the full functionality without needing to set anything up locally!
 
 
 
