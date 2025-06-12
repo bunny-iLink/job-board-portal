@@ -30,17 +30,29 @@
 <div *ngIf="showNotifications" class="notification-modal">
   <div class="notification-header">
     <h4>Notifications</h4>
-    <button class="close-btn" (click)="toggleNotifications()">×</button>
+    <button class="close-btn" (click)="closeNotifications()">×</button>
   </div>
+
   <div class="notification-content">
-    <ul *ngIf="notifications && notifications.length > 0">
-      <li *ngFor="let notification of notifications">{{ notification.message }}</li>
-    </ul>
-    <p *ngIf="!notifications || notifications.length === 0" class="no-notifications">
+    <!-- Loading State -->
+    <p *ngIf="loadingNotifications" class="loading-msg">
+      Loading notifications...
+    </p>
+
+    <!-- No Notifications -->
+    <p *ngIf="!loadingNotifications && (!notifications || notifications.length === 0)" class="no-notifications">
       No new notifications
     </p>
+
+    <!-- Notifications List -->
+    <ul *ngIf="!loadingNotifications && notifications && notifications.length > 0">
+      <li *ngFor="let notification of notifications">
+        {{ notification.message }}
+      </li>
+    </ul>
   </div>
 </div>
+
 
 <!-- Overlay for mobile menu -->
 <div *ngIf="showMobileMenu" class="mobile-overlay" (click)="toggleMobileMenu()"></div>

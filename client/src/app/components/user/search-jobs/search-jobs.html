@@ -8,11 +8,10 @@
         <label>Type:
             <select [(ngModel)]="filters.type" (change)="searchJobs()">
                 <option value="">All</option>
-                <option value="Full-time">Full-time</option>
-                <option value="Part-time">Part-time</option>
+                <option value="Full-Time">Full-Time</option>
+                <option value="Part-Time">Part-Time</option>
                 <option value="Internship">Internship</option>
                 <option value="Remote">Remote</option>
-
             </select>
         </label>
 
@@ -25,11 +24,22 @@
         </label>
     </div>
 
+    <div *ngIf="showDomainWarning" class="warning-message">
+        <p>
+            Please <strong>set your preferred domain</strong> in your profile, or
+            <strong>use the search box or filters</strong> to find relevant jobs.
+        </p>
+    </div>
+
+    <!-- Loading indicator -->
+    <div *ngIf="loadingJobs" class="loading-message">
+        <p>Loading jobs, please wait...</p>
+    </div>
 
     <!-- Grid of filtered job cards -->
     <div class="jobs-grid">
         <div class="job-card" *ngFor="let job of filteredJobs" (click)="openJobModal(job)">
-            <h3>{{ job.title }}</h3>
+            <h4>{{ job.title }}</h4>
             <p><strong>{{ job.company }}</strong> - {{ job.location }}</p>
             <p>{{ job.type }} | {{ job.salary }} LPA</p>
         </div>

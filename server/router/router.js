@@ -454,7 +454,7 @@ router.get('/searchJobs', searchJobsForUsers);
  *       404:
  *         description: Job not found
  */
-router.put('/updateJob/:jobId', updateJob);
+router.put('/updateJob/:jobId', verifyToken, requireRole("employer"), updateJob);
 
 /**
  * @swagger
@@ -485,7 +485,7 @@ router.put('/updateJob/:jobId', updateJob);
  *       404:
  *         description: User not found
  */
-router.put('/updateUser/:userId', updateUserData);
+router.put('/updateUser/:userId', verifyToken, requireRole("user"), updateUserData);
 
 /**
  * @swagger
@@ -550,7 +550,7 @@ router.put('/updateEmployer/:employerId', updateEmployerData);
  *       400:
  *         description: Invalid status
  */
-router.put('/:applicationId/status', updateApplicationStatus);
+router.put('/:applicationId/status', verifyToken, requireRole("employer"), updateApplicationStatus);
 
 // DELETE methods
 
@@ -573,7 +573,7 @@ router.put('/:applicationId/status', updateApplicationStatus);
  *       404:
  *         description: Job not found
  */
-router.delete('/deleteJob/:jobId', deleteJob);
+router.delete('/deleteJob/:jobId', verifyToken, requireRole("employer"), deleteJob);
 
 /**
  * @swagger
@@ -594,7 +594,7 @@ router.delete('/deleteJob/:jobId', deleteJob);
  *       404:
  *         description: User not found
  */
-router.delete('/deleteUser/:userId', deleteUserData);
+router.delete('/deleteUser/:userId', verifyToken, requireRole("user"), deleteUserData);
 
 /**
  * @swagger
@@ -615,7 +615,7 @@ router.delete('/deleteUser/:userId', deleteUserData);
  *       404:
  *         description: Employer not found
  */
-router.delete('/deleteEmployer/:employerId', deleteEmployerData);
+router.delete('/deleteEmployer/:employerId', verifyToken, requireRole("employer"), deleteEmployerData);
 
 /**
  * @swagger
@@ -636,58 +636,6 @@ router.delete('/deleteEmployer/:employerId', deleteEmployerData);
  *       404:
  *         description: Application not found
  */
-router.delete('/revokeApplication/:application_id', revokeApplication);
-
-//PATCH methods
-
-/**
- * @swagger
- * /application/update-status:
- *   patch:
- *     summary: Update the status of an application
- *     tags: [Applications]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               applicationId:
- *                 type: string
- *                 description: ID of the application
- *               status:
- *                 type: string
- *                 enum: [In Progress, Accepted, Rejected]
- *                 description: New status to be set
- *             example:
- *               applicationId: "60c72b2f9b1d8b3d88f9d999"
- *               status: "Accepted"
- *     responses:
- *       200:
- *         description: Status updated successfully
- *       400:
- *         description: Invalid status
- *       404:
- *         description: Application not found
- */
-router.patch('/application/update-status', async (req, res) => {
-    try {
-        const { applicationId, status } = req.body;
-
-        if (!['In Progress', 'Accepted', 'Rejected'].includes(status)) {
-            return res.status(400).json({ message: "Invalid status" });
-        }
-
-        const updated = await Application.findByIdAndUpdate(applicationId, { status }, { new: true });
-        if (!updated) {
-            return res.status(404).json({ message: "Application not found" });
-        }
-
-        res.status(200).json({ message: "Status updated", application: updated });
-    } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
-    }
-});
+router.delete('/revokeApplication/:application_id', verifyToken, requireRole("user"), revokeApplication);
 
 export default router;

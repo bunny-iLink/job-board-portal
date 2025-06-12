@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-search-jobs',
@@ -22,7 +23,10 @@ export class SearchJobsComponent implements OnInit {
   // Currently selected job for modal
   selectedJob: any = null;
   // Modal state
+  token: string | null = null;
   showModal: boolean = false;
+  showDomainWarning: boolean = false;
+  loadingJobs: boolean = false;
 
   // Filter options for job type, experience, and expected salary
   filters = {
@@ -32,11 +36,12 @@ export class SearchJobsComponent implements OnInit {
   };
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   // On component initialization, fetch and display jobs
   ngOnInit() {
     this.searchJobs();
+    this.token = this.authService.getToken();
   }
 
   // Utility: Check if running in browser
@@ -66,6 +71,32 @@ export class SearchJobsComponent implements OnInit {
       return;
     }
 
+    this.loadingJobs = true; // ✅ Start loading
+    const hasFilters = this.filters.type || this.filters.experience || this.filters.expectedSalary;
+    const hasSearch = this.searchTerm.trim().length > 0;
+    const hasPreferredDomain = user.preferredDomain?.trim().length > 0;
+
+    if (!hasFilters && !hasSearch && !hasPreferredDomain) {
+      this.showDomainWarning = true;
+
+      this.http.get(environment.apiUrl + `/api/searchJobs`)
+        .subscribe({
+          next: (res: any) => {
+            this.allJobs = res;
+            this.filteredJobs = [...res];
+            this.loadingJobs = false; // ✅ Stop loading
+          },
+          error: (err) => {
+            console.error('Error fetching all jobs:', err);
+            this.loadingJobs = false;
+          }
+        });
+
+      return;
+    }
+
+    this.showDomainWarning = false;
+
     const queryParams: any = {
       userId: user._id,
       domain: user.preferredDomain,
@@ -74,10 +105,7 @@ export class SearchJobsComponent implements OnInit {
 
     if (this.filters.type) queryParams.type = this.filters.type;
     if (this.filters.experience) queryParams.experience = this.filters.experience;
-    if (this.filters.expectedSalary) {
-      queryParams.expectedSalary = this.filters.expectedSalary;
-    }
-
+    if (this.filters.expectedSalary) queryParams.expectedSalary = this.filters.expectedSalary;
 
     const queryString = new URLSearchParams(queryParams).toString();
 
@@ -86,8 +114,12 @@ export class SearchJobsComponent implements OnInit {
         next: (res: any) => {
           this.allJobs = res;
           this.filteredJobs = [...res];
+          this.loadingJobs = false; // ✅ Stop loading
         },
-        error: (err) => console.error('Error fetching jobs:', err)
+        error: (err) => {
+          console.error('Error fetching jobs:', err);
+          this.loadingJobs = false;
+        }
       });
   }
 
@@ -119,7 +151,11 @@ export class SearchJobsComponent implements OnInit {
       jobId: job._id
     };
 
-    this.http.post(environment.apiUrl + '/api/applyForJob', payload).subscribe({
+    this.http.post(environment.apiUrl + '/api/applyForJob', payload, {
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      }
+    }).subscribe({
       next: (res: any) => {
         alert(res.message || 'Application submitted!');
         this.closeModal();

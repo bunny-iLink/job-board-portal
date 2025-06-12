@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
+import { AuthService } from '../../service/auth.service';
 @Component({
   selector: 'app-job-details',
   standalone: true,
@@ -16,20 +17,30 @@ export class JobDetailsComponent implements OnInit {
   job: any = null;
   applicants: any[] = [];
   resumeBlobUrls: { [key: string]: string } = {}; // Store blob URLs by applicant ID
+  token: string | null = null;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) { }
+  loadingJobDetails = false;
+  constructor(private route: ActivatedRoute, private http: HttpClient, private authService: AuthService) { }
 
   ngOnInit(): void {
     // Get job ID from route parameters and load job details
-    this.jobId = this.route.snapshot.paramMap.get('id') || '';
+    this.route.queryParamMap.subscribe(params => {
+      this.jobId = params.get('id') || '';
+      if (this.jobId) {
+        this.loadJobDetails();
+      }
+    });
+
+    this.token = this.authService.getToken();
     if (this.jobId) {
       this.loadJobDetails();
     }
   }
 
   // Fetch job details and list of applicants from backend
-  loadJobDetails() {
-    this.http.get<{ job: any; applicants: any[] }>(environment.apiUrl +`/api/getJobById/${this.jobId}`)
+  loadJobDetails(): void {
+    this.loadingJobDetails = true;
+    this.http.get<{ job: any; applicants: any[] }>(environment.apiUrl + `/api/getJobById/${this.jobId}`)
       .subscribe({
         next: res => {
           this.job = res.job;
@@ -40,8 +51,14 @@ export class JobDetailsComponent implements OnInit {
               this.createResumeBlobUrl(applicant);
             }
           });
+          this.loadingJobDetails = false;
+          console.log(this.applicants);
+          
         },
-        error: err => console.error('Failed to load job details:', err)
+        error: err => {
+          console.error('Failed to load job details:', err);
+          this.loadingJobDetails = false;
+        }
       });
   }
 
@@ -92,8 +109,12 @@ export class JobDetailsComponent implements OnInit {
     const confirmed = window.confirm(`Are you sure you want to change the status to "${newStatus}"?`);
     if (!confirmed) return;
 
-    this.http.put(environment.apiUrl +`/api/${applicationId}/status`, {
+    this.http.put(environment.apiUrl + `/api/${applicationId}/status`, {
       status: newStatus
+    }, {
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      }
     }).subscribe({
       next: () => {
         const applicant = this.applicants.find(a => a._id === applicationId);

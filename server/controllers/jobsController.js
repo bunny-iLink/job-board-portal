@@ -229,18 +229,31 @@ export async function searchJobsForUsers(req, res) {
 
     try {
         const {
-            domain, experience, expectedSalary, type, search, userId
+            domain,
+            experience,
+            expectedSalary,
+            type,
+            search,
+            userId,
+            preferredDomain
         } = req.query;
 
         const query = { status: 'open' };
 
-        // Only filter by domain if there's no search query
-        if (domain && !search) {
-            query.domain = domain;
+        // Apply domain or preferredDomain only when search is not present
+        if (!search) {
+            if (domain) {
+                query.domain = domain;
+            } else if (preferredDomain) {
+                query.domain = preferredDomain;
+            }
         }
 
         if (type) query.type = type;
-        if (experience) query.experience = { $lte: Number(experience) };
+
+        if(experience) {
+            query.experience = { $lte: Number(experience)}
+        }
 
         if (expectedSalary) {
             query.salary = { $gte: Number(expectedSalary) };
@@ -271,6 +284,7 @@ export async function searchJobsForUsers(req, res) {
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 }
+
 
 
 

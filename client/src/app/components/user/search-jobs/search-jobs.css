@@ -5,7 +5,6 @@
     background-color: #f7f9fc;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    font-family: 'Segoe UI', sans-serif;
 }
 
 .search-container input,
@@ -18,12 +17,32 @@
     font-size: 15px;
 }
 
+.warning-message {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 0.1em;
+    border: 1px solid #ffeeba;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+.warning-message p {
+    margin-left: 5px;
+}
+
 .filters {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 16px;
     margin-top: 16px;
     box-sizing: border-box;
+}
+
+.loading-message {
+    text-align: center;
+    margin: 2rem 0;
+    font-size: 1.2rem;
+    color: #555;
 }
 
 .search-container input,
@@ -59,7 +78,7 @@
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }
 
-.job-card h3 {
+.job-card h4 {
     margin: 0 0 10px;
     color: #0073e6;
 }

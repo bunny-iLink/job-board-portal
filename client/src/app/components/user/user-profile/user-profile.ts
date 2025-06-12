@@ -19,6 +19,7 @@ export class UserProfileComponent implements OnInit {
   loading = false;
   error = '';
   success = '';
+  token: string | null = null;
 
   resumeURL: SafeResourceUrl | null = null;
 
@@ -33,6 +34,7 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit() {
     this.userId = this.authService.getUserId();
+    this.token = this.authService.getToken();
     if (!this.userId) {
       this.error = 'No user ID found.';
       return;
@@ -78,7 +80,11 @@ export class UserProfileComponent implements OnInit {
       delete updatedUser.password;
     }
 
-    this.http.put(`${this.apiBase}/updateUser/${this.userId}`, updatedUser)
+    this.http.put(`${this.apiBase}/updateUser/${this.userId}`, updatedUser, {
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      }
+    })
       .subscribe({
         next: (res: any) => {
           this.success = 'Profile updated successfully!';
@@ -102,7 +108,11 @@ export class UserProfileComponent implements OnInit {
       return;
     }
 
-    this.http.delete(`${this.apiBase}/deleteUser/${this.userId}`)
+    this.http.delete(`${this.apiBase}/deleteUser/${this.userId}`, {
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      }
+    })
       .subscribe({
         next: () => {
           alert('Profile deleted successfully.');
