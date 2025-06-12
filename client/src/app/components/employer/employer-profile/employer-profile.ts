@@ -45,7 +45,11 @@ export class EmployerProfileComponent implements OnInit {
 
   fetchEmployer() {
     this.loading = true;
-    this.http.get(`${this.apiBase}/getEmployerData/${this.employerId}`)
+    this.http.get(`${this.apiBase}/getEmployerData/${this.employerId}`, {
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      }
+    })
       .subscribe({
         next: (data: any) => {
           this.employer = data.employer;
