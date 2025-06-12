@@ -220,7 +220,7 @@ router.post('/addJob', verifyToken, requireRole("employer"), addJob);
  *       400:
  *         description: Invalid input
  */
-router.post('/applyForJob/', verifyToken, requireRole("user"), applyForJob)
+router.post('/applyForJob/', applyForJob)
 
 // GET methods
 
