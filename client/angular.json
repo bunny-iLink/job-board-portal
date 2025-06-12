@@ -10,26 +10,6 @@
       "sourceRoot": "src",
       "prefix": "app",
       "architect": {
-        "prerender": {
-          "builder": "@angular-devkit/build-angular:prerender",
-          "options": {
-            "browserTarget": "client:build:production",
-            "serverTarget": "client:server:production",
-            "routes": [
-              "/register", 
-              "/login",
-              "/home",
-              "/employer/dashboard",
-              "/employer/profile",
-              "/employer/my-listings",
-              "/user/dashboard",
-              "/user/profile",
-              "/user/jobs",
-              "/user/applied-jobs",
-              ""
-            ]
-          }
-        },
         "build": {
           "builder": "@angular/build:application",
           "options": {
