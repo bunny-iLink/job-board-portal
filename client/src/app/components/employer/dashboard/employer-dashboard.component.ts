@@ -97,6 +97,8 @@ export class EmployerDashboardComponent implements OnInit {
 
   // Navigate to job details page for a specific job
   viewJobDetails(jobId: string) {
-    this.router.navigate(['/employer/job-details', jobId]);
+    this.router.navigate(['/employer/job-details'], {
+      queryParams: { id: jobId }
+    });
   }
 }

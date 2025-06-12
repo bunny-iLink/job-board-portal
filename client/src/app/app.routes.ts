@@ -36,7 +36,7 @@ export const routes: Routes = [
         loadComponent: () => import('./components/employer/my-listings/my-listings').then(m => m.MyListingsComponent)
       },
       {
-        path: 'job-details/:id',
+        path: 'job-details',
         loadComponent: () => import('../app/components/employer/job-details/job-details').then(m => m.JobDetailsComponent),
         // renderMode: 'direct'
       }

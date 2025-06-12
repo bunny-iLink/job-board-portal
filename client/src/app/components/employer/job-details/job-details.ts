@@ -23,7 +23,13 @@ export class JobDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     // Get job ID from route parameters and load job details
-    this.jobId = this.route.snapshot.paramMap.get('id') || '';
+    this.route.queryParamMap.subscribe(params => {
+      this.jobId = params.get('id') || '';
+      if (this.jobId) {
+        this.loadJobDetails();
+      }
+    });
+
     this.token = this.authService.getToken();
     if (this.jobId) {
       this.loadJobDetails();
@@ -32,7 +38,7 @@ export class JobDetailsComponent implements OnInit {
 
   // Fetch job details and list of applicants from backend
   loadJobDetails() {
-    this.http.get<{ job: any; applicants: any[] }>(environment.apiUrl +`/api/getJobById/${this.jobId}`)
+    this.http.get<{ job: any; applicants: any[] }>(environment.apiUrl + `/api/getJobById/${this.jobId}`)
       .subscribe({
         next: res => {
           this.job = res.job;
@@ -95,7 +101,7 @@ export class JobDetailsComponent implements OnInit {
     const confirmed = window.confirm(`Are you sure you want to change the status to "${newStatus}"?`);
     if (!confirmed) return;
 
-    this.http.put(environment.apiUrl +`/api/${applicationId}/status`, {
+    this.http.put(environment.apiUrl + `/api/${applicationId}/status`, {
       status: newStatus
     }, {
       headers: {
