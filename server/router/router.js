@@ -381,7 +381,7 @@ router.get('/jobs-by-domain', getJobsByDomain);
  *       404:
  *         description: Job not found
  */
-router.get('/getJobById/:jobId', getJobById);
+router.get('/getJobById/:jobId', verifyToken, requireRole("employer"), getJobById);
 
 /**
  * @swagger

@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
 import { environment } from '../../../../environments/environment';
+import { EmployerService } from '../../service/employer.service';
 
 @Component({
   selector: 'app-employer-profile',
@@ -25,12 +26,10 @@ export class EmployerProfileComponent implements OnInit {
   selectedMimeType: string | null = null;
   previewImage: string | null = null;
 
-  apiBase = environment.apiUrl + '/api';
-
   constructor(
-    private http: HttpClient,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private employerService: EmployerService
   ) { }
 
   ngOnInit() {
@@ -45,21 +44,18 @@ export class EmployerProfileComponent implements OnInit {
 
   fetchEmployer() {
     this.loading = true;
-    this.http.get(`${this.apiBase}/getEmployerData/${this.employerId}`, {
-      headers: {
-        Authorization: `Bearer ${this.token}`
-      }
-    })
+    this.employerService.getEmployerData(this.employerId!, this.token!)
       .subscribe({
         next: (data: any) => {
           this.employer = data.employer;
           if (this.employer) {
             this.employer.password = '';
           }
-          this.loading = false;
         },
         error: () => {
           this.error = 'Failed to load employer data.';
+        },
+        complete: () => {
           this.loading = false;
         }
       });
@@ -86,11 +82,7 @@ export class EmployerProfileComponent implements OnInit {
       };
     }
 
-    this.http.put(`${this.apiBase}/updateEmployer/${this.employerId}`, updatedEmployer, {
-      headers: {
-        Authorization: `Bearer ${this.token}`
-      }
-    })
+    this.employerService.updateEmployer(this.employerId!, updatedEmployer, this.token!)
       .subscribe({
         next: () => {
           this.success = 'Profile updated successfully!';
@@ -114,11 +106,7 @@ export class EmployerProfileComponent implements OnInit {
     }
 
     // Send DELETE request to backend to remove employer profile
-    this.http.delete(`${this.apiBase}/deleteEmployer/${this.employerId}`, {
-      headers: {
-        Authorization: `Bearer ${this.token}`
-      }
-    })
+    this.employerService.deleteEmployer(this.employerId!, this.token!)
       .subscribe({
         next: () => {
           alert('Profile deleted successfully.');

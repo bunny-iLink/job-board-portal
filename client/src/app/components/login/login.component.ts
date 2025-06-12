@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../environments/environment';
+import { LoginService } from '../service/login.service';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +23,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private loginService: LoginService
   ) {
     // Initialize the login form with validators
     this.loginForm = this.fb.group({
@@ -50,7 +52,7 @@ export class LoginComponent {
     const loginData = this.loginForm.value;
 
     // Send login request to backend API
-    this.http.post(environment.apiUrl +'/api/login', loginData).subscribe({
+    this.loginService.login(loginData).subscribe({
       next: (response: any) => {
         alert('Login successful!');
         console.log(response);

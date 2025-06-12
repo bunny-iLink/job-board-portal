@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../service/auth.service';
 import { environment } from '../../../../environments/environment';
+import { JobService } from '../../service/job.service';
 
 interface Job {
   _id?: string;
@@ -36,7 +37,7 @@ interface Job {
 })
 export class MyListingsComponent implements OnInit {
   // List of jobs for the employer
-  jobs: Job[] = [];
+  jobs: any = [];
   // Modal state for add/edit job
   isModalOpen = false;
   // Edit mode flag
@@ -52,20 +53,16 @@ export class MyListingsComponent implements OnInit {
   jobForm: Job = this.getEmptyJob();
   // API base URL
   readonly baseUrl = environment.apiUrl + '/api';
-  
+
   loading = false;
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(private http: HttpClient, private authService: AuthService, private jobService: JobService) { }
 
   ngOnInit() {
-    // Load employer and token from localStorage and AuthService
+    // Load employer and token from localStorage via AuthService
     if (typeof window !== 'undefined') {
-      const employerStr = localStorage.getItem('user');
-      this.token = localStorage.getItem('token');
-
-      if (employerStr) {
-        this.employer = JSON.parse(employerStr);
-      }
+      this.employer = this.authService.getUser(); // already parsed JSON
+      this.token = this.authService.getToken();
     }
 
     this.employerId = this.authService.getUserId() ?? '';
@@ -74,6 +71,7 @@ export class MyListingsComponent implements OnInit {
 
     this.fetchJobs();
   }
+
 
   // Returns a blank job object for form reset
   getEmptyJob(): Job {
@@ -111,11 +109,7 @@ export class MyListingsComponent implements OnInit {
 
     this.loading = true;
 
-    this.http.get<Job[]>(`${this.baseUrl}/getJobs/${employerId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }).subscribe({
+    this.jobService.getJobs(this.employerId, this.token!).subscribe({
       next: (res) => {
         this.jobs = res;
         console.log('Jobs fetched:', res);
@@ -176,11 +170,7 @@ export class MyListingsComponent implements OnInit {
     };
 
     if (this.isEditMode && this.selectedJobId) {
-      this.http.put(`${this.baseUrl}/updateJob/${this.selectedJobId}`, payload, {
-        headers: {
-          Authorization: `Bearer ${this.token}`
-        }
-      }).subscribe({
+      this.jobService.updateJob(this.selectedJobId, payload, this.token!).subscribe({
         next: () => {
           this.fetchJobs();
           this.closeModal();
@@ -188,11 +178,7 @@ export class MyListingsComponent implements OnInit {
         error: (err) => console.error('Failed to update job:', err)
       });
     } else {
-      this.http.post(`${this.baseUrl}/addJob`, payload, {
-        headers: {
-          Authorization: `Bearer ${this.token}`
-        }
-      }).subscribe({
+      this.jobService.addJob(payload, this.token!).subscribe({
         next: () => {
           this.fetchJobs();
           this.closeModal();
@@ -208,11 +194,7 @@ export class MyListingsComponent implements OnInit {
       return;
     }
 
-    this.http.delete(`${this.baseUrl}/deleteJob/${jobId}`, {
-      headers: {
-        Authorization: `Bearer ${this.token}`
-      }
-    }).subscribe({
+    this.jobService.deleteJob(jobId!, this.token!).subscribe({
       next: () => this.fetchJobs(),
       error: (err) => console.error('Failed to delete job:', err)
     });

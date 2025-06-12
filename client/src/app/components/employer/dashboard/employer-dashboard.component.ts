@@ -1,18 +1,11 @@
 // Angular component for the employer dashboard, displaying employer info and job listings
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { environment } from '../../../../environments/environment';
-
-// Interface for job summary data
-interface JobSummary {
-  _id: string;
-  title: string;
-  vacancies: number;
-  applicantCount: number;
-}
+import { EmployerService } from '../../service/employer.service';
+import { JobService } from '../../service/job.service';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-employer-dashboard',
@@ -29,77 +22,60 @@ export class EmployerDashboardComponent implements OnInit {
   // JWT token for authentication
   token: string | null = null;
   // List of job summaries for this employer
-  jobs: JobSummary[] = [];
+  jobs: any = [];
 
   isEmployerLoading = false;
   isJobsLoading = false;
 
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private jobService: JobService, private employerService: EmployerService, private authService: AuthService, private router: Router) { }
 
   // On component initialization, load employer and job data from localStorage and API
   ngOnInit(): void {
-    if (typeof window !== 'undefined') {
-      this.token = localStorage.getItem('token');
+    this.token = this.authService.getToken();
+    this.employerId = this.authService.getUserId();
 
-      const storedUser = localStorage.getItem('user');
-      if (storedUser) {
-        const user = JSON.parse(storedUser);
-        this.employerId = user._id;
-
-        this.fetchEmployerData(); // Load employer profile
-        this.fetchJobSummaries(); // Load job listings
-      } else {
-        console.warn("No valid employer");
-      }
+    if (this.token && this.employerId) {
+      this.fetchEmployerData();
+      this.fetchJobSummaries();
+    } else {
+      console.warn('Missing token or employer ID.');
     }
   }
 
   // Fetch employer profile data from backend
-  fetchEmployerData() {
-    if (!this.employerId) return;
+  fetchEmployerData(): void {
+    if (!this.employerId || !this.token) return;
 
     this.isEmployerLoading = true;
-    this.http.get(environment.apiUrl + `/api/getEmployerData/${this.employerId}`, {
-      headers: {
-        Authorization: `Bearer ${this.token}`
-      }
-    }).subscribe({
+    this.employerService.getEmployerData(this.employerId, this.token).subscribe({
       next: (res: any) => {
         this.employer = res.employer;
         console.log('Employer loaded:', this.employer);
-        this.isEmployerLoading = false;
       },
       error: err => {
         console.error('Failed to load employer data:', err);
+      },
+      complete: () => {
         this.isEmployerLoading = false;
       }
     });
   }
 
   // Fetch job summaries for this employer from backend
-  fetchJobSummaries() {
-    if (!this.employerId || !this.token) {
-      console.warn('Cannot fetch job summaries: employerId or token missing');
-      return;
-    }
+  fetchJobSummaries(): void {
+    if (!this.employerId || !this.token) return;
 
     this.isJobsLoading = true;
-    this.http.get<JobSummary[]>(
-      environment.apiUrl + `/api/employer/${this.employerId}/jobs-summary`,
-      {
-        headers: {
-          Authorization: `Bearer ${this.token}`
-        }
-      }
-    ).subscribe({
-      next: res => {
+    this.jobService.getJobSummaries(this.employerId, this.token).subscribe({
+      next: (res: any[]) => {
         this.jobs = res;
-        console.log('Jobs with applicant count:', this.jobs);
-        this.isJobsLoading = false;
+        console.log('Jobs loaded:', this.jobs);
       },
       error: err => {
         console.error('Failed to load job summaries:', err);
+      },
+      complete: () => {
         this.isJobsLoading = false;
       }
     });
