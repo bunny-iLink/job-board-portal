@@ -55,10 +55,12 @@ export async function applyForJob(req, res) {
 
 export const updateApplicationStatus = async (req, res) => {
     console.log("[updateApplicationStatus] Request received for applicationId:", req.params.applicationId, "with body:", req.body);
+
     try {
         const applicationId = req.params.applicationId;
         const { status } = req.body;
         const validStatuses = ["In Progress", "Accepted", "Rejected"];
+
         if (!validStatuses.includes(status)) {
             console.warn(`[updateApplicationStatus] Invalid status value: ${status}`);
             return res.status(400).json({ message: "Invalid status value." });
@@ -73,14 +75,15 @@ export const updateApplicationStatus = async (req, res) => {
         console.info(`[updateApplicationStatus] Current status for application ${applicationId}: ${application.status}`);
         const previousStatus = application.status;
 
+        // Fetch the job details
+        const job = await Job.findById(application.jobId);
+        if (!job) {
+            console.warn(`[updateApplicationStatus] Associated job not found for application ${applicationId}`);
+            return res.status(404).json({ message: "Associated job not found." });
+        }
+
         // If status is changing to Accepted, reduce job vacancy
         if (status === "Accepted" && previousStatus !== "Accepted") {
-            const job = await Job.findById(application.jobId);
-            if (!job) {
-                console.warn(`[updateApplicationStatus] Associated job not found for application ${applicationId}`);
-                return res.status(404).json({ message: "Associated job not found." });
-            }
-
             if (job.vacancies <= 0) {
                 console.warn(`[updateApplicationStatus] No vacancies available for job ${job._id}`);
                 return res.status(400).json({ message: "No vacancies available for this job." });
@@ -95,10 +98,10 @@ export const updateApplicationStatus = async (req, res) => {
         await application.save();
         console.info(`[updateApplicationStatus] Application ${applicationId} status updated to ${status}`);
 
-        // Create a notification for the user
+        // Create a notification with job title instead of job ID
         const notification = new Notification({
             userId: application.userId,
-            message: `Your application for job ID ${application.jobId} has been updated to '${status}'.`
+            message: `Your application for the job "${job.title}" has been updated to '${status}'.`
         });
         await notification.save();
         console.info(`[updateApplicationStatus] Notification created for user ${application.userId}`);

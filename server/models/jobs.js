@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 export const jobsSchema = new mongoose.Schema({
     title: { type: String, required: true },
-    employerId: { type: String, required: true },
+    employerId: { type: mongoose.Schema.Types.ObjectId, ref: "Employer", required: true },
     employerName: { type: String, required: true },
     domain: { type: String, required: true },
     description: {
