@@ -39,4 +39,16 @@ export class JobService {
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
         return this.http.delete(`${environment.apiUrl}/deleteJob/${jobId}`, { headers });
     }
+
+    appliedJobs(userId: string): Observable<any> {
+        return this.http.get(`${environment.apiUrl}/appliedJobs/${userId}`);
+    }
+
+    searchJobs(): Observable<any> {
+        return this.http.get(`${environment.apiUrl}/searchJobs`);
+    }
+
+    searchJobsWithFilter(queryString: string): Observable<any> {
+        return this.http.get(`${environment.apiUrl}/searchJobs?${queryString}`);
+    }
 }

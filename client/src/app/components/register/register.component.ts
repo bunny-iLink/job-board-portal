@@ -5,6 +5,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { RegisterService } from '../service/register.service';
 
 @Component({
   selector: 'app-register',
@@ -21,7 +22,7 @@ export class RegisterComponent {
   // Controls password visibility
   showPassword: boolean = false;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private registerService: RegisterService) {
     // Initialize the registration form with validators
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
@@ -49,18 +50,18 @@ export class RegisterComponent {
     const userData = this.registerForm.value;
 
     // Choose API endpoint based on selected role
-    const url = this.selectedRole === 'candidate' 
-      ? environment.apiUrl + '/api/addUser'
-      : environment.apiUrl +'/api/addEmployer';
+    const url = this.selectedRole === 'candidate'
+      ? environment.apiUrl + '/addUser'
+      : environment.apiUrl + '/addEmployer';
 
     // Send registration request to backend API
-    this.http.post(url, userData).subscribe({
+    this.registerService.register(url, userData).subscribe({
       next: res => {
         alert('Registration successful! Please log in.');
         this.router.navigate(['/login']);
       },
       error: err => {
-        alert('Registration failed. Please try again.');
+        alert(`Registration failed. Please try again. ${err}`);
       }
     });
   }

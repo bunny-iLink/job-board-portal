@@ -22,7 +22,6 @@ export class LoginComponent {
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
     private router: Router,
     private loginService: LoginService
   ) {

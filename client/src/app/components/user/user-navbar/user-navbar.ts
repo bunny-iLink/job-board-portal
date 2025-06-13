@@ -2,9 +2,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../service/auth.service';
 import { environment } from '../../../../environments/environment';
+import { NotificationsService } from '../../service/notifications.service';
 
 @Component({
   selector: 'app-user-navbar',
@@ -30,7 +30,7 @@ export class UserNavbar implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private http: HttpClient
+    private notificationService: NotificationsService
   ) { }
 
   // On component initialization, get token and user name from AuthService
@@ -73,11 +73,7 @@ export class UserNavbar implements OnInit {
     this.loadingNotifications = true;
 
     const userId = this.authService.getUserId();
-    this.http.get(environment.apiUrl + `/api/notifications/${userId}`, {
-      headers: {
-        Authorization: `Bearer ${this.token}`
-      }
-    }).subscribe({
+    this.notificationService.getNotifications(userId!, this.token!).subscribe({
       next: (data: any) => {
         this.notifications = data.notifications || [];
         this.loadingNotifications = false;

@@ -151,22 +151,36 @@ export async function revokeApplication(req, res) {
             return res.status(400).json({ message: "Application ID is required" });
         }
 
-        // Check if ID is a valid MongoDB ObjectId
         if (!mongoose.Types.ObjectId.isValid(application_id)) {
             console.warn(`[revokeApplication] Invalid Application ID format: ${application_id}`);
             return res.status(400).json({ message: "Invalid Application ID format" });
         }
 
-        const deletedApplication = await Application.findByIdAndDelete(application_id);
-        console.info("[revokeApplication] Deleted application:", deletedApplication);
-
-        if (!deletedApplication) {
+        // Find application first (don't delete yet)
+        const application = await Application.findById(application_id);
+        if (!application) {
             console.warn(`[revokeApplication] No application found with id: ${application_id}`);
             return res.status(404).json({ message: "Application not found" });
         }
 
+        // If application was accepted, increase the job vacancy
+        if (application.status === "Accepted") {
+            const job = await Job.findById(application.jobId);
+            if (job) {
+                job.vacancies += 1;
+                await job.save();
+                console.info(`[revokeApplication] Job vacancies incremented. Job ID: ${job._id}, new vacancies: ${job.vacancies}`);
+            } else {
+                console.warn(`[revokeApplication] Job not found for jobId: ${application.jobId}`);
+            }
+        }
+
+        // Now delete the application
+        const deletedApplication = await Application.findByIdAndDelete(application_id);
+        console.info("[revokeApplication] Deleted application:", deletedApplication);
+
         res.status(200).json({
-            message: "Application deleted successfully",
+            message: "Application revoked successfully",
             deletedApplication,
         });
 
@@ -175,3 +189,4 @@ export async function revokeApplication(req, res) {
         res.status(500).json({ message: "Internal server error" });
     }
 }
+

@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { environment } from '../../../../environments/environment';
+import { UserService } from '../../service/user.service';
 @Component({
   selector: 'app-user-profile',
   standalone: true,
@@ -23,10 +24,10 @@ export class UserProfileComponent implements OnInit {
 
   resumeURL: SafeResourceUrl | null = null;
 
-  apiBase = environment.apiUrl +'/api';
+  apiBase = environment.apiUrl + '/api';
 
   constructor(
-    private http: HttpClient,
+    private userService: UserService,
     private router: Router,
     private authService: AuthService,
     private sanitizer: DomSanitizer
@@ -44,7 +45,7 @@ export class UserProfileComponent implements OnInit {
 
   fetchuser() {
     this.loading = true;
-    this.http.get(`${this.apiBase}/getUserData/${this.userId}`)
+    this.userService.getUserData(this.userId!)
       .subscribe({
         next: (data: any) => {
           this.user = data.user;
@@ -80,11 +81,7 @@ export class UserProfileComponent implements OnInit {
       delete updatedUser.password;
     }
 
-    this.http.put(`${this.apiBase}/updateUser/${this.userId}`, updatedUser, {
-      headers: {
-        Authorization: `Bearer ${this.token}`
-      }
-    })
+    this.userService.updateUserData(this.userId!, updatedUser, this.token!)
       .subscribe({
         next: (res: any) => {
           this.success = 'Profile updated successfully!';
@@ -108,11 +105,7 @@ export class UserProfileComponent implements OnInit {
       return;
     }
 
-    this.http.delete(`${this.apiBase}/deleteUser/${this.userId}`, {
-      headers: {
-        Authorization: `Bearer ${this.token}`
-      }
-    })
+    this.userService.deleteUser(this.userId, this.token!)
       .subscribe({
         next: () => {
           alert('Profile deleted successfully.');

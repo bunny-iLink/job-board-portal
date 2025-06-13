@@ -1,10 +1,11 @@
 // Angular component for searching and filtering available jobs
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
 import { AuthService } from '../../service/auth.service';
+import { JobService } from '../../service/job.service';
+import { ApplicationService } from '../../service/application.service';
 
 @Component({
   selector: 'app-search-jobs',
@@ -36,7 +37,7 @@ export class SearchJobsComponent implements OnInit {
   };
 
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(private jobService: JobService, private authService: AuthService, private applicationService: ApplicationService) { }
 
   // On component initialization, fetch and display jobs
   ngOnInit() {
@@ -52,17 +53,11 @@ export class SearchJobsComponent implements OnInit {
   // Utility: Get stored user from localStorage
   getStoredUser() {
     if (this.isBrowser()) {
-      const userStr = localStorage.getItem('user');
-      if (userStr) {
-        try {
-          return JSON.parse(userStr);
-        } catch (e) {
-          console.warn('Invalid JSON in localStorage');
-        }
-      }
+      return this.authService.getUser(); // ✅ Already parsed
     }
     return null;
   }
+
 
   searchJobs() {
     const user = this.getStoredUser();
@@ -79,7 +74,7 @@ export class SearchJobsComponent implements OnInit {
     if (!hasFilters && !hasSearch && !hasPreferredDomain) {
       this.showDomainWarning = true;
 
-      this.http.get(environment.apiUrl + `/api/searchJobs`)
+      this.jobService.searchJobs()
         .subscribe({
           next: (res: any) => {
             this.allJobs = res;
@@ -109,7 +104,7 @@ export class SearchJobsComponent implements OnInit {
 
     const queryString = new URLSearchParams(queryParams).toString();
 
-    this.http.get(environment.apiUrl + `/api/searchJobs?${queryString}`)
+    this.jobService.searchJobsWithFilter(queryString)
       .subscribe({
         next: (res: any) => {
           this.allJobs = res;
@@ -151,11 +146,7 @@ export class SearchJobsComponent implements OnInit {
       jobId: job._id
     };
 
-    this.http.post(environment.apiUrl + '/api/applyForJob', payload, {
-      headers: {
-        Authorization: `Bearer ${this.token}`
-      }
-    }).subscribe({
+    this.applicationService.applyForJob(payload, this.token!).subscribe({
       next: (res: any) => {
         alert(res.message || 'Application submitted!');
         this.closeModal();
