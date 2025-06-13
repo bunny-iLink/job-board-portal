@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { environment } from "../../../environments/environment";
+import { environment } from "../../environments/environment";
 
 @Injectable({
     providedIn: 'root'
@@ -21,6 +21,6 @@ export class UserService {
 
     deleteUser(userId: string, token: string): Observable<any> {
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-        return this.http.delete(`${environment.apiUrl}/deleteUser/${userId}`);
+        return this.http.delete(`${environment.apiUrl}/deleteUser/${userId}`, { headers });
     }
 }

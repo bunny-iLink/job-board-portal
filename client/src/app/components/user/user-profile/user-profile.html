@@ -1,3 +1,6 @@
+<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()">
+</app-alert>
+
 <div *ngIf="loading" class="spinner-container">
     <div class="spinner"></div>
     <div class="loading-text">
@@ -99,7 +102,5 @@
             <button type="submit">Save Changes</button>
             <button type="button" (click)="deleteProfile()" class="delete-btn">Delete Profile</button>
         </div>
-
-        <div *ngIf="success" class="success">{{ success }}</div>
     </form>
 </div>

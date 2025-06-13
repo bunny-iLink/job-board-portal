@@ -3,9 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { EmployerService } from '../../service/employer.service';
-import { JobService } from '../../service/job.service';
-import { AuthService } from '../../service/auth.service';
+import { EmployerService } from '../../../service/employer.service';
+import { JobService } from '../../../service/job.service';
+import { AuthService } from '../../../service/auth.service';
 
 @Component({
   selector: 'app-employer-dashboard',
@@ -26,7 +26,6 @@ export class EmployerDashboardComponent implements OnInit {
 
   isEmployerLoading = false;
   isJobsLoading = false;
-
 
   constructor(private jobService: JobService, private employerService: EmployerService, private authService: AuthService, private router: Router) { }
 

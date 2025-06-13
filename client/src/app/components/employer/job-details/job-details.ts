@@ -3,9 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../service/auth.service';
-import { JobService } from '../../service/job.service';
-import { ApplicationService } from '../../service/application.service';
+import { AuthService } from '../../../service/auth.service';
+import { JobService } from '../../../service/job.service';
+import { ApplicationService } from '../../../service/application.service';
 @Component({
   selector: 'app-job-details',
   standalone: true,

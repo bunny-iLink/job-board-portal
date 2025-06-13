@@ -2,15 +2,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { environment } from '../../../../environments/environment';
-import { AuthService } from '../../service/auth.service';
-import { JobService } from '../../service/job.service';
-import { ApplicationService } from '../../service/application.service';
+import { AuthService } from '../../../service/auth.service';
+import { JobService } from '../../../service/job.service';
+import { ApplicationService } from '../../../service/application.service';
+import { AlertComponent } from '../../alert/alert.component';
 
 @Component({
   selector: 'app-search-jobs',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AlertComponent],
   templateUrl: 'search-jobs.html',
   styleUrls: ['search-jobs.css']
 })
@@ -36,6 +36,25 @@ export class SearchJobsComponent implements OnInit {
     expectedSalary: '' // new field
   };
 
+  // Variables for alert
+  alertMessage: string = '';
+  alertType: 'success' | 'error' | 'info' = 'info';
+  showAlert: boolean = false;
+  navigateAfterAlert: boolean = false;
+
+  private showCustomAlert(message: string, type: 'success' | 'error' | 'info', navigate: boolean = false) {
+    console.log("Alert Triggered:", { message, type });
+
+    this.alertMessage = message;
+    this.alertType = type;
+    this.showAlert = true;
+    this.navigateAfterAlert = navigate;
+  }
+
+  // Called when the alert is closed by the user
+  onAlertClosed(): void {
+    this.showAlert = false;
+  }
 
   constructor(private jobService: JobService, private authService: AuthService, private applicationService: ApplicationService) { }
 
@@ -131,13 +150,13 @@ export class SearchJobsComponent implements OnInit {
   applyToJob(job: any) {
     const user = this.getStoredUser();
     if (!user) {
-      alert('Please log in to apply.');
+      this.showCustomAlert('Please log in to apply.', 'info');
       return;
     }
 
     // Check if profile is complete
     if (!this.isProfileComplete(user)) {
-      alert('Please complete your profile (name, email, and resume are required) before applying for jobs.');
+      this.showCustomAlert('Please complete your profile (name, email, and resume are required) before applying for jobs.', 'info');
       return;
     }
 
@@ -148,16 +167,16 @@ export class SearchJobsComponent implements OnInit {
 
     this.applicationService.applyForJob(payload, this.token!).subscribe({
       next: (res: any) => {
-        alert(res.message || 'Application submitted!');
+        this.showCustomAlert(res.message || 'Application submitted!', 'success');
         this.closeModal();
         this.searchJobs();
       },
       error: (err) => {
         if (err.status === 409) {
-          alert('Already applied to this job.');
+          this.showCustomAlert('Already applied to this job.', 'info');
         } else {
           console.error('Application error:', err);
-          alert('Failed to apply.');
+          this.showCustomAlert('Failed to apply.', 'error');
         }
         this.closeModal();
       }

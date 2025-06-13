@@ -1,16 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { AuthService } from '../../service/auth.service';
-import { environment } from '../../../../environments/environment';
-import { EmployerService } from '../../service/employer.service';
+import { AuthService } from '../../../service/auth.service';
+import { EmployerService } from '../../../service/employer.service';
+import { AlertComponent } from '../../alert/alert.component';
 
 @Component({
   selector: 'app-employer-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AlertComponent],
   templateUrl: 'employer-profile.html',
   styleUrls: ['./employer-profile.css']
 })
@@ -25,6 +24,23 @@ export class EmployerProfileComponent implements OnInit {
   selectedBase64: string | null = null;
   selectedMimeType: string | null = null;
   previewImage: string | null = null;
+
+  // Variables for alert
+  alertMessage: string = '';
+  alertType: 'success' | 'error' | 'info' = 'info';
+  showAlert: boolean = false;
+
+  private showCustomAlert(message: string, type: 'success' | 'error' | 'info') {
+    console.log("Alert Triggered:", { message, type });
+
+    this.alertMessage = message;
+    this.alertType = type;
+    this.showAlert = true;
+  }
+
+  onAlertClosed(): void {
+    this.showAlert = false;
+  }
 
   constructor(
     private router: Router,
@@ -89,6 +105,7 @@ export class EmployerProfileComponent implements OnInit {
           this.previewImage = null;
           this.selectedBase64 = null;
           this.selectedMimeType = null;
+          this.showCustomAlert(this.success, 'success');
         },
         error: () => {
           this.error = 'Failed to update profile.';

@@ -1,16 +1,15 @@
 // Angular component for displaying jobs the user has applied to
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { environment } from '../../../../environments/environment';
-import { AuthService } from '../../service/auth.service';
-import { UserService } from '../../service/user.service';
-import { JobService } from '../../service/job.service';
-import { ApplicationService } from '../../service/application.service';
+import { AuthService } from '../../../service/auth.service';
+import { UserService } from '../../../service/user.service';
+import { JobService } from '../../../service/job.service';
+import { ApplicationService } from '../../../service/application.service';
+import { AlertComponent } from '../../alert/alert.component';
 
 @Component({
   selector: 'app-applied-jobs',
-  imports: [CommonModule],
+  imports: [CommonModule, AlertComponent],
   standalone: true,
   templateUrl: './applied-jobs.html',
   styleUrls: ['./applied-jobs.css']
@@ -29,6 +28,26 @@ export class AppliedJobsComponent implements OnInit {
   selectedJob: any = null;
   showModal: boolean = false;
   loading: boolean = true;
+
+  // Variables for alert
+  alertMessage: string = '';
+  alertType: 'success' | 'error' | 'info' = 'info';
+  showAlert: boolean = false;
+  navigateAfterAlert: boolean = false;
+
+  private showCustomAlert(message: string, type: 'success' | 'error' | 'info', navigate: boolean = false) {
+    console.log("Alert Triggered:", { message, type });
+
+    this.alertMessage = message;
+    this.alertType = type;
+    this.showAlert = true;
+    this.navigateAfterAlert = navigate;
+  }
+
+  // Called when the alert is closed by the user
+  onAlertClosed(): void {
+    this.showAlert = false;
+  }
 
   constructor(private applicationService: ApplicationService, private authService: AuthService, private userService: UserService, private jobService: JobService) { }
 
@@ -104,7 +123,7 @@ export class AppliedJobsComponent implements OnInit {
     // Find the application to get the applicationId
     const application = this.appliedJobs.find(job => job._id === jobId);
     if (!application) {
-      alert("Application not found!");
+      this.showCustomAlert("Application not found!", 'info');
       return;
     }
 
@@ -113,12 +132,12 @@ export class AppliedJobsComponent implements OnInit {
 
     this.applicationService.revokeApplication(application.applicationId, this.token!).subscribe({
       next: (res: any) => {
-        alert("Application revoked successfully!");
+        this.showCustomAlert("Application revoked successfully!", 'success');
         this.appliedJobs = this.appliedJobs.filter(job => job._id !== jobId);
       },
       error: err => {
         console.error('Error revoking application:', err);
-        alert(`Failed to revoke application: ${err.error?.message || 'Unknown error'}`);
+        this.showCustomAlert(`Failed to revoke application: ${err.error?.message || 'Unknown error'}`, 'error');
       }
     });
   }

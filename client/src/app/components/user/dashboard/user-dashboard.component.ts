@@ -1,9 +1,9 @@
 // Angular component for the user dashboard, displaying user info and applied jobs
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../service/auth.service';
-import { JobService } from '../../service/job.service';
-import { UserService } from '../../service/user.service';
+import { AuthService } from '../../../service/auth.service';
+import { JobService } from '../../../service/job.service';
+import { UserService } from '../../../service/user.service';
 
 @Component({
   selector: 'app-user-dashboard',

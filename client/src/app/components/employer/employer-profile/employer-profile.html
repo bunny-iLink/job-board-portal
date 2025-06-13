@@ -1,3 +1,6 @@
+<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()">
+</app-alert>
+
 <!-- Employer profile page: view and edit employer details, including profile picture upload -->
 <div *ngIf="loading" class="spinner-container" aria-live="polite" aria-busy="true">
     <div class="spinner"></div>
@@ -112,7 +115,5 @@
                 Delete Profile
             </button>
         </div>
-
-        <div *ngIf="success" class="success" aria-live="polite">{{ success }}</div>
     </form>
 </div>

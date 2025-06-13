@@ -1,16 +1,17 @@
 // Angular component for handling user registration functionality
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
-import { RegisterService } from '../service/register.service';
+import { RegisterService } from '../../service/register.service';
+import { AlertComponent } from '../alert/alert.component';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
+  imports: [CommonModule, ReactiveFormsModule, AlertComponent],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
@@ -21,6 +22,30 @@ export class RegisterComponent {
   selectedRole: string = '';
   // Controls password visibility
   showPassword: boolean = false;
+
+  // Variables for alert
+  alertMessage: string = '';
+  alertType: 'success' | 'error' | 'info' = 'info';
+  showAlert: boolean = false;
+  navigateAfterAlert: boolean = false;
+  registrationSuccess: boolean = false;
+
+  private showCustomAlert(message: string, type: 'success' | 'error' | 'info', navigate: boolean = false) {
+    console.log("Alert Triggered:", { message, type });
+
+    this.alertMessage = message;
+    this.alertType = type;
+    this.showAlert = true;
+    this.navigateAfterAlert = navigate;
+  }
+
+  // Called when the alert is closed by the user
+  onAlertClosed(): void {
+    this.showAlert = false;
+    if (this.registrationSuccess) {
+      this.router.navigate(['/login']);
+    }
+  }
 
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private registerService: RegisterService) {
     // Initialize the registration form with validators
@@ -57,11 +82,11 @@ export class RegisterComponent {
     // Send registration request to backend API
     this.registerService.register(url, userData).subscribe({
       next: res => {
-        alert('Registration successful! Please log in.');
-        this.router.navigate(['/login']);
+        this.showCustomAlert("Registration successful. Please log in....", 'success');
+        this.registrationSuccess = true;
       },
       error: err => {
-        alert(`Registration failed. Please try again. ${err}`);
+        this.showCustomAlert(`Registration failed. Please try again. ${err}`, 'error');
       }
     });
   }

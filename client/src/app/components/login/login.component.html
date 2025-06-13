@@ -1,5 +1,9 @@
+<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()">
+</app-alert>
+
+
 <!-- Login page container with overlay for visual effect -->
-<div class="auth-page"> 
+<div class="auth-page">
   <div class="auth-overlay"></div>
   <div class="login-container">
     <!-- Login form using Angular Reactive Forms -->

@@ -1,16 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { AuthService } from '../../service/auth.service';
+import { AuthService } from '../../../service/auth.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { environment } from '../../../../environments/environment';
-import { UserService } from '../../service/user.service';
+import { UserService } from '../../../service/user.service';
+import { AlertComponent } from '../../alert/alert.component';
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AlertComponent],
   templateUrl: 'user-profile.html',
   styleUrls: ['./user-profile.css']
 })
@@ -24,7 +23,28 @@ export class UserProfileComponent implements OnInit {
 
   resumeURL: SafeResourceUrl | null = null;
 
-  apiBase = environment.apiUrl + '/api';
+  // Variables for alert
+  alertMessage: string = '';
+  alertType: 'success' | 'error' | 'info' = 'info';
+  showAlert: boolean = false;
+  deleteSuccess: boolean = false;
+
+  private showCustomAlert(message: string, type: 'success' | 'error' | 'info') {
+    console.log("Alert Triggered:", { message, type });
+
+    this.alertMessage = message;
+    this.alertType = type;
+    this.showAlert = true;
+  }
+
+  // Called when the alert is closed by the user
+  onAlertClosed(): void {
+    this.showAlert = false;
+
+    if (this.deleteSuccess) {
+      this.router.navigate(['/login']);
+    }
+  }
 
   constructor(
     private userService: UserService,
@@ -85,6 +105,7 @@ export class UserProfileComponent implements OnInit {
       .subscribe({
         next: (res: any) => {
           this.success = 'Profile updated successfully!';
+          this.showCustomAlert(this.success, 'success');
 
           // Update localStorage
           const newUser = res.user || updatedUser; // in case API returns the updated user
@@ -108,12 +129,12 @@ export class UserProfileComponent implements OnInit {
     this.userService.deleteUser(this.userId, this.token!)
       .subscribe({
         next: () => {
-          alert('Profile deleted successfully.');
+          this.showCustomAlert('Profile deleted successfully.', 'success');
           if (typeof window !== 'undefined') {
             localStorage.removeItem('id');
             localStorage.removeItem('token');
           }
-          this.router.navigate(['/login']);
+          this.deleteSuccess = true;
         },
         error: () => {
           this.error = 'Failed to delete profile.';
@@ -141,11 +162,11 @@ export class UserProfileComponent implements OnInit {
     const file = event.target.files?.[0];
     if (file) {
       if (file.type !== 'application/pdf') {
-        alert('Only PDF files are allowed.');
+        this.showCustomAlert('Only PDF files are allowed.', 'info');
         return;
       }
       if (file.size > 2 * 1024 * 1024) {
-        alert('File size must be less than 2MB.');
+        this.showCustomAlert('File size must be less than 2MB.', 'info');
         return;
       }
 

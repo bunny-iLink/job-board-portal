@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { User } from "../models/users.js";
 import { Employer } from "../models/employer.js";
 import { Notification } from "../models/notification.js";
+import { Application } from "../models/applications.js";
 
 const SALT_ROUNDS = 10;
 

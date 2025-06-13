@@ -1,3 +1,6 @@
+<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()">
+</app-alert>
+
 <nav class="navbar" *ngIf="token">
   <div class="navbar-container">
     <div class="navbar-left">

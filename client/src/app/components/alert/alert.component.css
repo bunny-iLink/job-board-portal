@@ -1,0 +1,67 @@
+/* Modal overlay */
+.alert-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* dark backdrop */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    /* ⬅️ Higher than the job modal */
+}
+
+/* Modal box */
+.alert-box {
+    background-color: #ffffff;
+    padding: 24px 28px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+    max-width: 380px;
+    width: 90%;
+    font-family: 'Segoe UI', sans-serif;
+    position: relative;
+    text-align: left;
+}
+
+/* Alert content text */
+.alert-box p {
+    font-size: 16px;
+    color: #333;
+    margin: 0;
+}
+
+/* Bottom-right OK button */
+.alert-box button {
+    position: absolute;
+    bottom: 16px;
+    right: 20px;
+    background-color: #0073e6;
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.alert-box button:hover {
+    background-color: #005bb5;
+}
+
+/* Optional colored border by type */
+.alert-box.success {
+    border-left: 6px solid #28a745;
+}
+
+.alert-box.error {
+    border-left: 6px solid #dc3545;
+}
+
+.alert-box.info {
+    border-left: 6px solid #0073e6;
+}

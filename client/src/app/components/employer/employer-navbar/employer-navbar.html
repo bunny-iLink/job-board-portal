@@ -1,29 +1,21 @@
+<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()">
+</app-alert>
+
 <nav class="navbar" *ngIf="token" aria-label="Main navigation">
     <div class="navbar-left" role="menubar" aria-label="Primary navigation actions">
-        <span class="greeting clickable" 
-              role="button"
-              tabindex="0"
-              (click)="goToDashboard()"
-              (keyup.enter)="goToDashboard()"
-              [attr.aria-label]="'Go to dashboard, logged in as ' + userName">
+        <span class="greeting clickable" role="button" tabindex="0" (click)="goToDashboard()"
+            (keyup.enter)="goToDashboard()" [attr.aria-label]="'Go to dashboard, logged in as ' + userName">
             Hello, {{ userName }}!
         </span>
-        <button class="nav-button" 
-                (click)="goToListings()"
-                aria-label="View my job listings">
+        <button class="nav-button" (click)="goToListings()" aria-label="View my job listings">
             My Listings
         </button>
-        <button class="nav-button" 
-                (click)="goToProfile()"
-                aria-label="View my profile">
+        <button class="nav-button" (click)="goToProfile()" aria-label="View my profile">
             Profile
         </button>
     </div>
     <div class="navbar-right" role="menubar" aria-label="User actions">
-        <button class="icon-button" 
-                (click)="logout()"
-                aria-label="Logout"
-                title="Logout">
+        <button class="icon-button" (click)="logout()" aria-label="Logout" title="Logout">
             <span aria-hidden="true">🚪</span> Logout
         </button>
     </div>

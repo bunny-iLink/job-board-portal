@@ -1,0 +1,6 @@
+<div class="alert-modal" *ngIf="show">
+    <div class="alert-box" [ngClass]="type">
+        <p>{{ message }}</p>
+        <button (click)="onClose()">OK</button>
+    </div>
+</div>
