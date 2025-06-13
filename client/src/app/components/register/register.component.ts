@@ -68,6 +68,10 @@ export class RegisterComponent {
     this.showPassword = !this.showPassword;
   }
 
+  goToLogin() {
+    this.router.navigate(['/login'])
+  }
+
   // Handle form submission for registration
   onSubmit() {
     if (!this.selectedRole || this.registerForm.invalid) return;
