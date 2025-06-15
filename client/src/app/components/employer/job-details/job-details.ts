@@ -6,11 +6,12 @@ import { AuthService } from '../../../service/auth.service';
 import { JobService } from '../../../service/job.service';
 import { ApplicationService } from '../../../service/application.service';
 import { ConfirmComponent } from '../../confirm/confirm.component';
+import { AlertComponent } from '../../alert/alert.component';
 
 @Component({
   selector: 'app-job-details',
   standalone: true,
-  imports: [CommonModule, FormsModule, ConfirmComponent],
+  imports: [CommonModule, FormsModule, ConfirmComponent, AlertComponent],
   templateUrl: 'job-details.html',
   styleUrls: ['job-details.css']
 })
@@ -23,6 +24,11 @@ export class JobDetailsComponent implements OnInit {
 
   loadingJobDetails = false;
   constructor(private route: ActivatedRoute, private jobService: JobService, private applicationService: ApplicationService, private authService: AuthService) { }
+
+  // Variables for alert
+  alertMessage: string = '';
+  alertType: 'success' | 'error' | 'info' = 'info';
+  showAlert: boolean = false;
 
   // Variables for Confirm
   confirmMessage = "";
@@ -39,6 +45,18 @@ export class JobDetailsComponent implements OnInit {
         this.loadJobDetails(); // ✅ Only one call now
       }
     });
+  }
+
+  private showCustomAlert(message: string, type: 'success' | 'error' | 'info') {
+    console.log("Alert Triggered:", { message, type });
+
+    this.alertMessage = message;
+    this.alertType = type;
+    this.showAlert = true;
+  }
+
+  onAlertClosed(): void {
+    this.showAlert = false;
   }
 
   // Fetch job details and list of applicants from backend
@@ -119,6 +137,7 @@ export class JobDetailsComponent implements OnInit {
           const a = this.applicants.find(x => x._id === this.selectedApplicationId);
           if (a) a.status = this.newStatusToSet;
           this.resetConfirm();
+          this.showCustomAlert("Status changed successfuully", "success")
         },
         error: err => {
           console.error('Failed to update status:', err);

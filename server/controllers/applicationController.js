@@ -41,9 +41,9 @@ export async function applyForJob(req, res) {
         await application.save();
         console.info(`[applyForJob] Application saved for user ${userId} and job ${jobId}`);
 
-        job.applicantCount += 1;
-        await job.save();
-        console.info(`[applyForJob] Job applicantCount updated to ${job.applicantCount}`);
+        // ✅ Use atomic increment for better concurrency safety
+        await Job.updateOne({ _id: jobId }, { $inc: { applicantCount: 1 } });
+        console.info(`[applyForJob] applicantCount incremented for job ${jobId}`);
 
         res.status(201).json({ message: 'Application submitted successfully.', application });
 
@@ -51,7 +51,7 @@ export async function applyForJob(req, res) {
         console.error("[applyForJob] Error applying for job:", error);
         res.status(500).json({ message: 'Internal server error.' });
     }
-};
+}
 
 export const updateApplicationStatus = async (req, res) => {
     console.log("[updateApplicationStatus] Request received for applicationId:", req.params.applicationId, "with body:", req.body);
@@ -75,7 +75,6 @@ export const updateApplicationStatus = async (req, res) => {
         console.info(`[updateApplicationStatus] Current status for application ${applicationId}: ${application.status}`);
         const previousStatus = application.status;
 
-        // Fetch the job details
         const job = await Job.findById(application.jobId);
         if (!job) {
             console.warn(`[updateApplicationStatus] Associated job not found for application ${applicationId}`);
@@ -94,11 +93,17 @@ export const updateApplicationStatus = async (req, res) => {
             console.info(`[updateApplicationStatus] Decreased vacancies for job ${job._id}, new vacancies: ${job.vacancies}`);
         }
 
+        // If status is changing from Accepted to Rejected, increase job vacancy
+        if (previousStatus === "Accepted" && status === "Rejected") {
+            job.vacancies += 1;
+            await job.save();
+            console.info(`[updateApplicationStatus] Increased vacancies for job ${job._id}, new vacancies: ${job.vacancies}`);
+        }
+
         application.status = status;
         await application.save();
         console.info(`[updateApplicationStatus] Application ${applicationId} status updated to ${status}`);
 
-        // Create a notification with job title instead of job ID
         const notification = new Notification({
             userId: application.userId,
             message: `Your application for the job "${job.title}" has been updated to '${status}'.`

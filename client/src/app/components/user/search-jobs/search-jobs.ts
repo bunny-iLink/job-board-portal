@@ -192,7 +192,7 @@ export class SearchJobsComponent implements OnInit {
       },
       error: (err) => {
         if (err.status === 409) {
-          this.showCustomAlert('Already applied to this job.', 'info');
+          this.showCustomAlert('You have already applied to this job.', 'info');
         } else {
           console.error('Application error:', err);
           this.showCustomAlert('Failed to apply.', 'error');

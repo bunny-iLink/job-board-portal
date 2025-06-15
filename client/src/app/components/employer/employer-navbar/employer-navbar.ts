@@ -41,6 +41,12 @@ export class EmployerNavbar implements OnInit {
     }
   }
 
+  showMobileMenu: boolean = false;
+
+  toggleMobileMenu(): void {
+    this.showMobileMenu = !this.showMobileMenu;
+  }
+
   constructor(private router: Router, private authService: AuthService) { }
 
   // On component initialization, get token and user name from AuthService
