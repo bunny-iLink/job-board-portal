@@ -1,4 +1,3 @@
-// Angular component for searching and filtering available jobs
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -6,77 +5,62 @@ import { AuthService } from '../../../service/auth.service';
 import { JobService } from '../../../service/job.service';
 import { ApplicationService } from '../../../service/application.service';
 import { AlertComponent } from '../../alert/alert.component';
+import { ConfirmComponent } from '../../confirm/confirm.component';
 
 @Component({
   selector: 'app-search-jobs',
   standalone: true,
-  imports: [CommonModule, FormsModule, AlertComponent],
+  imports: [CommonModule, FormsModule, AlertComponent, ConfirmComponent],
   templateUrl: 'search-jobs.html',
   styleUrls: ['search-jobs.css']
 })
 export class SearchJobsComponent implements OnInit {
-  // All jobs fetched from backend
   allJobs: any[] = [];
-  // Jobs filtered by search and filters
   filteredJobs: any[] = [];
-  // Search term entered by user
   searchTerm: string = '';
-  // Currently selected job for modal
   selectedJob: any = null;
-  // Modal state
   token: string | null = null;
   showModal: boolean = false;
   showDomainWarning: boolean = false;
   loadingJobs: boolean = false;
 
-  // Filter options for job type, experience, and expected salary
   filters = {
     type: '',
     experience: '',
-    expectedSalary: '' // new field
+    expectedSalary: ''
   };
 
-  // Variables for alert
   alertMessage: string = '';
   alertType: 'success' | 'error' | 'info' = 'info';
   showAlert: boolean = false;
   navigateAfterAlert: boolean = false;
 
-  private showCustomAlert(message: string, type: 'success' | 'error' | 'info', navigate: boolean = false) {
-    console.log("Alert Triggered:", { message, type });
+  // ✅ ConfirmComponent state
+  confirmMessage: string = '';
+  showConfirm: boolean = false;
+  pendingJobApplication: any = null;
 
-    this.alertMessage = message;
-    this.alertType = type;
-    this.showAlert = true;
-    this.navigateAfterAlert = navigate;
-  }
+  constructor(
+    private jobService: JobService,
+    private authService: AuthService,
+    private applicationService: ApplicationService
+  ) { }
 
-  // Called when the alert is closed by the user
-  onAlertClosed(): void {
-    this.showAlert = false;
-  }
-
-  constructor(private jobService: JobService, private authService: AuthService, private applicationService: ApplicationService) { }
-
-  // On component initialization, fetch and display jobs
   ngOnInit() {
     this.searchJobs();
     this.token = this.authService.getToken();
   }
 
-  // Utility: Check if running in browser
   isBrowser(): boolean {
     return typeof window !== 'undefined';
   }
 
-  // Utility: Get stored user from localStorage
   getStoredUser() {
     if (this.isBrowser()) {
-      return this.authService.getUser(); // ✅ Already parsed
+      return this.authService.getUser();
     }
     return null;
   }
-
 
   searchJobs() {
     const user = this.getStoredUser();
@@ -85,7 +69,7 @@ export class SearchJobsComponent implements OnInit {
       return;
     }
 
-    this.loadingJobs = true; // ✅ Start loading
+    this.loadingJobs = true;
     const hasFilters = this.filters.type || this.filters.experience || this.filters.expectedSalary;
     const hasSearch = this.searchTerm.trim().length > 0;
     const hasPreferredDomain = user.preferredDomain?.trim().length > 0;
@@ -93,18 +77,17 @@ export class SearchJobsComponent implements OnInit {
     if (!hasFilters && !hasSearch && !hasPreferredDomain) {
       this.showDomainWarning = true;
 
-      this.jobService.searchJobs()
-        .subscribe({
-          next: (res: any) => {
-            this.allJobs = res;
-            this.filteredJobs = [...res];
-            this.loadingJobs = false; // ✅ Stop loading
-          },
-          error: (err) => {
-            console.error('Error fetching all jobs:', err);
-            this.loadingJobs = false;
-          }
-        });
+      this.jobService.searchJobs().subscribe({
+        next: (res: any) => {
+          this.allJobs = res;
+          this.filteredJobs = [...res];
+          this.loadingJobs = false;
+        },
+        error: (err) => {
+          console.error('Error fetching all jobs:', err);
+          this.loadingJobs = false;
+        }
+      });
 
       return;
     }
@@ -123,18 +106,17 @@ export class SearchJobsComponent implements OnInit {
 
     const queryString = new URLSearchParams(queryParams).toString();
 
-    this.jobService.searchJobsWithFilter(queryString)
-      .subscribe({
-        next: (res: any) => {
-          this.allJobs = res;
-          this.filteredJobs = [...res];
-          this.loadingJobs = false; // ✅ Stop loading
-        },
-        error: (err) => {
-          console.error('Error fetching jobs:', err);
-          this.loadingJobs = false;
-        }
-      });
+    this.jobService.searchJobsWithFilter(queryString).subscribe({
+      next: (res: any) => {
+        this.allJobs = res;
+        this.filteredJobs = [...res];
+        this.loadingJobs = false;
+      },
+      error: (err) => {
+        console.error('Error fetching jobs:', err);
+        this.loadingJobs = false;
+      }
+    });
   }
 
   openJobModal(job: any) {
@@ -147,6 +129,7 @@ export class SearchJobsComponent implements OnInit {
     this.showModal = false;
   }
 
+  // ✅ Updated to handle confirm component logic
   applyToJob(job: any) {
     const user = this.getStoredUser();
     if (!user) {
@@ -154,18 +137,54 @@ export class SearchJobsComponent implements OnInit {
       return;
     }
 
-    // Check if profile is complete
-    if (!this.isProfileComplete(user)) {
-      this.showCustomAlert('Please complete your profile (name, email, and resume are required) before applying for jobs.', 'info');
+    if (!user?.name?.trim() || !user?.email?.trim() || !user?.resume?.data) {
+      this.showCustomAlert('Please complete your profile (name, email, and resume are required) before applying.', 'info');
       return;
     }
+
+    const recommendedFields = ['phone', 'address', 'experience', 'preferredDomain'];
+    const missingFields = recommendedFields.filter(field => !user[field]);
+
+    if (missingFields.length > 0) {
+      this.confirmMessage = `Your profile is missing recommended info (${missingFields.join(', ')}). Apply anyway?`;
+      this.pendingJobApplication = job;
+      this.showConfirm = true;
+      return;
+    }
+
+    this.submitApplication(job);
+  }
+
+  // ✅ Called if user accepts confirm modal
+  onConfirmApply() {
+    if (this.pendingJobApplication) {
+      this.submitApplication(this.pendingJobApplication);
+      this.resetConfirmState();
+    }
+  }
+
+  // ✅ Called if user cancels confirm modal
+  onCancelConfirm() {
+    this.resetConfirmState();
+    this.closeModal();
+  }
+
+  private resetConfirmState() {
+    this.showConfirm = false;
+    this.confirmMessage = '';
+    this.pendingJobApplication = null;
+  }
+
+  private submitApplication(job: any) {
+    const user = this.getStoredUser();
+    if (!user || !this.token) return;
 
     const payload = {
       userId: user._id,
       jobId: job._id
     };
 
-    this.applicationService.applyForJob(payload, this.token!).subscribe({
+    this.applicationService.applyForJob(payload, this.token).subscribe({
       next: (res: any) => {
         this.showCustomAlert(res.message || 'Application submitted!', 'success');
         this.closeModal();
@@ -183,29 +202,14 @@ export class SearchJobsComponent implements OnInit {
     });
   }
 
-  // Add this new method to check profile completeness
-  isProfileComplete(user: any): boolean {
-    // Check basic info
-    if (!user?.name?.trim() || !user?.email?.trim()) {
-      return false;
-    }
+  private showCustomAlert(message: string, type: 'success' | 'error' | 'info', navigate: boolean = false) {
+    this.alertMessage = message;
+    this.alertType = type;
+    this.showAlert = true;
+    this.navigateAfterAlert = navigate;
+  }
 
-    // Check resume exists and has data
-    if (!user?.resume?.data) {
-      return false;
-    }
-
-    // Optionally check other important fields
-    const recommendedFields = ['phone', 'address', 'experience', 'preferredDomain'];
-    for (const field of recommendedFields) {
-      if (!user[field]) {
-        if (confirm('Your profile is missing some recommended information. Apply anyway?')) {
-          return true;
-        }
-        return false;
-      }
-    }
-
-    return true;
+  onAlertClosed(): void {
+    this.showAlert = false;
   }
 }

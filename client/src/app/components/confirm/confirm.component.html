@@ -1,0 +1,9 @@
+<div class="confirm-modal" *ngIf="show">
+    <div class="confirm-box">
+        <p>{{ message }}</p>
+        <div class="button-group">
+            <button (click)="onConfirm()">{{ confirmText }}</button>
+            <button (click)="onCancel()">{{ cancelText }}</button>
+        </div>
+    </div>
+</div>

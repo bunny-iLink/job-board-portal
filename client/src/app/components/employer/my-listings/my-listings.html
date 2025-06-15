@@ -1,3 +1,6 @@
+<app-confirm [message]="confirmMessage" [show]="showConfirm" (confirmed)="onConfirmDelete()" (cancelled)="onCancelConfirm()">
+</app-confirm>
+
 <div class="header">
     <button class="add-btn" (click)="openModal()">+ Add Job</button>
 </div>

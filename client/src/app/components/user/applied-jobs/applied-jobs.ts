@@ -6,10 +6,11 @@ import { UserService } from '../../../service/user.service';
 import { JobService } from '../../../service/job.service';
 import { ApplicationService } from '../../../service/application.service';
 import { AlertComponent } from '../../alert/alert.component';
+import { ConfirmComponent } from '../../confirm/confirm.component';
 
 @Component({
   selector: 'app-applied-jobs',
-  imports: [CommonModule, AlertComponent],
+  imports: [CommonModule, AlertComponent, ConfirmComponent],
   standalone: true,
   templateUrl: './applied-jobs.html',
   styleUrls: ['./applied-jobs.css']
@@ -34,6 +35,12 @@ export class AppliedJobsComponent implements OnInit {
   alertType: 'success' | 'error' | 'info' = 'info';
   showAlert: boolean = false;
   navigateAfterAlert: boolean = false;
+
+  // Variables for Confirm
+  confirmMessage: string = "";
+  showConfirm: boolean = false;
+  applicationIdToBeDeleted = "";
+  jobIdToBeDeleted: string = '';
 
   private showCustomAlert(message: string, type: 'success' | 'error' | 'info', navigate: boolean = false) {
     console.log("Alert Triggered:", { message, type });
@@ -101,7 +108,6 @@ export class AppliedJobsComponent implements OnInit {
     });
   }
 
-
   // Open the modal to show job details
   openJobModal(job: any) {
     this.selectedJob = job;
@@ -127,19 +133,37 @@ export class AppliedJobsComponent implements OnInit {
       return;
     }
 
-    const confirmRevoke = confirm("Are you sure you want to revoke your application for this job?");
-    if (!confirmRevoke) return;
+    this.applicationIdToBeDeleted = application.applicationId;
+    this.jobIdToBeDeleted = jobId;
+    this.confirmMessage = 'Are you sure you want to revoke your application for this job?';
+    this.showConfirm = true;
+  }
 
-    this.applicationService.revokeApplication(application.applicationId, this.token!).subscribe({
-      next: (res: any) => {
-        this.showCustomAlert("Application revoked successfully!", 'success');
-        this.appliedJobs = this.appliedJobs.filter(job => job._id !== jobId);
+  onConfirmRevoke() {
+    if (!this.applicationIdToBeDeleted || !this.token) return;
+
+    this.applicationService.revokeApplication(this.applicationIdToBeDeleted, this.token).subscribe({
+      next: () => {
+        this.showCustomAlert('Application revoked successfully!', 'success');
+        this.appliedJobs = this.appliedJobs.filter(job => job._id !== this.jobIdToBeDeleted);
+        this.resetConfirmState();
       },
       error: err => {
         console.error('Error revoking application:', err);
         this.showCustomAlert(`Failed to revoke application: ${err.error?.message || 'Unknown error'}`, 'error');
+        this.resetConfirmState();
       }
     });
   }
 
+  onCancelConfirm() {
+    this.resetConfirmState();
+  }
+
+  private resetConfirmState() {
+    this.showConfirm = false;
+    this.confirmMessage = '';
+    this.applicationIdToBeDeleted = '';
+    this.jobIdToBeDeleted = '';
+  }
 }

@@ -5,11 +5,12 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../service/auth.service';
 import { EmployerService } from '../../../service/employer.service';
 import { AlertComponent } from '../../alert/alert.component';
+import { ConfirmComponent } from '../../confirm/confirm.component'
 
 @Component({
   selector: 'app-employer-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, AlertComponent],
+  imports: [CommonModule, FormsModule, AlertComponent, ConfirmComponent],
   templateUrl: 'employer-profile.html',
   styleUrls: ['./employer-profile.css']
 })
@@ -30,6 +31,10 @@ export class EmployerProfileComponent implements OnInit {
   alertType: 'success' | 'error' | 'info' = 'info';
   showAlert: boolean = false;
 
+  // Variables for confirm
+  confirmMessage: string = "";
+  showConfirm: boolean = false;
+
   private showCustomAlert(message: string, type: 'success' | 'error' | 'info') {
     console.log("Alert Triggered:", { message, type });
 
@@ -40,6 +45,11 @@ export class EmployerProfileComponent implements OnInit {
 
   onAlertClosed(): void {
     this.showAlert = false;
+  }
+
+  private showCustomConfirm(message: string) {
+    this.confirmMessage = message;
+    this.showConfirm = true;
   }
 
   constructor(
@@ -118,10 +128,10 @@ export class EmployerProfileComponent implements OnInit {
     if (!this.employerId) return;
 
     // Confirm with the user before deleting the profile
-    if (!confirm('Are you sure you want to delete your profile? This action cannot be undone.')) {
-      return;
-    }
+    this.showCustomConfirm('Are you sure you want to delete your profile? This action cannot be undone.')
+  }
 
+  onConfirmDelete() {
     // Send DELETE request to backend to remove employer profile
     this.employerService.deleteEmployer(this.employerId!, this.token!)
       .subscribe({
@@ -139,6 +149,10 @@ export class EmployerProfileComponent implements OnInit {
           this.error = 'Failed to delete profile.';
         }
       });
+  }
+
+  onCancelDelete() {
+    this.showConfirm = false;
   }
 
   onProfilePictureSelected(event: any) {

@@ -1,6 +1,9 @@
 <app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()">
 </app-alert>
 
+<app-confirm [message]="confirmMessage" [show]="showConfirm" (confirmed)="onConfirmDelete()" (cancelled)="onCancelConfirm()">
+</app-confirm>
+
 <div *ngIf="loading" class="spinner-container">
     <div class="spinner"></div>
     <div class="loading-text">

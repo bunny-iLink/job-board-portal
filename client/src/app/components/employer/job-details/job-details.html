@@ -1,3 +1,8 @@
+<app-confirm [message]="confirmMessage" [show]="showConfirm" (confirmed)="onConfirmStatusChange()"
+  (cancelled)="onCancelStatusChange()">
+
+</app-confirm>
+
 <div *ngIf="loadingJobDetails" class="spinner-container" aria-busy="true">
   <div class="spinner"></div>
   <div class="loading-text">Loading job details and applicants...</div>

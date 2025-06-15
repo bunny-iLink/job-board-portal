@@ -6,10 +6,12 @@ import { AuthService } from '../../../service/auth.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { UserService } from '../../../service/user.service';
 import { AlertComponent } from '../../alert/alert.component';
+import { ConfirmComponent } from '../../confirm/confirm.component';
+
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, AlertComponent],
+  imports: [CommonModule, FormsModule, AlertComponent, ConfirmComponent],
   templateUrl: 'user-profile.html',
   styleUrls: ['./user-profile.css']
 })
@@ -28,6 +30,12 @@ export class UserProfileComponent implements OnInit {
   alertType: 'success' | 'error' | 'info' = 'info';
   showAlert: boolean = false;
   deleteSuccess: boolean = false;
+
+  // Variables for Confirm
+  confirmMessage: string = '';
+  showConfirm: boolean = false;
+  pendingDelete: boolean = false;
+
 
   private showCustomAlert(message: string, type: 'success' | 'error' | 'info') {
     console.log("Alert Triggered:", { message, type });
@@ -120,14 +128,14 @@ export class UserProfileComponent implements OnInit {
   }
 
   deleteProfile() {
-    if (!this.userId) return;
+    this.confirmMessage = 'Are you sure you want to delete your profile? This action cannot be undone.';
+    this.showConfirm = true;
+    this.pendingDelete = true;
+  }
 
-    if (!confirm('Are you sure you want to delete your profile? This action cannot be undone.')) {
-      return;
-    }
-
-    this.userService.deleteUser(this.userId, this.token!)
-      .subscribe({
+  onConfirmDelete() {
+    if (this.pendingDelete && this.userId && this.token) {
+      this.userService.deleteUser(this.userId, this.token).subscribe({
         next: () => {
           this.showCustomAlert('Profile deleted successfully.', 'success');
           if (typeof window !== 'undefined') {
@@ -140,6 +148,18 @@ export class UserProfileComponent implements OnInit {
           this.error = 'Failed to delete profile.';
         }
       });
+    }
+    this.resetConfirm();
+  }
+
+  onCancelConfirm() {
+    this.resetConfirm();
+  }
+
+  private resetConfirm() {
+    this.showConfirm = false;
+    this.confirmMessage = '';
+    this.pendingDelete = false;
   }
 
   onProfilePictureSelected(event: any) {

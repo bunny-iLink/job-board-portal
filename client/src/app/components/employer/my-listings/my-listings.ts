@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../service/auth.service';
 import { environment } from '../../../../environments/environment';
 import { JobService } from '../../../service/job.service';
+import { ConfirmComponent } from '../../confirm/confirm.component';
 
 interface Job {
   _id?: string;
@@ -33,7 +34,7 @@ interface Job {
   selector: 'app-my-listings',
   templateUrl: 'my-listings.html',
   styleUrls: ['./my-listings.css'],
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, ConfirmComponent]
 })
 export class MyListingsComponent implements OnInit {
   // List of jobs for the employer
@@ -53,6 +54,16 @@ export class MyListingsComponent implements OnInit {
   jobForm: Job = this.getEmptyJob();
   // API base URL
   readonly baseUrl = environment.apiUrl + '/api';
+
+  // Variables for Confirm
+  confirmMessage: string = ""
+  showConfirm: boolean = false;
+  jobIdToDelete: string = "";
+
+  private showCustomConfirm(message: string) {
+    this.confirmMessage = message;
+    this.showConfirm = true;
+  }
 
   loading = false;
 
@@ -190,13 +201,19 @@ export class MyListingsComponent implements OnInit {
 
   // Delete a job after confirmation
   deleteJob(jobId: string) {
-    if (!confirm('Are you sure you want to delete this job? This action cannot be undone.')) {
-      return;
-    }
+    this.jobIdToDelete = jobId;
+    this.showCustomConfirm('Are you sure you want to delete this job? This action cannot be undone.')
+  }
 
-    this.jobService.deleteJob(jobId!, this.token!).subscribe({
+  onConfirmDelete() {
+    this.jobService.deleteJob(this.jobIdToDelete!, this.token!).subscribe({
       next: () => this.fetchJobs(),
       error: (err) => console.error('Failed to delete job:', err)
     });
+    this.showConfirm = false;
+  }
+
+  onCancelConfirm() {
+    this.showConfirm = false;
   }
 }
