@@ -74,24 +74,37 @@ export class RegisterComponent {
 
   // Handle form submission for registration
   onSubmit() {
-    if (!this.selectedRole || this.registerForm.invalid) return;
+    if (!this.selectedRole || this.registerForm.invalid) {
+      this.showCustomAlert('Please fill all required fields and select a role.', 'error');
+      return;
+    }
 
     const userData = this.registerForm.value;
 
-    // Choose API endpoint based on selected role
     const url = this.selectedRole === 'candidate'
       ? environment.apiUrl + '/addUser'
       : environment.apiUrl + '/addEmployer';
 
-    // Send registration request to backend API
     this.registerService.register(url, userData).subscribe({
       next: res => {
         this.showCustomAlert("Registration successful. Please log in....", 'success');
         this.registrationSuccess = true;
       },
       error: err => {
-        this.showCustomAlert(`Registration failed. Please try again. ${err}`, 'error');
+        let errorMessage = 'Registration failed. Please try again.';
+        const status = err.status;
+
+        if (status === 400) {
+          errorMessage = err.message;
+        } else if (status === 409) {
+          errorMessage = 'An account with this email already exists.';
+        } else if (status === 500) {
+          errorMessage = 'Server error. Please try again later.';
+        }
+
+        this.showCustomAlert(errorMessage, 'error');
       }
     });
   }
+
 }

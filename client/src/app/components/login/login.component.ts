@@ -85,8 +85,21 @@ export class LoginComponent {
 
         this.showCustomAlert('Login successful!', 'success', true);
       },
-      error: () => {
-        this.showCustomAlert('Login failed. Please check your credentials.', 'error');
+      error: (error) => {
+        let errorMessage = 'An unexpected error occurred. Please try again later.';
+        const status = error.status;
+
+        if (status === 400) {
+          errorMessage = 'Please enter both email and password.';
+        } else if (status === 404) {
+          errorMessage = 'No account found with this email.';
+        } else if (status === 401) {
+          errorMessage = 'Incorrect email or password. Please try again.';
+        } else if (status === 500) {
+          errorMessage = 'Server error. Please try again later.';
+        }
+
+        this.showCustomAlert(errorMessage, 'error');
       }
     });
   }

@@ -25,7 +25,7 @@ export async function loginUser(req, res) {
 
         if (!account) {
             console.warn(`Login failed: No account found for email ${email}`);
-            return res.status(401).json({ message: "Invalid email or password" });
+            return res.status(404).json({ message: "Account not found" });
         }
 
         console.log(`Account found. Type: ${accountType}, ID: ${account._id}`);

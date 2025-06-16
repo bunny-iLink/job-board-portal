@@ -16,10 +16,18 @@ export async function addUser(req, res) {
         const { name, email, password } = req.body;
         console.log("Attempting to add user:", { name, email });
 
+        if (!name || !email || !password) {
+            console.warn("Missing required fields");
+            return res.status(400).json({ message: "Name, email, and password are required" });
+        }
+
+        // Check if email exists in either User or Employer collection
         const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            console.warn(`User already exists with email: ${email}`);
-            return res.status(400).json({ message: "User already exists with this email" });
+        const existingEmployer = !existingUser ? await Employer.findOne({ email }) : null;
+
+        if (existingUser || existingEmployer) {
+            console.warn(`Email already registered in system: ${email}`);
+            return res.status(409).json({ message: "An account with this email already exists" });
         }
 
         const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
@@ -35,10 +43,11 @@ export async function addUser(req, res) {
             message: "User added successfully",
             user: userToReturn
         });
+
     } catch (err) {
         console.error("Error adding user:", err);
         return res.status(500).json({
-            message: "Error adding user",
+            message: "Internal server error while adding user",
             error: err.message || err
         });
     }
@@ -183,20 +192,36 @@ export async function addEmployer(req, res) {
         const { name, email, password, companyName } = req.body;
         console.log("Adding new employer:", { name, email, companyName });
 
+        if (!name || !email || !password || !companyName) {
+            console.warn("Missing required employer fields");
+            return res.status(400).json({
+                message: "Name, email, password, and company name are required"
+            });
+        }
+
+        // Check for existing email in Employer and User collections
         const existingEmployer = await Employer.findOne({
             $or: [{ email }, { companyName }]
         });
 
-        if (existingEmployer) {
-            const conflictField = existingEmployer.email === email ? "email" : "company name";
-            console.warn(`Conflict: Employer already exists with ${conflictField}:`, conflictField === "email" ? email : companyName);
-            return res.status(400).json({
-                message: `Employer already exists with this ${conflictField}`
+        const existingUser = !existingEmployer ? await User.findOne({ email }) : null;
+
+        if (existingEmployer || existingUser) {
+            let conflictField = '';
+            if (existingEmployer) {
+                conflictField = existingEmployer.email === email ? 'email' : 'company name';
+            } else if (existingUser) {
+                conflictField = 'email';
+            }
+
+            console.warn(`Conflict: Employer/User already exists with ${conflictField}:`, conflictField === 'email' ? email : companyName);
+            return res.status(409).json({
+                message: `An account already exists with this ${conflictField}`
             });
         }
 
         const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
-        const newEmployer = new Employer({ name, email, password: hashedPassword, companyName });
+        const newEmployer = new Employer({ name, email, password: hashedPassword, company: companyName });
 
         const savedEmployer = await newEmployer.save();
         console.log("Employer successfully saved with ID:", savedEmployer._id);
@@ -212,12 +237,11 @@ export async function addEmployer(req, res) {
     } catch (err) {
         console.error("Error adding employer:", err);
         return res.status(500).json({
-            message: "Error adding employer",
+            message: "Internal server error while adding employer",
             error: err.message || err
         });
     }
 }
-
 
 // Get employer data by ID
 
