@@ -72,6 +72,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: auto;
   z-index: 1000;
 }
 
@@ -81,10 +82,30 @@
   width: 90%;
   max-width: 600px;
   border-radius: 12px;
-  padding: 25px 30px;
+  padding: 0; /* Removed padding here to separate scroll and action areas */
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.form-scroll-area {
+  padding: 25px 30px;
   overflow-y: auto;
+  flex: 1 1 auto;
+}
+
+.modal-actions {
+  padding: 10px 20px;
+  display: flex;
+  justify-content: center;
+  background-color: #f9f9f9;
+  position: sticky;
+  bottom: 0;
+  border-top: 1px solid #ddd;
+  z-index: 1;
 }
 
 /* Modal Title */
@@ -95,6 +116,7 @@
   font-weight: 700;
   text-align: center;
 }
+
 
 /* Focused state */
 .modal-content input[type="text"]:focus,
