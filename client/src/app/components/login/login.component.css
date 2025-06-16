@@ -79,7 +79,7 @@
 
 .password-wrapper button {
   position: absolute;
-  top: 50%;
+  top: 35%;
   right: 8px;
   transform: translateY(-50%);
   background: none;

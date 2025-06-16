@@ -5,9 +5,20 @@
     </div>
 
     <div class="navbar-right">
-      <button class="icon-button notifications-btn" (click)="toggleNotifications()" title="Notifications">
-        🔔
-      </button>
+      <button 
+  *ngIf="loadingNotifications || !notifications || notifications.length === 0"
+  class="icon-button notifications-btn" 
+  (click)="toggleNotifications()" 
+  title="Notifications">
+  🔔
+</button>
+      <button 
+  *ngIf="!loadingNotifications && notifications && notifications.length > 0"
+  class="icon-button notifications-btn" 
+  (click)="toggleNotifications()" 
+  title="Notifications">
+  <img src="../../../../../public/image.png" alt="Notifications Icon" width="20" height="20">
+</button> 
       <button class="hamburger" (click)="toggleMobileMenu()" [class.active]="showMobileMenu">
         <span></span>
         <span></span>
