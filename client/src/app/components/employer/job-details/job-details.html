@@ -45,9 +45,16 @@
       <li *ngFor="let offer of job.description.whatWeOffer">{{ offer }}</li>
     </ul>
   </section>
-
+  
   <section class="applicant-section">
-    <h2>Applicants ({{ applicants.length }})</h2>
+    <div class="applicant-header">
+      <h2>Applicants ({{ applicants.length }})</h2>
+      <button (click)="downloadAcceptedApplicantsCSV()" class="download-btn">
+      ⬇️ Download Accepted Applicants (CSV)
+      </button>
+    
+    </div>
+    <hr/>
 
     <div *ngIf="applicants.length === 0" class="no-applicants">
       <p>No one has applied for this job yet.</p>
