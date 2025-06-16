@@ -63,8 +63,7 @@
   margin-top: 32px;
   font-size: 22px;
   color: #333;
-  border-bottom: 2px solid #e0e0e0;
-  padding-bottom: 4px;
+  padding-bottom: 2px;
 }
 
 .job-section h3 {
@@ -129,4 +128,43 @@ a:hover {
   margin-top: 20px;
   color: #777;
   font-style: italic;
+}
+.applicant-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* allows wrapping */
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.applicant-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  flex: 1 1 auto;
+}
+
+.download-btn {
+  padding: 8px 16px;
+  background-color: #198754;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+
+/* Responsive tweaks for small screens */
+@media (max-width: 600px) {
+  .applicant-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .download-btn {
+    width: 100%;
+    text-align: center;
+  }
 }

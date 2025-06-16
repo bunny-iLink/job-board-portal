@@ -166,4 +166,36 @@ export class JobDetailsComponent implements OnInit {
   onStatusChange(applicationId: string, newStatus: string) {
     this.onStatusClick(applicationId, newStatus);
   }
+
+  downloadAcceptedApplicantsCSV() {
+  const acceptedApplicants = this.applicants.filter(app => app.status === 'Accepted');
+
+  if (acceptedApplicants.length === 0) {
+    this.showCustomAlert('No accepted applicants found.', 'info');
+    return;
+  }
+
+  const csvRows = [
+    ['Name', 'Email', 'Contact Number'], // header
+    ...acceptedApplicants.map(app => [
+      app.userId?.name || '',
+      app.userId?.email || '',
+      app.userId?.phone || 'N/A'
+    ])
+  ];
+
+  const csvContent = csvRows.map(row =>
+    row.map(value => `"${String(value).replace(/"/g, '""')}"`).join(',')
+  ).join('\n');
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `accepted_applicants_${this.jobId}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  window.URL.revokeObjectURL(url);
+}
 }
