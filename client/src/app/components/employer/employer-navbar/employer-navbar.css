@@ -16,6 +16,10 @@
   padding: 12px 24px;
 }
 
+.nav-button small button {
+  text-align: center;
+}
+
 /* Greeting */
 .greeting {
   font-size: 24px;
@@ -48,9 +52,18 @@
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.3s;
-  width: 8%;
   text-align: center;
+  /* Ensures text is centered */
+  display: flex;
+  /* Add this */
+  justify-content: center;
+  /* Center horizontally */
+  align-items: center;
+  /* Center vertically */
+  width: auto;
+  /* Change from 8% to auto, or use min-width instead */
 }
+
 
 .nav-button:hover {
   background-color: #e0f0ff;
