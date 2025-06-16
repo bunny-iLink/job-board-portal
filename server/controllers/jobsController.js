@@ -281,6 +281,7 @@ export async function searchJobsForUsers(req, res) {
             query._id = { $nin: appliedJobIds };
         }
 
+        console.log("Final Query Params:", query);
         const jobs = await Job.find(query);
         console.log(`[searchJobsForUsers] Found ${jobs.length} matching jobs`);
         res.status(200).json(jobs);

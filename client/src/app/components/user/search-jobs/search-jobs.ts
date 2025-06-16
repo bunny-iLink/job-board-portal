@@ -96,9 +96,12 @@ export class SearchJobsComponent implements OnInit {
 
     const queryParams: any = {
       userId: user._id,
-      domain: user.preferredDomain,
       search: this.searchTerm.trim()
     };
+
+    if (user.preferredDomain && user.preferredDomain !== 'null') {
+      queryParams.domain = user.preferredDomain;
+    }
 
     if (this.filters.type) queryParams.type = this.filters.type;
     if (this.filters.experience) queryParams.experience = this.filters.experience;

@@ -6,6 +6,7 @@ import { AuthService } from '../../../service/auth.service';
 import { environment } from '../../../environments/environment';
 import { JobService } from '../../../service/job.service';
 import { ConfirmComponent } from '../../confirm/confirm.component';
+import { AlertComponent } from '../../alert/alert.component';
 
 interface Job {
   _id?: string;
@@ -34,7 +35,7 @@ interface Job {
   selector: 'app-my-listings',
   templateUrl: 'my-listings.html',
   styleUrls: ['./my-listings.css'],
-  imports: [CommonModule, FormsModule, ConfirmComponent]
+  imports: [CommonModule, FormsModule, ConfirmComponent, AlertComponent]
 })
 export class MyListingsComponent implements OnInit {
   // List of jobs for the employer
@@ -54,6 +55,11 @@ export class MyListingsComponent implements OnInit {
   jobForm: Job = this.getEmptyJob();
   // API base URL
   readonly baseUrl = environment.apiUrl + '/api';
+
+  // Variables for alert
+  alertMessage: string = '';
+  alertType: 'success' | 'error' | 'info' = 'info';
+  showAlert: boolean = false;
 
   // Variables for Confirm
   confirmMessage: string = ""
@@ -106,6 +112,18 @@ export class MyListingsComponent implements OnInit {
       vacancies: null as any,
       status: 'open'
     };
+  }
+
+  private showCustomAlert(message: string, type: 'success' | 'error' | 'info') {
+    console.log("Alert Triggered:", { message, type });
+
+    this.alertMessage = message;
+    this.alertType = type;
+    this.showAlert = true;
+  }
+
+  onAlertClosed(): void {
+    this.showAlert = false;
   }
 
   // Fetch all jobs for the current employer from backend
@@ -183,6 +201,7 @@ export class MyListingsComponent implements OnInit {
     if (this.isEditMode && this.selectedJobId) {
       this.jobService.updateJob(this.selectedJobId, payload, this.token!).subscribe({
         next: () => {
+          this.showCustomAlert('Job updated successfully!', 'success');
           this.fetchJobs();
           this.closeModal();
         },
