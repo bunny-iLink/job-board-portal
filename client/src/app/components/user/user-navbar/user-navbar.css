@@ -232,3 +232,22 @@
   background-color: rgba(0, 0, 0, 0.4);
   z-index: 999;
 }
+
+.accepted {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.rejected {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.in-progress {
+  color: #ffc107;
+  font-weight: bold;
+}
+
+.job-title {
+  font-weight: bold;
+}
