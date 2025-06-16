@@ -52,7 +52,12 @@
 
     <ul *ngIf="!loadingNotifications && notifications && notifications.length > 0">
       <li *ngFor="let notification of notifications">
-        {{ notification.message }}
+        <ng-container *ngIf="parseNotification(notification.message) as parsed">
+          Your application for the job
+          "<span class="job-title">{{ parsed.jobTitle }}</span>"
+          has been updated to
+          '<span [ngClass]="parsed.statusClass">{{ parsed.status }}</span>'.
+        </ng-container>
       </li>
     </ul>
   </div>

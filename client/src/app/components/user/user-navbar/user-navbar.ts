@@ -113,4 +113,27 @@ export class UserNavbar implements OnInit {
   toggleMobileMenu() {
     this.showMobileMenu = !this.showMobileMenu;
   }
+
+  parseNotification(message: string): { jobTitle: string; status: string; statusClass: string } | null {
+    const jobMatch = message.match(/job "(.*?)"/);
+    const statusMatch = message.match(/'(Accepted|Rejected|In Progress)'/);
+
+    if (jobMatch && statusMatch) {
+      const jobTitle = jobMatch[1];
+      const status = statusMatch[1];
+
+      let statusClass = '';
+      if (status === 'Accepted') {
+        statusClass = 'accepted';
+      } else if (status === 'Rejected') {
+        statusClass = 'rejected';
+      } else if (status === 'In Progress') {
+        statusClass = 'in-progress';
+      }
+
+      return { jobTitle, status, statusClass };
+    }
+
+    return null;
+  }
 }
