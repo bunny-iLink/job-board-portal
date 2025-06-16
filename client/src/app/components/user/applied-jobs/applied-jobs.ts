@@ -1,13 +1,16 @@
 // Angular component for displaying jobs the user has applied to
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { environment } from '../../../../environments/environment';
-import { AuthService } from '../../service/auth.service';
+import { AuthService } from '../../../service/auth.service';
+import { UserService } from '../../../service/user.service';
+import { JobService } from '../../../service/job.service';
+import { ApplicationService } from '../../../service/application.service';
+import { AlertComponent } from '../../alert/alert.component';
+import { ConfirmComponent } from '../../confirm/confirm.component';
 
 @Component({
   selector: 'app-applied-jobs',
-  imports: [CommonModule],
+  imports: [CommonModule, AlertComponent, ConfirmComponent],
   standalone: true,
   templateUrl: './applied-jobs.html',
   styleUrls: ['./applied-jobs.css']
@@ -25,9 +28,35 @@ export class AppliedJobsComponent implements OnInit {
   // Modal state and selected job for details
   selectedJob: any = null;
   showModal: boolean = false;
-  loading: boolean = true; 
+  loading: boolean = true;
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  // Variables for alert
+  alertMessage: string = '';
+  alertType: 'success' | 'error' | 'info' = 'info';
+  showAlert: boolean = false;
+  navigateAfterAlert: boolean = false;
+
+  // Variables for Confirm
+  confirmMessage: string = "";
+  showConfirm: boolean = false;
+  applicationIdToBeDeleted = "";
+  jobIdToBeDeleted: string = '';
+
+  private showCustomAlert(message: string, type: 'success' | 'error' | 'info', navigate: boolean = false) {
+    console.log("Alert Triggered:", { message, type });
+
+    this.alertMessage = message;
+    this.alertType = type;
+    this.showAlert = true;
+    this.navigateAfterAlert = navigate;
+  }
+
+  // Called when the alert is closed by the user
+  onAlertClosed(): void {
+    this.showAlert = false;
+  }
+
+  constructor(private applicationService: ApplicationService, private authService: AuthService, private userService: UserService, private jobService: JobService) { }
 
   // On component initialization, load user and applied jobs data
   ngOnInit(): void {
@@ -38,18 +67,17 @@ export class AppliedJobsComponent implements OnInit {
   // Load user data from localStorage and fetch from backend
   loadUserData() {
     if (typeof window !== 'undefined') {
-      const storedData = localStorage.getItem('user');
+      const userObject = this.authService.getUser(); // already parsed in AuthService
 
-      if (storedData && storedData !== 'null') {
-        const userObject = JSON.parse(storedData); // Parse user object
-        this.userId = userObject._id;              // Extract user ID
+      if (userObject && userObject !== 'null') {
+        this.userId = userObject._id; // safely access user ID
 
-        // Fetch user profile from backend
-        this.http.get(environment.apiUrl + `/api/getUserData/${this.userId}`).subscribe({
+        // Fetch full user profile from backend
+        this.userService.getUserData(this.userId!).subscribe({
           next: (res: any) => {
             this.user = res.user;
             console.log('User data:', this.user);
-            this.loadAppliedJobs(); // Load jobs the user has applied to
+            this.loadAppliedJobs(); // Now load applied jobs
           },
           error: err => {
             console.error('Failed to load user data:', err);
@@ -60,13 +88,14 @@ export class AppliedJobsComponent implements OnInit {
       }
     }
   }
+
   // Load jobs that the user has applied to from the backend
   loadAppliedJobs() {
     if (!this.userId) return;
 
     this.loading = true; // Start loading
 
-    this.http.get(environment.apiUrl + `/api/appliedJobs/${this.userId}`).subscribe({
+    this.jobService.appliedJobs(this.userId).subscribe({
       next: (res: any) => {
         this.appliedJobs = res.jobs || res;
         console.log('Applied jobs:', this.appliedJobs);
@@ -78,7 +107,6 @@ export class AppliedJobsComponent implements OnInit {
       }
     });
   }
-
 
   // Open the modal to show job details
   openJobModal(job: any) {
@@ -101,27 +129,41 @@ export class AppliedJobsComponent implements OnInit {
     // Find the application to get the applicationId
     const application = this.appliedJobs.find(job => job._id === jobId);
     if (!application) {
-      alert("Application not found!");
+      this.showCustomAlert("Application not found!", 'info');
       return;
     }
 
-    const confirmRevoke = confirm("Are you sure you want to revoke your application for this job?");
-    if (!confirmRevoke) return;
+    this.applicationIdToBeDeleted = application.applicationId;
+    this.jobIdToBeDeleted = jobId;
+    this.confirmMessage = 'Are you sure you want to revoke your application for this job?';
+    this.showConfirm = true;
+  }
 
-    this.http.delete(environment.apiUrl + `/api/revokeApplication/${application.applicationId}`, {
-      headers: {
-        Authorization: `Bearer ${this.token}`
-      }
-    }).subscribe({
-      next: (res: any) => {
-        alert("Application revoked successfully!");
-        this.appliedJobs = this.appliedJobs.filter(job => job._id !== jobId);
+  onConfirmRevoke() {
+    if (!this.applicationIdToBeDeleted || !this.token) return;
+
+    this.applicationService.revokeApplication(this.applicationIdToBeDeleted, this.token).subscribe({
+      next: () => {
+        this.showCustomAlert('Application revoked successfully!', 'success');
+        this.appliedJobs = this.appliedJobs.filter(job => job._id !== this.jobIdToBeDeleted);
+        this.resetConfirmState();
       },
       error: err => {
         console.error('Error revoking application:', err);
-        alert(`Failed to revoke application: ${err.error?.message || 'Unknown error'}`);
+        this.showCustomAlert(`Failed to revoke application: ${err.error?.message || 'Unknown error'}`, 'error');
+        this.resetConfirmState();
       }
     });
   }
 
+  onCancelConfirm() {
+    this.resetConfirmState();
+  }
+
+  private resetConfirmState() {
+    this.showConfirm = false;
+    this.confirmMessage = '';
+    this.applicationIdToBeDeleted = '';
+    this.jobIdToBeDeleted = '';
+  }
 }

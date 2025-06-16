@@ -1,0 +1,99 @@
+/* Modal overlay */
+.confirm-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+}
+
+/* Modal box */
+.confirm-box {
+    background-color: #ffffff;
+    padding: 1.5rem 1.75rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 400px;
+    min-height: 130px;
+    font-family: 'Segoe UI', sans-serif;
+    position: relative;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+/* Confirm text */
+.confirm-box p {
+    font-size: 1rem;
+    color: #333;
+    margin: 0 0 1.25rem 0;
+    line-height: 1.5;
+}
+
+/* Button group */
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+/* Yes (Confirm) button */
+.button-group button:first-child {
+    background-color: #0073e6;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.1rem;
+    font-size: 0.875rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button-group button:first-child:hover {
+    background-color: #005bb5;
+}
+
+/* Cancel button */
+.button-group button:last-child {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.1rem;
+    font-size: 0.875rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button-group button:last-child:hover {
+    background-color: #b02a37;
+}
+
+/* Media query for small screens */
+@media (max-width: 400px) {
+    .confirm-box {
+        padding: 1rem 1.25rem;
+        max-width: 95%;
+        font-size: 0.9rem;
+    }
+
+    .confirm-box p {
+        font-size: 0.95rem;
+    }
+
+    .button-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+
+    .button-group button {
+        font-size: 0.85rem;
+        padding: 0.45rem 1rem;
+    }
+}

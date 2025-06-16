@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { environment } from "../../../environments/environment";
+import { environment } from "../environments/environment";
 import { Observable } from "rxjs";
 
 @Injectable({
@@ -38,5 +38,17 @@ export class JobService {
     deleteJob(jobId: string, token: string): Observable<any> {
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
         return this.http.delete(`${environment.apiUrl}/deleteJob/${jobId}`, { headers });
+    }
+
+    appliedJobs(userId: string): Observable<any> {
+        return this.http.get(`${environment.apiUrl}/appliedJobs/${userId}`);
+    }
+
+    searchJobs(): Observable<any> {
+        return this.http.get(`${environment.apiUrl}/searchJobs`);
+    }
+
+    searchJobsWithFilter(queryString: string): Observable<any> {
+        return this.http.get(`${environment.apiUrl}/searchJobs?${queryString}`);
     }
 }

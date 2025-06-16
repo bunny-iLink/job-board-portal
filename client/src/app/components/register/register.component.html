@@ -1,3 +1,6 @@
+<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()">
+</app-alert>
+
 <!-- Registration page container with overlay for visual effect -->
 <div class="auth-page">
   <div class="auth-overlay"></div>
@@ -90,12 +93,13 @@
         </div>
 
         <!-- Submit Button: Create Account -->
-        <button type="submit" [disabled]="!registerForm.valid || !selectedRole" class="submit-btn">Create Account</button>
+        <button type="submit" [disabled]="!registerForm.valid || !selectedRole" class="submit-btn">Create
+          Account</button>
       </form>
 
       <!-- Footer: Link to Sign In page -->
       <div class="footer">
-        <p>Already have an account? <a href="/login">Sign in</a></p>
+        <p>Already have an account? <a (click)="goToLogin()">Sign in</a></p>
       </div>
     </div>
   </div>

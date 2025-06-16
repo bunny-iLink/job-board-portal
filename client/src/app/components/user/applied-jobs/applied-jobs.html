@@ -1,3 +1,9 @@
+<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()">
+</app-alert>
+
+<app-confirm [message]="confirmMessage" [show]="showConfirm" (confirmed)="onConfirmRevoke()" (cancelled)="onCancelConfirm()">
+</app-confirm>
+
 <!-- Container for displaying all jobs the user has applied to -->
 <div class="applied-jobs-container">
   <h2>Your Applied Jobs</h2>

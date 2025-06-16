@@ -1,3 +1,10 @@
+<app-confirm [message]="confirmMessage" [show]="showConfirm" (confirmed)="onConfirmDelete()"
+    (cancelled)="onCancelConfirm()">
+</app-confirm>
+
+<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()">
+</app-alert>
+
 <div class="header">
     <button class="add-btn" (click)="openModal()">+ Add Job</button>
 </div>
@@ -120,6 +127,6 @@
 </div>
 
 <!-- No jobs -->
-<div *ngIf="!loading && jobs.length === 0">
+<div *ngIf="!loading && jobs.length === 0" class="no-jobs-found">
     No job listings found.
 </div>

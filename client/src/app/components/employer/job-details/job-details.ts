@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../service/auth.service';
-import { JobService } from '../../service/job.service';
-import { ApplicationService } from '../../service/application.service';
+import { AuthService } from '../../../service/auth.service';
+import { JobService } from '../../../service/job.service';
+import { ApplicationService } from '../../../service/application.service';
+import { ConfirmComponent } from '../../confirm/confirm.component';
+import { AlertComponent } from '../../alert/alert.component';
+
 @Component({
   selector: 'app-job-details',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmComponent, AlertComponent],
   templateUrl: 'job-details.html',
   styleUrls: ['job-details.css']
 })
@@ -21,7 +23,18 @@ export class JobDetailsComponent implements OnInit {
   token: string | null = null;
 
   loadingJobDetails = false;
-  constructor(private route: ActivatedRoute, private http: HttpClient, private jobService: JobService, private applicationService: ApplicationService, private authService: AuthService) { }
+  constructor(private route: ActivatedRoute, private jobService: JobService, private applicationService: ApplicationService, private authService: AuthService) { }
+
+  // Variables for alert
+  alertMessage: string = '';
+  alertType: 'success' | 'error' | 'info' = 'info';
+  showAlert: boolean = false;
+
+  // Variables for Confirm
+  confirmMessage = "";
+  showConfirm = false;
+  selectedApplicationId = "";
+  newStatusToSet = "";
 
   ngOnInit(): void {
     this.token = this.authService.getToken();
@@ -34,6 +47,17 @@ export class JobDetailsComponent implements OnInit {
     });
   }
 
+  private showCustomAlert(message: string, type: 'success' | 'error' | 'info') {
+    console.log("Alert Triggered:", { message, type });
+
+    this.alertMessage = message;
+    this.alertType = type;
+    this.showAlert = true;
+  }
+
+  onAlertClosed(): void {
+    this.showAlert = false;
+  }
 
   // Fetch job details and list of applicants from backend
   loadJobDetails(): void {
@@ -98,6 +122,41 @@ export class JobDetailsComponent implements OnInit {
     }
   }
 
+  onStatusClick(applicationId: string, newStatus: string) {
+    this.confirmMessage = `Are you sure you want to change the status to "${newStatus}"?`;
+    this.selectedApplicationId = applicationId;
+    this.newStatusToSet = newStatus;
+    this.showConfirm = true;
+  }
+
+  onConfirmStatusChange() {
+    this.applicationService
+      .updateStatus(this.selectedApplicationId, this.token!, this.newStatusToSet)
+      .subscribe({
+        next: () => {
+          const a = this.applicants.find(x => x._id === this.selectedApplicationId);
+          if (a) a.status = this.newStatusToSet;
+          this.resetConfirm();
+          this.showCustomAlert("Status changed successfuully", "success")
+        },
+        error: err => {
+          console.error('Failed to update status:', err);
+          this.resetConfirm();
+        }
+      });
+  }
+
+  onCancelStatusChange() {
+    this.resetConfirm();
+  }
+
+  resetConfirm() {
+    this.showConfirm = false;
+    this.selectedApplicationId = '';
+    this.newStatusToSet = '';
+    this.confirmMessage = '';
+  }
+
   ngOnDestroy() {
     // Clean up blob URLs when component is destroyed to free memory
     Object.values(this.resumeBlobUrls).forEach(url => URL.revokeObjectURL(url));
@@ -105,17 +164,6 @@ export class JobDetailsComponent implements OnInit {
 
   // Change the status of an applicant's application (e.g., Accept/Reject)
   onStatusChange(applicationId: string, newStatus: string) {
-    const confirmed = window.confirm(`Are you sure you want to change the status to "${newStatus}"?`);
-    if (!confirmed) return;
-
-    this.applicationService.updateStatus(applicationId, this.token!, newStatus).subscribe({
-      next: () => {
-        const applicant = this.applicants.find(a => a._id === applicationId);
-        if (applicant) {
-          applicant.status = newStatus;
-        }
-      },
-      error: err => console.error('Failed to update status:', err)
-    });
+    this.onStatusClick(applicationId, newStatus);
   }
 }

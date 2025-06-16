@@ -1,11 +1,7 @@
 import mongoose from "mongoose";
-import { jobsSchema } from "../models/jobs.js";
-import { applicationSchema } from "../models/applications.js";
-import { userSchema } from "../models/users.js";
-
-const Job = mongoose.model("Job", jobsSchema);
-const Application = mongoose.model("Application", applicationSchema);
-const User = mongoose.model("User", userSchema);
+import { Job } from "../models/jobs.js";
+import { Application } from "../models/applications.js";
+import { User } from "../models/users.js";
 
 export async function addJob(req, res) {
     console.log("[addJob] Incoming job data:", req.body);
@@ -133,15 +129,25 @@ export async function deleteJob(req, res) {
             return res.status(400).json({ message: "Invalid job ID format" });
         }
 
-        const deletedJob = await Job.findByIdAndDelete(jobId);
+        // First delete all related applications
+        const deletedApplications = await Application.deleteMany({ jobId });
+        console.info(`[deleteJob] Deleted ${deletedApplications.deletedCount} application(s) linked to jobId ${jobId}`);
 
+        // Then delete the job itself
+        const deletedJob = await Job.findByIdAndDelete(jobId);
         if (!deletedJob) {
-            console.warn("[deleteJob] Job not found");
+            console.warn("[deleteJob] Job not found after deleting applications");
             return res.status(404).json({ message: "Job not found" });
         }
 
         console.log("[deleteJob] Job deleted:", deletedJob._id);
-        res.status(200).json({ message: "Job deleted successfully", job: deletedJob });
+
+        res.status(200).json({
+            message: "Job and related applications deleted successfully",
+            deletedApplications: deletedApplications.deletedCount,
+            deletedJob
+        });
+
     } catch (error) {
         console.error("[deleteJob] Error:", error.message);
         res.status(500).json({ message: "Error deleting job", error: error.message });
@@ -251,8 +257,8 @@ export async function searchJobsForUsers(req, res) {
 
         if (type) query.type = type;
 
-        if(experience) {
-            query.experience = { $lte: Number(experience)}
+        if (experience) {
+            query.experience = { $lte: Number(experience) }
         }
 
         if (expectedSalary) {
@@ -275,6 +281,7 @@ export async function searchJobsForUsers(req, res) {
             query._id = { $nin: appliedJobIds };
         }
 
+        console.log("Final Query Params:", query);
         const jobs = await Job.find(query);
         console.log(`[searchJobsForUsers] Found ${jobs.length} matching jobs`);
         res.status(200).json(jobs);

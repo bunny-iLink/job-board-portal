@@ -41,9 +41,9 @@ export async function applyForJob(req, res) {
         await application.save();
         console.info(`[applyForJob] Application saved for user ${userId} and job ${jobId}`);
 
-        job.applicantCount += 1;
-        await job.save();
-        console.info(`[applyForJob] Job applicantCount updated to ${job.applicantCount}`);
+        // ✅ Use atomic increment for better concurrency safety
+        await Job.updateOne({ _id: jobId }, { $inc: { applicantCount: 1 } });
+        console.info(`[applyForJob] applicantCount incremented for job ${jobId}`);
 
         res.status(201).json({ message: 'Application submitted successfully.', application });
 
@@ -51,14 +51,16 @@ export async function applyForJob(req, res) {
         console.error("[applyForJob] Error applying for job:", error);
         res.status(500).json({ message: 'Internal server error.' });
     }
-};
+}
 
 export const updateApplicationStatus = async (req, res) => {
     console.log("[updateApplicationStatus] Request received for applicationId:", req.params.applicationId, "with body:", req.body);
+
     try {
         const applicationId = req.params.applicationId;
         const { status } = req.body;
         const validStatuses = ["In Progress", "Accepted", "Rejected"];
+
         if (!validStatuses.includes(status)) {
             console.warn(`[updateApplicationStatus] Invalid status value: ${status}`);
             return res.status(400).json({ message: "Invalid status value." });
@@ -73,14 +75,14 @@ export const updateApplicationStatus = async (req, res) => {
         console.info(`[updateApplicationStatus] Current status for application ${applicationId}: ${application.status}`);
         const previousStatus = application.status;
 
+        const job = await Job.findById(application.jobId);
+        if (!job) {
+            console.warn(`[updateApplicationStatus] Associated job not found for application ${applicationId}`);
+            return res.status(404).json({ message: "Associated job not found." });
+        }
+
         // If status is changing to Accepted, reduce job vacancy
         if (status === "Accepted" && previousStatus !== "Accepted") {
-            const job = await Job.findById(application.jobId);
-            if (!job) {
-                console.warn(`[updateApplicationStatus] Associated job not found for application ${applicationId}`);
-                return res.status(404).json({ message: "Associated job not found." });
-            }
-
             if (job.vacancies <= 0) {
                 console.warn(`[updateApplicationStatus] No vacancies available for job ${job._id}`);
                 return res.status(400).json({ message: "No vacancies available for this job." });
@@ -91,14 +93,20 @@ export const updateApplicationStatus = async (req, res) => {
             console.info(`[updateApplicationStatus] Decreased vacancies for job ${job._id}, new vacancies: ${job.vacancies}`);
         }
 
+        // If status is changing from Accepted to Rejected, increase job vacancy
+        if (previousStatus === "Accepted" && status === "Rejected") {
+            job.vacancies += 1;
+            await job.save();
+            console.info(`[updateApplicationStatus] Increased vacancies for job ${job._id}, new vacancies: ${job.vacancies}`);
+        }
+
         application.status = status;
         await application.save();
         console.info(`[updateApplicationStatus] Application ${applicationId} status updated to ${status}`);
 
-        // Create a notification for the user
         const notification = new Notification({
             userId: application.userId,
-            message: `Your application for job ID ${application.jobId} has been updated to '${status}'.`
+            message: `Your application for the job "${job.title}" has been updated to '${status}'.`
         });
         await notification.save();
         console.info(`[updateApplicationStatus] Notification created for user ${application.userId}`);
@@ -151,22 +159,36 @@ export async function revokeApplication(req, res) {
             return res.status(400).json({ message: "Application ID is required" });
         }
 
-        // Check if ID is a valid MongoDB ObjectId
         if (!mongoose.Types.ObjectId.isValid(application_id)) {
             console.warn(`[revokeApplication] Invalid Application ID format: ${application_id}`);
             return res.status(400).json({ message: "Invalid Application ID format" });
         }
 
-        const deletedApplication = await Application.findByIdAndDelete(application_id);
-        console.info("[revokeApplication] Deleted application:", deletedApplication);
-
-        if (!deletedApplication) {
+        // Find application first (don't delete yet)
+        const application = await Application.findById(application_id);
+        if (!application) {
             console.warn(`[revokeApplication] No application found with id: ${application_id}`);
             return res.status(404).json({ message: "Application not found" });
         }
 
+        // If application was accepted, increase the job vacancy
+        if (application.status === "Accepted") {
+            const job = await Job.findById(application.jobId);
+            if (job) {
+                job.vacancies += 1;
+                await job.save();
+                console.info(`[revokeApplication] Job vacancies incremented. Job ID: ${job._id}, new vacancies: ${job.vacancies}`);
+            } else {
+                console.warn(`[revokeApplication] Job not found for jobId: ${application.jobId}`);
+            }
+        }
+
+        // Now delete the application
+        const deletedApplication = await Application.findByIdAndDelete(application_id);
+        console.info("[revokeApplication] Deleted application:", deletedApplication);
+
         res.status(200).json({
-            message: "Application deleted successfully",
+            message: "Application revoked successfully",
             deletedApplication,
         });
 
@@ -175,3 +197,4 @@ export async function revokeApplication(req, res) {
         res.status(500).json({ message: "Internal server error" });
     }
 }
+

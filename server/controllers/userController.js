@@ -1,10 +1,9 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import { userSchema } from "../models/users.js";
-import { employerSchema } from "../models/employer.js";
-
-const User = mongoose.model("User", userSchema);
-const Employer = mongoose.model("Employer", employerSchema);
+import { User } from "../models/users.js";
+import { Employer } from "../models/employer.js";
+import { Notification } from "../models/notification.js";
+import { Application } from "../models/applications.js";
 
 const SALT_ROUNDS = 10;
 
@@ -147,6 +146,10 @@ export async function deleteUserData(req, res) {
         // First, delete all applications associated with the user
         const appDeleteResult = await Application.deleteMany({ userId });
         console.log(`Deleted ${appDeleteResult.deletedCount} applications for user ID: ${userId}`);
+
+        //Next, delete all notifications associated with the user
+        const notificationDeleteResult = await Notification.deleteMany({ userId });
+        console.log(`Deleted ${notificationDeleteResult.deletedCount} notifications for user ID: ${userId}`)
 
         // Then, delete the user
         const userDeleteResult = await User.deleteOne({ _id: userId });

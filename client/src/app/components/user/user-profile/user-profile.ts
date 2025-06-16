@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { AuthService } from '../../service/auth.service';
+import { AuthService } from '../../../service/auth.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { environment } from '../../../../environments/environment';
+import { UserService } from '../../../service/user.service';
+import { AlertComponent } from '../../alert/alert.component';
+import { ConfirmComponent } from '../../confirm/confirm.component';
+
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AlertComponent, ConfirmComponent],
   templateUrl: 'user-profile.html',
   styleUrls: ['./user-profile.css']
 })
@@ -23,10 +25,37 @@ export class UserProfileComponent implements OnInit {
 
   resumeURL: SafeResourceUrl | null = null;
 
-  apiBase = environment.apiUrl +'/api';
+  // Variables for alert
+  alertMessage: string = '';
+  alertType: 'success' | 'error' | 'info' = 'info';
+  showAlert: boolean = false;
+  deleteSuccess: boolean = false;
+
+  // Variables for Confirm
+  confirmMessage: string = '';
+  showConfirm: boolean = false;
+  pendingDelete: boolean = false;
+
+
+  private showCustomAlert(message: string, type: 'success' | 'error' | 'info') {
+    console.log("Alert Triggered:", { message, type });
+
+    this.alertMessage = message;
+    this.alertType = type;
+    this.showAlert = true;
+  }
+
+  // Called when the alert is closed by the user
+  onAlertClosed(): void {
+    this.showAlert = false;
+
+    if (this.deleteSuccess) {
+      this.router.navigate(['/login']);
+    }
+  }
 
   constructor(
-    private http: HttpClient,
+    private userService: UserService,
     private router: Router,
     private authService: AuthService,
     private sanitizer: DomSanitizer
@@ -44,7 +73,7 @@ export class UserProfileComponent implements OnInit {
 
   fetchuser() {
     this.loading = true;
-    this.http.get(`${this.apiBase}/getUserData/${this.userId}`)
+    this.userService.getUserData(this.userId!)
       .subscribe({
         next: (data: any) => {
           this.user = data.user;
@@ -80,14 +109,11 @@ export class UserProfileComponent implements OnInit {
       delete updatedUser.password;
     }
 
-    this.http.put(`${this.apiBase}/updateUser/${this.userId}`, updatedUser, {
-      headers: {
-        Authorization: `Bearer ${this.token}`
-      }
-    })
+    this.userService.updateUserData(this.userId!, updatedUser, this.token!)
       .subscribe({
         next: (res: any) => {
           this.success = 'Profile updated successfully!';
+          this.showCustomAlert(this.success, 'success');
 
           // Update localStorage
           const newUser = res.user || updatedUser; // in case API returns the updated user
@@ -102,30 +128,38 @@ export class UserProfileComponent implements OnInit {
   }
 
   deleteProfile() {
-    if (!this.userId) return;
+    this.confirmMessage = 'Are you sure you want to delete your profile? This action cannot be undone.';
+    this.showConfirm = true;
+    this.pendingDelete = true;
+  }
 
-    if (!confirm('Are you sure you want to delete your profile? This action cannot be undone.')) {
-      return;
-    }
-
-    this.http.delete(`${this.apiBase}/deleteUser/${this.userId}`, {
-      headers: {
-        Authorization: `Bearer ${this.token}`
-      }
-    })
-      .subscribe({
+  onConfirmDelete() {
+    if (this.pendingDelete && this.userId && this.token) {
+      this.userService.deleteUser(this.userId, this.token).subscribe({
         next: () => {
-          alert('Profile deleted successfully.');
+          this.showCustomAlert('Profile deleted successfully.', 'success');
           if (typeof window !== 'undefined') {
             localStorage.removeItem('id');
             localStorage.removeItem('token');
           }
-          this.router.navigate(['/login']);
+          this.deleteSuccess = true;
         },
         error: () => {
           this.error = 'Failed to delete profile.';
         }
       });
+    }
+    this.resetConfirm();
+  }
+
+  onCancelConfirm() {
+    this.resetConfirm();
+  }
+
+  private resetConfirm() {
+    this.showConfirm = false;
+    this.confirmMessage = '';
+    this.pendingDelete = false;
   }
 
   onProfilePictureSelected(event: any) {
@@ -148,11 +182,11 @@ export class UserProfileComponent implements OnInit {
     const file = event.target.files?.[0];
     if (file) {
       if (file.type !== 'application/pdf') {
-        alert('Only PDF files are allowed.');
+        this.showCustomAlert('Only PDF files are allowed.', 'info');
         return;
       }
       if (file.size > 2 * 1024 * 1024) {
-        alert('File size must be less than 2MB.');
+        this.showCustomAlert('File size must be less than 2MB.', 'info');
         return;
       }
 

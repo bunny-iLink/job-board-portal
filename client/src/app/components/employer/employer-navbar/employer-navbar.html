@@ -1,30 +1,28 @@
-<nav class="navbar" *ngIf="token" aria-label="Main navigation">
-    <div class="navbar-left" role="menubar" aria-label="Primary navigation actions">
-        <span class="greeting clickable" 
-              role="button"
-              tabindex="0"
-              (click)="goToDashboard()"
-              (keyup.enter)="goToDashboard()"
-              [attr.aria-label]="'Go to dashboard, logged in as ' + userName">
-            Hello, {{ userName }}!
-        </span>
-        <button class="nav-button" 
-                (click)="goToListings()"
-                aria-label="View my job listings">
-            My Listings
-        </button>
-        <button class="nav-button" 
-                (click)="goToProfile()"
-                aria-label="View my profile">
-            Profile
+<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()">
+</app-alert>
+
+<nav class="navbar" *ngIf="token" aria-label="Employer navigation">
+    <div class="navbar-container">
+        <div class="navbar-brand">
+            <span class="greeting" (click)="goToDashboard()">Welcome, {{ userName }}!!</span>
+        </div>
+
+        <!-- Hamburger button for mobile -->
+        <button class="hamburger" (click)="toggleMobileMenu()" [attr.aria-expanded]="showMobileMenu"
+            aria-label="Toggle mobile menu">
+            <span></span>
+            <span></span>
+            <span></span>
         </button>
     </div>
-    <div class="navbar-right" role="menubar" aria-label="User actions">
-        <button class="icon-button" 
-                (click)="logout()"
-                aria-label="Logout"
-                title="Logout">
-            <span aria-hidden="true">🚪</span> Logout
-        </button>
+
+    <!-- Navigation links -->
+    <div class="navbar-links" [class.show]="showMobileMenu">
+        <button class="nav-button small" (click)="goToListings()"><strong>My Listings</strong></button>
+        <button class="nav-button small" (click)="goToProfile()"><strong>Profile</strong></button>
+        <button class="nav-button small logout-btn" (click)="logout()"><strong>Logout</strong></button>
     </div>
+
+    <!-- Overlay for mobile -->
+    <div *ngIf="showMobileMenu" class="mobile-overlay" (click)="toggleMobileMenu()"></div>
 </nav>

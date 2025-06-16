@@ -1,62 +1,55 @@
-<nav class="navbar" *ngIf="token">
+<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()">
+</app-alert>
+
+<nav class="navbar" *ngIf="token" role="navigation" aria-label="Main Navigation">
   <div class="navbar-container">
     <div class="navbar-left">
-      <span class="greeting clickable" (click)="goToDashboard()">Hello, {{ userName }}!</span>
+      <a class="greeting clickable" (click)="goToDashboard()" role="link" tabindex="0">
+        Hello, {{ userName }}!
+      </a>
     </div>
 
     <div class="navbar-right">
-      <button 
-  *ngIf="loadingNotifications || !notifications || notifications.length === 0"
-  class="icon-button notifications-btn" 
-  (click)="toggleNotifications()" 
-  title="Notifications">
-  🔔
-</button>
-      <button 
-  *ngIf="!loadingNotifications && notifications && notifications.length > 0"
-  class="icon-button notifications-btn" 
-  (click)="toggleNotifications()" 
-  title="Notifications">
-  <img src="../../../../../public/image.png" alt="Notifications Icon" width="20" height="20">
-</button> 
-      <button class="hamburger" (click)="toggleMobileMenu()" [class.active]="showMobileMenu">
+      <button class="icon-button notifications-btn" (click)="toggleNotifications()" aria-label="Open notifications"
+        title="Notifications">
+        🔔
+      </button>
+
+      <button class="hamburger" (click)="toggleMobileMenu()" [class.active]="showMobileMenu"
+        aria-label="Toggle mobile menu" [attr.aria-expanded]="showMobileMenu">
         <span></span>
         <span></span>
         <span></span>
       </button>
+
     </div>
   </div>
 
   <div class="navbar-links" [class.show]="showMobileMenu">
-    <button class="nav-button" (click)="goToListings()">Jobs</button>
-    <button class="nav-button" (click)="goToProfile()">Profile</button>
-    <button class="nav-button" (click)="goToAppliedJobs()">Applied Jobs</button>
-    <button class="nav-button logout-btn" (click)="logout()" title="Logout">
-      🚪 Logout
-    </button>
+    <button class="nav-button" (click)="goToListings()"><strong>Jobs</strong></button>
+    <button class="nav-button" (click)="goToProfile()"><strong>Profile</strong></button>
+    <button class="nav-button" (click)="goToAppliedJobs()"><strong>Applied Jobs</strong></button>
+    <button class="nav-button logout-btn" (click)="logout()" title="Logout"><strong>Logout</strong></button>
   </div>
 </nav>
 
 <!-- Notifications Modal -->
-<div *ngIf="showNotifications" class="notification-modal">
+<div *ngIf="showNotifications" class="notification-modal" role="dialog" aria-label="Notifications Panel">
   <div class="notification-header">
     <h4>Notifications</h4>
-    <button class="close-btn" (click)="closeNotifications()">×</button>
+    <button class="close-btn" (click)="closeNotifications()" aria-label="Close notifications panel">×</button>
   </div>
 
   <div class="notification-content">
-    <!-- Loading State -->
     <div *ngIf="loadingNotifications" class="spinner-container">
-      <div class="spinner"></div>
+      <div class="spinner" aria-hidden="true"></div>
       <div class="loading-text">Loading notifications...</div>
     </div>
 
-    <!-- No Notifications -->
     <p *ngIf="!loadingNotifications && (!notifications || notifications.length === 0)" class="no-notifications">
       No new notifications
     </p>
 
-    <!-- Notifications List -->
     <ul *ngIf="!loadingNotifications && notifications && notifications.length > 0">
       <li *ngFor="let notification of notifications">
         {{ notification.message }}
@@ -65,6 +58,5 @@
   </div>
 </div>
 
-
-<!-- Overlay for mobile menu -->
-<div *ngIf="showMobileMenu" class="mobile-overlay" (click)="toggleMobileMenu()"></div>
+<!-- Mobile Overlay -->
+<div *ngIf="showMobileMenu" class="mobile-overlay" (click)="toggleMobileMenu()" aria-hidden="true"></div>

@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { AuthService } from '../../service/auth.service';
-import { environment } from '../../../../environments/environment';
-import { EmployerService } from '../../service/employer.service';
+import { AuthService } from '../../../service/auth.service';
+import { EmployerService } from '../../../service/employer.service';
+import { AlertComponent } from '../../alert/alert.component';
+import { ConfirmComponent } from '../../confirm/confirm.component'
 
 @Component({
   selector: 'app-employer-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AlertComponent, ConfirmComponent],
   templateUrl: 'employer-profile.html',
   styleUrls: ['./employer-profile.css']
 })
@@ -25,6 +25,32 @@ export class EmployerProfileComponent implements OnInit {
   selectedBase64: string | null = null;
   selectedMimeType: string | null = null;
   previewImage: string | null = null;
+
+  // Variables for alert
+  alertMessage: string = '';
+  alertType: 'success' | 'error' | 'info' = 'info';
+  showAlert: boolean = false;
+
+  // Variables for confirm
+  confirmMessage: string = "";
+  showConfirm: boolean = false;
+
+  private showCustomAlert(message: string, type: 'success' | 'error' | 'info') {
+    console.log("Alert Triggered:", { message, type });
+
+    this.alertMessage = message;
+    this.alertType = type;
+    this.showAlert = true;
+  }
+
+  onAlertClosed(): void {
+    this.showAlert = false;
+  }
+
+  private showCustomConfirm(message: string) {
+    this.confirmMessage = message;
+    this.showConfirm = true;
+  }
 
   constructor(
     private router: Router,
@@ -89,6 +115,7 @@ export class EmployerProfileComponent implements OnInit {
           this.previewImage = null;
           this.selectedBase64 = null;
           this.selectedMimeType = null;
+          this.showCustomAlert(this.success, 'success');
         },
         error: () => {
           this.error = 'Failed to update profile.';
@@ -101,10 +128,10 @@ export class EmployerProfileComponent implements OnInit {
     if (!this.employerId) return;
 
     // Confirm with the user before deleting the profile
-    if (!confirm('Are you sure you want to delete your profile? This action cannot be undone.')) {
-      return;
-    }
+    this.showCustomConfirm('Are you sure you want to delete your profile? This action cannot be undone.')
+  }
 
+  onConfirmDelete() {
     // Send DELETE request to backend to remove employer profile
     this.employerService.deleteEmployer(this.employerId!, this.token!)
       .subscribe({
@@ -122,6 +149,10 @@ export class EmployerProfileComponent implements OnInit {
           this.error = 'Failed to delete profile.';
         }
       });
+  }
+
+  onCancelDelete() {
+    this.showConfirm = false;
   }
 
   onProfilePictureSelected(event: any) {

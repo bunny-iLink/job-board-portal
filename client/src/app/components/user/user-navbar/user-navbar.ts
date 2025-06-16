@@ -2,16 +2,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../../service/auth.service';
-import { environment } from '../../../../environments/environment';
+import { AuthService } from '../../../service/auth.service';
+import { NotificationsService } from '../../../service/notifications.service';
+import { AlertComponent } from '../../alert/alert.component';
 
 @Component({
   selector: 'app-user-navbar',
   standalone: true,
   templateUrl: 'user-navbar.html',
   styleUrls: ['./user-navbar.css'],
-  imports: [CommonModule]
+  imports: [CommonModule, AlertComponent]
 })
 export class UserNavbar implements OnInit {
   // Stores the user's name for display
@@ -27,10 +27,31 @@ export class UserNavbar implements OnInit {
 
   loadingNotifications = false;
 
+  // Variables for alert
+  alertMessage: string = '';
+  alertType: 'success' | 'error' | 'info' = 'info';
+  showAlert: boolean = false;
+  navigateAfterAlert: boolean = false;
+
+  private showCustomAlert(message: string, type: 'success' | 'error' | 'info', navigate: boolean = false) {
+    console.log("Alert Triggered:", { message, type });
+
+    this.alertMessage = message;
+    this.alertType = type;
+    this.showAlert = true;
+    this.navigateAfterAlert = navigate;
+  }
+
+  // Called when the alert is closed by the user
+  onAlertClosed(): void {
+    this.showAlert = false;
+    this.router.navigate(['/login'])
+  }
+
   constructor(
     private router: Router,
     private authService: AuthService,
-    private http: HttpClient
+    private notificationService: NotificationsService
   ) { }
 
   // On component initialization, get token and user name from AuthService
@@ -42,8 +63,7 @@ export class UserNavbar implements OnInit {
   // Log the user out, clear session, and redirect to login
   logout(): void {
     this.authService.logout();
-    alert('Logged out successfully...');
-    this.router.navigate(['/login']);
+    this.showCustomAlert('Logged out successfully...', 'success', true);
   }
 
   // Navigate to job listings page
@@ -73,11 +93,7 @@ export class UserNavbar implements OnInit {
     this.loadingNotifications = true;
 
     const userId = this.authService.getUserId();
-    this.http.get(environment.apiUrl + `/api/notifications/${userId}`, {
-      headers: {
-        Authorization: `Bearer ${this.token}`
-      }
-    }).subscribe({
+    this.notificationService.getNotifications(userId!, this.token!).subscribe({
       next: (data: any) => {
         this.notifications = data.notifications || [];
         this.loadingNotifications = false;

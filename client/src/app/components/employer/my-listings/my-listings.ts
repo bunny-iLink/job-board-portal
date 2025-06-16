@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../service/auth.service';
-import { environment } from '../../../../environments/environment';
-import { JobService } from '../../service/job.service';
+import { AuthService } from '../../../service/auth.service';
+import { environment } from '../../../environments/environment';
+import { JobService } from '../../../service/job.service';
+import { ConfirmComponent } from '../../confirm/confirm.component';
+import { AlertComponent } from '../../alert/alert.component';
 
 interface Job {
   _id?: string;
@@ -33,7 +35,7 @@ interface Job {
   selector: 'app-my-listings',
   templateUrl: 'my-listings.html',
   styleUrls: ['./my-listings.css'],
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, ConfirmComponent, AlertComponent]
 })
 export class MyListingsComponent implements OnInit {
   // List of jobs for the employer
@@ -53,6 +55,21 @@ export class MyListingsComponent implements OnInit {
   jobForm: Job = this.getEmptyJob();
   // API base URL
   readonly baseUrl = environment.apiUrl + '/api';
+
+  // Variables for alert
+  alertMessage: string = '';
+  alertType: 'success' | 'error' | 'info' = 'info';
+  showAlert: boolean = false;
+
+  // Variables for Confirm
+  confirmMessage: string = ""
+  showConfirm: boolean = false;
+  jobIdToDelete: string = "";
+
+  private showCustomConfirm(message: string) {
+    this.confirmMessage = message;
+    this.showConfirm = true;
+  }
 
   loading = false;
 
@@ -95,6 +112,18 @@ export class MyListingsComponent implements OnInit {
       vacancies: null as any,
       status: 'open'
     };
+  }
+
+  private showCustomAlert(message: string, type: 'success' | 'error' | 'info') {
+    console.log("Alert Triggered:", { message, type });
+
+    this.alertMessage = message;
+    this.alertType = type;
+    this.showAlert = true;
+  }
+
+  onAlertClosed(): void {
+    this.showAlert = false;
   }
 
   // Fetch all jobs for the current employer from backend
@@ -172,6 +201,7 @@ export class MyListingsComponent implements OnInit {
     if (this.isEditMode && this.selectedJobId) {
       this.jobService.updateJob(this.selectedJobId, payload, this.token!).subscribe({
         next: () => {
+          this.showCustomAlert('Job updated successfully!', 'success');
           this.fetchJobs();
           this.closeModal();
         },
@@ -190,13 +220,19 @@ export class MyListingsComponent implements OnInit {
 
   // Delete a job after confirmation
   deleteJob(jobId: string) {
-    if (!confirm('Are you sure you want to delete this job? This action cannot be undone.')) {
-      return;
-    }
+    this.jobIdToDelete = jobId;
+    this.showCustomConfirm('Are you sure you want to delete this job? This action cannot be undone.')
+  }
 
-    this.jobService.deleteJob(jobId!, this.token!).subscribe({
+  onConfirmDelete() {
+    this.jobService.deleteJob(this.jobIdToDelete!, this.token!).subscribe({
       next: () => this.fetchJobs(),
       error: (err) => console.error('Failed to delete job:', err)
     });
+    this.showConfirm = false;
+  }
+
+  onCancelConfirm() {
+    this.showConfirm = false;
   }
 }

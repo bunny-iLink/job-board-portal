@@ -1,8 +1,9 @@
 // Angular component for the user dashboard, displaying user info and applied jobs
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../environments/environment';
+import { AuthService } from '../../../service/auth.service';
+import { JobService } from '../../../service/job.service';
+import { UserService } from '../../../service/user.service';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -24,17 +25,16 @@ export class UserDashboardComponent implements OnInit {
   isUserLoading = false;
   isJobsLoading = false;
 
-  constructor(private http: HttpClient) { }
+  constructor(private userService: UserService, private authService: AuthService, private jobService: JobService) { }
 
   // After the view initializes, load user data from localStorage and API
   ngOnInit(): void {
     if (typeof window !== 'undefined') {
-      this.token = localStorage.getItem('token');
+      this.token = this.authService.getToken();
 
-      const storedUser = localStorage.getItem('user');
+      const storedUser = this.authService.getUser();
       if (storedUser) {
-        const user = JSON.parse(storedUser);
-        this.userId = user._id;
+        this.userId = storedUser._id;
 
         this.loadUserData(); // Load employer profile
         this.loadAppliedJobs(); // Load job listings
@@ -48,14 +48,13 @@ export class UserDashboardComponent implements OnInit {
   loadUserData() {
     if (typeof window !== 'undefined') {
 
-      const storedData = localStorage.getItem('user');
+      const storedData = this.authService.getUser();;
 
       if (storedData && storedData !== 'null') {
-        const userObject = JSON.parse(storedData);
-        this.userId = userObject._id;
+        this.userId = storedData._id;
 
         this.isUserLoading = true;
-        this.http.get(environment.apiUrl + `/api/getUserData/${this.userId}`).subscribe({
+        this.userService.getUserData(this.userId!).subscribe({
           next: (res: any) => {
             this.user = res.user;
             this.isUserLoading = false;
@@ -80,7 +79,7 @@ export class UserDashboardComponent implements OnInit {
     if (!this.userId) return;
 
     this.isJobsLoading = true;
-    this.http.get(environment.apiUrl + `/api/appliedJobs/${this.userId}`).subscribe({
+    this.jobService.appliedJobs(this.userId).subscribe({
       next: (res: any) => {
         this.appliedJobs = res.jobs || res;
         console.log('Applied jobs:', this.appliedJobs);
