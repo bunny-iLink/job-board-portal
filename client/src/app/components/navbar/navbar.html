@@ -1,31 +1,36 @@
 <!-- Alert and Confirm Components -->
 <app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()"></app-alert>
-<app-confirm [message]="confirmMessage" [show]="showConfirm" (confirmed)="onConfirmLogout()"
-  (cancelled)="onCancelLogout()"></app-confirm>
+<app-confirm [message]="confirmMessage" [show]="showConfirm" (confirmed)="onConfirmLogout()" (cancelled)="onCancelLogout()"></app-confirm>
 
-<!-- Navigation Bar -->
 <!-- Navigation Bar -->
 <nav class="navbar" *ngIf="token" role="navigation" aria-label="Main Navigation">
   <div class="navbar-container">
+
+    <!-- Left Section: Greeting -->
     <div class="navbar-left">
       <a class="greeting clickable" (click)="goToDashboard()" role="link" tabindex="0">
-        Hello, {{ userName }}!
+        {{ role === 'employer' ? 'Welcome' : 'Hello' }}, {{ userName }}!
       </a>
     </div>
 
+    <!-- Center Section: Brand -->
     <div class="navbar-title">
       <span class="title" (click)="goToHome()"><h3>JobHunt</h3></span>
       <span class="title-pro" (click)="goToHome()"><h3>Pro</h3></span>
     </div>
 
+    <!-- Right Section -->
     <div class="navbar-right">
-      <!-- 🔔 Notifications button OUTSIDE hamburger menu -->
-      <button class="icon-button notifications-btn" 
+
+      <!-- User: Notifications Bell -->
+      <button *ngIf="role === 'user'" class="icon-button notifications-btn" 
               (click)="toggleNotifications()" 
               aria-label="Open notifications" 
-              title="Notifications">🔔</button>
+              title="Notifications">
+        🔔
+      </button>
 
-      <!-- Hamburger button -->
+      <!-- Hamburger Toggle -->
       <button class="hamburger"
               (click)="toggleMobileMenu()"
               [class.active]="showMobileMenu"
@@ -36,22 +41,31 @@
         <span></span>
       </button>
 
-      <!-- Navigation links (inside hamburger menu for mobile) -->
+      <!-- Navigation Links (Hamburger dropdown) -->
       <div class="navbar-links" [class.show]="showMobileMenu">
-        <button class="nav-button" (click)="goToListings()"><strong>Jobs</strong></button>
+        <!-- Employer: My Listings -->
+        <button *ngIf="role === 'employer'" class="nav-button" (click)="goToListings()"><strong>My Listings</strong></button>
+
+        <!-- User: Jobs -->
+        <button *ngIf="role === 'user'" class="nav-button" (click)="goToListings()"><strong>Jobs</strong></button>
+
+        <!-- Common: Profile -->
         <button class="nav-button" (click)="goToProfile()"><strong>Profile</strong></button>
-        <button class="nav-button" (click)="goToAppliedJobs()"><strong>Applied Jobs</strong></button>
+
+        <!-- User: Applied Jobs -->
+        <button *ngIf="role === 'user'" class="nav-button" (click)="goToAppliedJobs()"><strong>Applied Jobs</strong></button>
+
+        <!-- Common: Logout -->
         <button class="nav-button logout-btn" (click)="logout()" title="Logout"><strong>Logout</strong></button>
       </div>
+
     </div> <!-- .navbar-right -->
-    
+
   </div> <!-- .navbar-container -->
 </nav>
 
-
-
-<!-- Notifications Modal -->
-<div *ngIf="showNotifications" class="notification-modal" role="dialog" aria-label="Notifications Panel">
+<!-- Notifications Modal (User Only) -->
+<div *ngIf="role === 'user' && showNotifications" class="notification-modal" role="dialog" aria-label="Notifications Panel">
   <div class="notification-header">
     <h4>Notifications</h4>
     <button class="close-btn" (click)="closeNotifications()" aria-label="Close notifications panel">×</button>
