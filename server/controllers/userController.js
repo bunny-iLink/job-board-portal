@@ -156,7 +156,7 @@ export async function deleteUserData(req, res) {
         const appDeleteResult = await Application.deleteMany({ userId });
         console.log(`Deleted ${appDeleteResult.deletedCount} applications for user ID: ${userId}`);
 
-        //Next, delete all notifications associated with the user
+        // Next, delete all notifications associated with the user
         const notificationDeleteResult = await Notification.deleteMany({ userId });
         console.log(`Deleted ${notificationDeleteResult.deletedCount} notifications for user ID: ${userId}`)
 
@@ -200,23 +200,13 @@ export async function addEmployer(req, res) {
         }
 
         // Check for existing email in Employer and User collections
-        const existingEmployer = await Employer.findOne({
-            $or: [{ email }, { companyName }]
-        });
-
+        const existingEmployer = await Employer.findOne({ email });
         const existingUser = !existingEmployer ? await User.findOne({ email }) : null;
 
         if (existingEmployer || existingUser) {
-            let conflictField = '';
-            if (existingEmployer) {
-                conflictField = existingEmployer.email === email ? 'email' : 'company name';
-            } else if (existingUser) {
-                conflictField = 'email';
-            }
-
-            console.warn(`Conflict: Employer/User already exists with ${conflictField}:`, conflictField === 'email' ? email : companyName);
+            console.warn(`Email already registered in system: ${email}`);
             return res.status(409).json({
-                message: `An account already exists with this ${conflictField}`
+                message: `An account already exists with this ${email}`
             });
         }
 

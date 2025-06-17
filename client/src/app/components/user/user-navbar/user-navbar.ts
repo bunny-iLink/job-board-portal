@@ -108,7 +108,7 @@ export class UserNavbar implements OnInit {
   // Toggle notification dropdown and fetch notifications from backend if opening
   toggleNotifications(): void {
     // Toggle visibility ON
-    this.showNotifications = true;
+    this.showNotifications = !this.showNotifications;
     this.loadingNotifications = true;
 
     const userId = this.authService.getUserId();

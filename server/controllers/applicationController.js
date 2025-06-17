@@ -172,6 +172,17 @@ export async function revokeApplication(req, res) {
         }
 
         // If application was accepted, increase the job vacancy
+
+        const job = await Job.findById(application.jobId);
+        if (!job) {
+            console.warn(`[revokeApplication] Job not found for jobId: ${application.jobId}`);
+            return res.status(404).json({ message: "Job not found" });
+        } else {
+            job.applicantCount -= 1;
+            await job.save();
+            console.info(`[revokeApplication] Decreased applicantCount for job ${job._id}, new count: ${job.applicantCount}`);
+        }
+
         if (application.status === "Accepted") {
             const job = await Job.findById(application.jobId);
             if (job) {

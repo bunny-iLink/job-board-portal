@@ -63,14 +63,7 @@ export async function getJobsForEmployer(req, res) {
             return res.status(404).json({ message: "No jobs found for this employer" });
         }
 
-        const jobsWithApplicantCount = await Promise.all(
-            jobs.map(async (job) => {
-                const count = await Application.countDocuments({ jobId: job._id });
-                return { ...job.toObject(), applicantCount: count };
-            })
-        );
-
-        res.status(200).json(jobsWithApplicantCount);
+        res.status(200).json(jobs);
     } catch (error) {
         console.error("[getJobsForEmployer] Error:", error.message);
         res.status(500).json({ message: "Internal server error", error: error.message });
@@ -159,18 +152,8 @@ export async function getJobsSummaryForEmployer(req, res) {
     console.log("[getJobsSummaryForEmployer] employerId:", employerId);
 
     try {
-        const jobs = await Job.find({ employerId }).select('_id title vacancies');
-        const jobSummaries = await Promise.all(
-            jobs.map(async job => {
-                const applicantCount = await Application.countDocuments({ jobId: job._id });
-                return {
-                    _id: job._id,
-                    title: job.title,
-                    vacancies: job.vacancies,
-                    applicantCount
-                };
-            })
-        );
+        const jobSummaries = await Job.find({ employerId })
+            .select('_id title vacancies applicantCount');
 
         console.log(`[getJobsSummaryForEmployer] Found ${jobSummaries.length} summaries`);
         res.status(200).json(jobSummaries);
@@ -241,7 +224,8 @@ export async function searchJobsForUsers(req, res) {
             type,
             search,
             userId,
-            preferredDomain
+            preferredDomain,
+            skills
         } = req.query;
 
         const query = { status: 'open' };
@@ -271,7 +255,9 @@ export async function searchJobsForUsers(req, res) {
                 { title: regex },
                 { company: regex },
                 { location: regex },
-                { 'description.overview': regex }
+                { 'description.overview': regex },
+                { 'description.requiredSkills': { $elemMatch: { $regex: regex } } },
+                { 'description.preferredSkills': { $elemMatch: { $regex: regex } } }
             ];
         }
 
