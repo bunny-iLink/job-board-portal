@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../service/auth.service';
+import { ConfirmComponent } from '../../confirm/confirm.component';
 import { NotificationsService } from '../../../service/notifications.service';
 import { AlertComponent } from '../../alert/alert.component';
 
@@ -11,7 +12,7 @@ import { AlertComponent } from '../../alert/alert.component';
   standalone: true,
   templateUrl: 'user-navbar.html',
   styleUrls: ['./user-navbar.css'],
-  imports: [CommonModule, AlertComponent]
+  imports: [CommonModule, AlertComponent, ConfirmComponent]
 })
 export class UserNavbar implements OnInit {
   // Stores the user's name for display
@@ -32,6 +33,10 @@ export class UserNavbar implements OnInit {
   alertType: 'success' | 'error' | 'info' = 'info';
   showAlert: boolean = false;
   navigateAfterAlert: boolean = false;
+
+  // Variables for Confirm dialog
+  confirmMessage: string = '';
+  showConfirm: boolean = false;
 
   private showCustomAlert(message: string, type: 'success' | 'error' | 'info', navigate: boolean = false) {
     console.log("Alert Triggered:", { message, type });
@@ -62,8 +67,21 @@ export class UserNavbar implements OnInit {
 
   // Log the user out, clear session, and redirect to login
   logout(): void {
+    // this.authService.logout();
+    // this.showCustomAlert('Logged out successfully...', 'success', true);
+
+    this.confirmMessage = 'Are you sure you want to log out?';
+    this.showConfirm = true;
+  }
+
+  onConfirmLogout(): void {
     this.authService.logout();
     this.showCustomAlert('Logged out successfully...', 'success', true);
+    this.showConfirm = false;
+  }
+
+  onCancelLogout(): void {
+    this.showConfirm = false;
   }
 
   // Navigate to job listings page

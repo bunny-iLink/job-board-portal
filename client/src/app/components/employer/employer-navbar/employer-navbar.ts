@@ -4,13 +4,14 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../service/auth.service';
 import { CommonModule } from '@angular/common';
 import { AlertComponent } from '../../alert/alert.component';
+import { ConfirmComponent } from '../../confirm/confirm.component';
 
 @Component({
   selector: 'app-employer-navbar',
   standalone: true,
   templateUrl: 'employer-navbar.html',
   styleUrls: ['./employer-navbar.css'],
-  imports: [CommonModule, AlertComponent]
+  imports: [CommonModule, AlertComponent, ConfirmComponent]
 })
 export class EmployerNavbar implements OnInit {
   // Stores the employer's name for display
@@ -23,6 +24,10 @@ export class EmployerNavbar implements OnInit {
   alertType: 'success' | 'error' | 'info' = 'info';
   showAlert: boolean = false;
   navigateAfterAlert: boolean = false;
+
+  // Confirm dialog variables
+  confirmMessage: string = '';
+  showConfirm: boolean = false;
 
   private showCustomAlert(message: string, type: 'success' | 'error' | 'info', navigate: boolean = false) {
     console.log("Alert Triggered:", { message, type });
@@ -57,8 +62,21 @@ export class EmployerNavbar implements OnInit {
 
   // Log the employer out, clear session, and redirect to login
   logout(): void {
-    this.showCustomAlert("Logged out successfully", 'success', true)
+    // this.showCustomAlert("Logged out successfully", 'success', true)
+    // this.authService.logout();
+
+    this.confirmMessage = 'Are you sure you want to log out?';
+    this.showConfirm = true;
+  }
+
+  onConfirmLogout(): void {
     this.authService.logout();
+    this.showCustomAlert('Logged out successfully', 'success', true);
+    this.showConfirm = false;
+  }
+
+  onCancelLogout(): void {
+    this.showConfirm = false;
   }
 
   // Navigate to employer's job listings page

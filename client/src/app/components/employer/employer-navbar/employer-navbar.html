@@ -1,6 +1,10 @@
 <app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()">
 </app-alert>
 
+<app-confirm [message]="confirmMessage" [show]="showConfirm" (confirmed)="onConfirmLogout()"
+    (cancelled)="onCancelLogout()">
+</app-confirm>
+
 <nav class="navbar" *ngIf="token" aria-label="Employer navigation">
     <div class="navbar-container">
         <div class="navbar-brand">
