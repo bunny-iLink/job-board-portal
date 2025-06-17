@@ -189,10 +189,10 @@ export async function deleteUserData(req, res) {
 
 export async function addEmployer(req, res) {
     try {
-        const { name, email, password, companyName } = req.body;
-        console.log("Adding new employer:", { name, email, companyName });
+        const { name, email, password, company } = req.body;
+        console.log("Adding new employer:", { name, email, company });
 
-        if (!name || !email || !password || !companyName) {
+        if (!name || !email || !password) {
             console.warn("Missing required employer fields");
             return res.status(400).json({
                 message: "Name, email, password, and company name are required"
@@ -211,7 +211,7 @@ export async function addEmployer(req, res) {
         }
 
         const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
-        const newEmployer = new Employer({ name, email, password: hashedPassword, company: companyName });
+        const newEmployer = new Employer({ name, email, password: hashedPassword, company });
 
         const savedEmployer = await newEmployer.save();
         console.log("Employer successfully saved with ID:", savedEmployer._id);

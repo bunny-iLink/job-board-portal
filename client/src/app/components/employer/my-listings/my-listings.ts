@@ -210,6 +210,7 @@ export class MyListingsComponent implements OnInit {
     } else {
       this.jobService.addJob(payload, this.token!).subscribe({
         next: () => {
+          this.showCustomAlert('Job created successfully!', 'success');
           this.fetchJobs();
           this.closeModal();
         },
