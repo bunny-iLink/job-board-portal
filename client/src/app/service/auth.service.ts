@@ -30,6 +30,10 @@ export class AuthService {
         const user = this.getUser();
         return user?.name ?? null;
     }
+    getUserRole(): string | null {
+    const user = this.getUser();
+    return user?.role ?? null;
+}
 
     logout(): void {
         if (!isPlatformBrowser(this.platformId)) {
