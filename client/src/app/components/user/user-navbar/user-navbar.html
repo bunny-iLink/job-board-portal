@@ -1,10 +1,10 @@
-<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()">
-</app-alert>
-
+<!-- Alert and Confirm Components -->
+<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()"></app-alert>
 <app-confirm [message]="confirmMessage" [show]="showConfirm" (confirmed)="onConfirmLogout()"
-  (cancelled)="onCancelLogout()">
-</app-confirm>
+  (cancelled)="onCancelLogout()"></app-confirm>
 
+<!-- Navigation Bar -->
+<!-- Navigation Bar -->
 <nav class="navbar" *ngIf="token" role="navigation" aria-label="Main Navigation">
   <div class="navbar-container">
     <div class="navbar-left">
@@ -13,29 +13,42 @@
       </a>
     </div>
 
-    <div class="navbar-right">
-      <button class="icon-button notifications-btn" (click)="toggleNotifications()" aria-label="Open notifications"
-        title="Notifications">
-        🔔
-      </button>
-
-      <button class="hamburger" (click)="toggleMobileMenu()" [class.active]="showMobileMenu"
-        aria-label="Toggle mobile menu" [attr.aria-expanded]="showMobileMenu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-
+    <div class="navbar-title">
+      <span class="title" (click)="goToHome()"><h3>JobHunt</h3></span>
+      <span class="title-pro" (click)="goToHome()"><h3>Pro</h3></span>
     </div>
-  </div>
 
-  <div class="navbar-links" [class.show]="showMobileMenu">
-    <button class="nav-button" (click)="goToListings()"><strong>Jobs</strong></button>
-    <button class="nav-button" (click)="goToProfile()"><strong>Profile</strong></button>
-    <button class="nav-button" (click)="goToAppliedJobs()"><strong>Applied Jobs</strong></button>
-    <button class="nav-button logout-btn" (click)="logout()" title="Logout"><strong>Logout</strong></button>
-  </div>
+    <div class="navbar-right">
+      <!-- 🔔 Notifications button OUTSIDE hamburger menu -->
+      <button class="icon-button notifications-btn" 
+              (click)="toggleNotifications()" 
+              aria-label="Open notifications" 
+              title="Notifications">🔔</button>
+
+      <!-- Hamburger button -->
+      <button class="hamburger"
+              (click)="toggleMobileMenu()"
+              [class.active]="showMobileMenu"
+              aria-label="Toggle mobile menu"
+              [attr.aria-expanded]="showMobileMenu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <!-- Navigation links (inside hamburger menu for mobile) -->
+      <div class="navbar-links" [class.show]="showMobileMenu">
+        <button class="nav-button" (click)="goToListings()"><strong>Jobs</strong></button>
+        <button class="nav-button" (click)="goToProfile()"><strong>Profile</strong></button>
+        <button class="nav-button" (click)="goToAppliedJobs()"><strong>Applied Jobs</strong></button>
+        <button class="nav-button logout-btn" (click)="logout()" title="Logout"><strong>Logout</strong></button>
+      </div>
+    </div> <!-- .navbar-right -->
+    
+  </div> <!-- .navbar-container -->
 </nav>
+
+
 
 <!-- Notifications Modal -->
 <div *ngIf="showNotifications" class="notification-modal" role="dialog" aria-label="Notifications Panel">
@@ -67,5 +80,5 @@
   </div>
 </div>
 
-<!-- Mobile Overlay -->
+<!-- Mobile Menu Overlay -->
 <div *ngIf="showMobileMenu" class="mobile-overlay" (click)="toggleMobileMenu()" aria-hidden="true"></div>

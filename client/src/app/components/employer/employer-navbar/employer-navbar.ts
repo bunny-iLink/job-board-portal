@@ -60,15 +60,14 @@ export class EmployerNavbar implements OnInit {
     this.userName = this.authService.getUserName();
   }
 
-  // Log the employer out, clear session, and redirect to login
+  
   logout(): void {
-    // this.showCustomAlert("Logged out successfully", 'success', true)
-    // this.authService.logout();
-
+    this.showMobileMenu = false; // Close mobile menu before showing confirm dialog
     this.confirmMessage = 'Are you sure you want to log out?';
     this.showConfirm = true;
   }
 
+  // Log the employer out, clear session, and redirect to login
   onConfirmLogout(): void {
     this.authService.logout();
     this.showCustomAlert('Logged out successfully', 'success', true);
@@ -82,15 +81,21 @@ export class EmployerNavbar implements OnInit {
   // Navigate to employer's job listings page
   goToListings(): void {
     this.router.navigate(['/employer/my-listings']);
+    this.showMobileMenu = false; // Close mobile menu after navigation
   }
 
   // Navigate to employer profile page
   goToProfile(): void {
     this.router.navigate(['/employer/profile']);
+    this.showMobileMenu = false; // Close mobile menu after navigation
   }
 
   // Navigate to employer dashboard
   goToDashboard(): void {
     this.router.navigate(['/employer/dashboard']);
+  }
+
+  goToHome(): void {
+    this.router.navigate(['/']);
   }
 }

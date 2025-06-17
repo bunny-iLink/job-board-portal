@@ -17,6 +17,14 @@
   padding: 12px 24px;
 }
 
+.navbar-left,
+.navbar-links,
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 /* Greeting link */
 .greeting {
   font-size: 1.5rem;
@@ -63,18 +71,24 @@
   background: none;
   border: none;
   cursor: pointer;
+  z-index: 1001;
+  gap: 5px;
 }
 
 .hamburger span {
-  height: 3px;
+  display: block;
+  height: 2px;
   width: 100%;
   background-color: white;
   border-radius: 2px;
   transition: all 0.3s ease-in-out;
+  transform-origin: center;
 }
 
-.hamburger.active span:nth-child(1) {
-  transform: rotate(45deg) translate(5px, 5px);
+/* .hamburger.active span:nth-child(1) {
+  transform: rotate(45deg);
+  position: absolute;
+
 }
 
 .hamburger.active span:nth-child(2) {
@@ -82,16 +96,20 @@
 }
 
 .hamburger.active span:nth-child(3) {
-  transform: rotate(-45deg) translate(6px, -6px);
-}
+  transform: rotate(-45deg);
+  position: absolute;
+  
+} */
 
 /* Navbar Links */
 .navbar-links {
   display: flex;
-  justify-content: center;
+  align-items: center;
   gap: 16px;
-  padding: 12px 24px;
-  background-color: #0A66C2;
+}
+
+.navbar-left {
+  flex-shrink: 0;
 }
 
 .navbar-links.show {
@@ -118,15 +136,44 @@
 @media (max-width: 768px) {
   .hamburger {
     display: flex;
+    position: absolute;
+    top: 28px;
+    right: 16px;
+  }
+
+  .icon-button.notifications-btn {
+    position: absolute;
+    top: 25px;
+    right: 60px;
+  }
+
+  .navbar-container {
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  .navbar-left,
+  .navbar-title {
+    width: 100%;
+    text-align: center;
+    margin: 12px 0;
+  }
+
+  .navbar-right {
+    width: 100%;
+    display: flex;
+    justify-content: center;
   }
 
   .navbar-links {
     display: none;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center; /* ✅ Center the buttons */
     gap: 12px;
-    padding: 16px 24px;
-    width: 85%;
+    padding: 16px 0;
+    width: 100%;
+    background-color: #0A66C2;
   }
 
   .navbar-links.show {
@@ -134,10 +181,11 @@
   }
 
   .nav-button {
-    width: 100%;
-    text-align: left;
+    width: 80%;         /* Optional: wider buttons on mobile */
+    text-align: center; /* ✅ Center text inside button */
   }
 }
+
 
 /* Spinner */
 .spinner-container {
@@ -250,4 +298,31 @@
 
 .job-title {
   font-weight: bold;
+}
+
+.navbar-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  text-align: center;
+}
+
+.navbar-title :hover {
+  cursor: pointer; 
+}
+
+.title-pro{
+  color:#ffd700
+}
+@media (max-width: 1024px) {
+  .navbar-title {
+    display: none;
+  }
 }

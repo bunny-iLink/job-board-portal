@@ -67,9 +67,7 @@ export class UserNavbar implements OnInit {
 
   // Log the user out, clear session, and redirect to login
   logout(): void {
-    // this.authService.logout();
-    // this.showCustomAlert('Logged out successfully...', 'success', true);
-
+    this.showMobileMenu = false; // Close mobile menu before showing confirm dialog
     this.confirmMessage = 'Are you sure you want to log out?';
     this.showConfirm = true;
   }
@@ -87,11 +85,13 @@ export class UserNavbar implements OnInit {
   // Navigate to job listings page
   goToListings(): void {
     this.router.navigate(['/user/jobs']);
+    this.showMobileMenu = false; // Close mobile menu after navigation
   }
 
   // Navigate to user profile page
   goToProfile(): void {
     this.router.navigate(['/user/profile']);
+    this.showMobileMenu = false; // Close mobile menu after navigation
   }
 
   // Navigate to user dashboard
@@ -102,6 +102,7 @@ export class UserNavbar implements OnInit {
   // Navigate to applied jobs page
   goToAppliedJobs(): void {
     this.router.navigate(['/user/applied-jobs']);
+    this.showMobileMenu = false; // Close mobile menu after navigation
   }
 
   // Toggle notification dropdown and fetch notifications from backend if opening
@@ -130,6 +131,10 @@ export class UserNavbar implements OnInit {
   // Toggle mobile menu visibility
   toggleMobileMenu() {
     this.showMobileMenu = !this.showMobileMenu;
+  }
+
+  goToHome(): void {
+    this.router.navigate(['/']);
   }
 
   parseNotification(message: string): { jobTitle: string; status: string; statusClass: string } | null {
