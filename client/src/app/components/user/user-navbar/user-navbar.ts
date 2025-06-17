@@ -133,7 +133,7 @@ export class UserNavbar implements OnInit {
     this.showMobileMenu = !this.showMobileMenu;
   }
 
-  goToHome(): void {
+    goToHome(): void {
     this.router.navigate(['/']);
   }
 
