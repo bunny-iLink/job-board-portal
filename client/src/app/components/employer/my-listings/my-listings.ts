@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../../../service/auth.service';
 import { environment } from '../../../environments/environment';
 import { JobService } from '../../../service/job.service';
@@ -187,6 +187,14 @@ export class MyListingsComponent implements OnInit {
     return arr?.join(', ') ?? '';
   }
 
+  handleFormSubmit(form: NgForm) {
+    if (form.valid) {
+      this.saveJob(); // Your actual save logic
+    } else {
+      form.control.markAllAsTouched(); // Show validation errors
+    }
+  }
+
   // Save a new job or update an existing job
   saveJob() {
     const payload = {
@@ -227,7 +235,10 @@ export class MyListingsComponent implements OnInit {
 
   onConfirmDelete() {
     this.jobService.deleteJob(this.jobIdToDelete!, this.token!).subscribe({
-      next: () => this.fetchJobs(),
+      next: () => {
+        this.showCustomAlert("Job deleted successfully!", "success"),
+          this.fetchJobs()
+      },
       error: (err) => console.error('Failed to delete job:', err)
     });
     this.showConfirm = false;

@@ -14,7 +14,7 @@
     <div class="modal-content">
         <h2>{{ isEditMode ? 'Edit Job' : 'Add New Job' }}</h2>
         <div class="form-scroll-area">
-            <form (ngSubmit)="saveJob()" #jobFormEl="ngForm">
+            <form #jobFormEl="ngForm">
 
                 <label for="title">Title</label>
                 <input id="title" type="text" [(ngModel)]="jobForm.title" name="title" placeholder="Title" required />
@@ -99,15 +99,12 @@
                 <input id="whatWeOffer" type="text" [ngModel]="fromArray(jobForm.description.whatWeOffer)"
                     (ngModelChange)="jobForm.description.whatWeOffer = toArray($event)" name="whatWeOffer"
                     placeholder="What We Offer (comma separated)" />
-
-                <div class="modal-actions">
-                    <button type="submit">{{ isEditMode ? 'Update' : 'Create' }}</button>
-                    <button type="button" (click)="closeModal()">Cancel</button>
-                </div>
             </form>
         </div>
-
-
+        <div class="modal-actions">
+            <button type="button" class="submit-btn"  (click)="handleFormSubmit(jobFormEl)">{{ isEditMode ? 'Update' : 'Create' }}</button>
+            <button type="button" class="cancel-btn" (click)="closeModal()">Cancel</button>
+        </div>
     </div>
 </div>
 

@@ -82,7 +82,8 @@
   width: 90%;
   max-width: 600px;
   border-radius: 12px;
-  padding: 0; /* Removed padding here to separate scroll and action areas */
+  padding: 0;
+  /* Removed padding here to separate scroll and action areas */
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   max-height: 90vh;
   display: flex;
@@ -167,22 +168,22 @@
 }
 
 /* Submit Button */
-.modal-content button[type="submit"] {
+.submit-btn {
   background-color: #0A66C2;
   color: white;
 }
 
-.modal-content button[type="submit"]:hover {
+.submit-btn:hover {
   background-color: #004a8c;
 }
 
 /* Cancel Button */
-.modal-content button[type="button"] {
+.cancel-btn {
   background-color: #ddd;
   color: #333;
 }
 
-.modal-content button[type="button"]:hover {
+.cancel-btn:hover {
   background-color: #bbb;
 }
 

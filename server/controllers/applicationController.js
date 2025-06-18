@@ -94,7 +94,7 @@ export const updateApplicationStatus = async (req, res) => {
         }
 
         // If status is changing from Accepted to Rejected, increase job vacancy
-        if (previousStatus === "Accepted" && status === "Rejected") {
+        if ((previousStatus === "Accepted" || previousStatus === "In Progress") && status === "Rejected") {
             job.vacancies += 1;
             await job.save();
             console.info(`[updateApplicationStatus] Increased vacancies for job ${job._id}, new vacancies: ${job.vacancies}`);
