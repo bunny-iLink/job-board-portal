@@ -225,7 +225,6 @@ export async function searchJobsForUsers(req, res) {
             search,
             userId,
             preferredDomain,
-            skills
         } = req.query;
 
         const query = { status: 'open' };
