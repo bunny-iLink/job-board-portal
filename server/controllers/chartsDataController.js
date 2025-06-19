@@ -5,21 +5,21 @@ import { ObjectId } from 'mongodb';
 
 export async function getApplicationsDataForEmployerBasedOnStatus(req, res) {
   try {
-    const { employerId } = req.params;
-    if (!employerId) {
+    const { userId } = req.params;
+    if (!userId) {
       return res.status(400).json({ message: "Employer ID is required" });
     }
 
     const results = await Application.aggregate([
       {
         $match: {
-          employerId: new ObjectId(employerId) // Only match this employer's apps
+          userId: new ObjectId(userId)
         }
       },
       {
         $group: {
-          _id: "$status",             // Group by status field
-          count: { $sum: 1 }          // Count number of applications per status
+          _id: "$status",            
+          count: { $sum: 1 }          
         }
       }
     ]);
@@ -39,4 +39,52 @@ export async function getApplicationsDataForEmployerBasedOnStatus(req, res) {
     return res.status(500).json({ message: "Internal server error" });
   }
 }
+
+export async function getApplicationsByDomain(req, res) {
+    const { userId } = req.params;
+
+    try {
+        const result = await Application.aggregate([
+            {
+                $match: {
+                    userId: new mongoose.Types.ObjectId(userId)
+                }
+            },
+            {
+                $lookup: {
+                    from: 'jobs', // MongoDB collection name (usually plural lowercase)
+                    localField: 'jobId',
+                    foreignField: '_id',
+                    as: 'jobDetails'
+                }
+            },
+            {
+                $unwind: '$jobDetails'
+            },
+            {
+                $group: {
+                    _id: '$jobDetails.domain',
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    domain: '$_id',
+                    count: 1
+                }
+            }
+        ]);
+
+        // Convert array to desired format: [{ "domain": count }]
+        const formatted = result.map(item => ({ [item.domain]: item.count }));
+
+        res.status(200).json(formatted);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+}
+
 
