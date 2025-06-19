@@ -4,13 +4,16 @@ import {
     updateUserData, updateEmployerData, deleteUserData, deleteEmployerData,
 } from '../controllers/userController.js';
 import { loginUser } from '../controllers/loginController.js';
-import { addJob, deleteJob, updateJob, 
-    getJobsSummaryForEmployer, getJobsByDomain, getJobById, 
-    getJobsForEmployer, searchJobsForUsers } from '../controllers/jobsController.js';
+import {
+    addJob, deleteJob, updateJob,
+    getJobsSummaryForEmployer, getJobsByDomain, getJobById,
+    getJobsForEmployer, searchJobsForUsers
+} from '../controllers/jobsController.js';
 import { applyForJob, updateApplicationStatus, getUserAppliedJobs, revokeApplication } from '../controllers/applicationController.js';
 import { getUserNotifications } from '../controllers/notificationController.js';
 import { verifyToken } from '../middleware/authMiddleware.js';
 import { requireRole } from '../middleware/authMiddleware.js';
+import { getApplicationsDataForEmployerBasedOnStatus } from '../controllers/chartsDataController.js';
 
 const router = Router();
 
@@ -418,6 +421,52 @@ router.get('/getJobsForUser', searchJobsForUsers)
  *         description: Filtered job results
  */
 router.get('/searchJobs', searchJobsForUsers);
+
+/**
+ * @swagger
+ * /echartStatusForEmployer/{employerId}:
+ *   get:
+ *     summary: Get count of applications per status for a given employer
+ *     tags: [Applications]
+ *     security:
+ *       - bearerAuth: []  # Assuming you're using JWT token auth
+ *     parameters:
+ *       - in: path
+ *         name: employerId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the employer
+ *     responses:
+ *       200:
+ *         description: Application status count for employer
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 Applied:
+ *                   type: integer
+ *                   example: 5
+ *                 In Progress:
+ *                   type: integer
+ *                   example: 3
+ *                 Accepted:
+ *                   type: integer
+ *                   example: 2
+ *                 Rejected:
+ *                   type: integer
+ *                   example: 1
+ *       400:
+ *         description: Missing or invalid employer ID
+ *       401:
+ *         description: Unauthorized - missing or invalid token
+ *       403:
+ *         description: Forbidden - role not allowed
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/echartStatusForEmployer/:employerId', verifyToken, requireRole("employer"), getApplicationsDataForEmployerBasedOnStatus)
 
 
 // PUT methods
