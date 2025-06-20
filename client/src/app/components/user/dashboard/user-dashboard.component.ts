@@ -137,26 +137,61 @@ fetchDomainChart() {
 
   this.userService.getDomainSummary(this.userId!, this.token!).subscribe({
     next: (domainData: any[]) => {
-      const domains = domainData.map(d => d.domain);  // ✅ FIXED here
-      const counts = domainData.map(d => d.count);     // e.g. 4
+      const domains = domainData.map(d => d.domain);   // e.g., ['Web', 'Data', 'DevOps']
+      const counts = domainData.map(d => d.count);     // e.g., [5, 8, 2]
 
       this.barChartOptions = {
-        title: { text: 'Applications by Job Domain' },
-        tooltip: {},
-        xAxis: {
-          type: 'category',
-          data: domains
+        title: {
+          text: 'Applications by Job Domain',
+          left: 'center',
+          top: 10
         },
-        yAxis: { type: 'value' },
-        series: [{
-          data: counts,
-          type: 'bar'
-        }]
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: { type: 'shadow' }
+        },
+        grid: {
+          left: '5%',
+          right: '5%',
+          bottom: '5%',
+          top: 60,
+          containLabel: true
+        },
+        xAxis: {
+          type: 'value',
+          name: 'Applications'
+        },
+        yAxis: {
+          type: 'category',
+          data: domains,
+          axisLabel: {
+            interval: 0,
+            formatter: (value: string) =>
+              value.length > 20 ? value.slice(0, 20) + '…' : value
+          }
+        },
+        series: [
+          {
+            name: 'Applications',
+            type: 'bar',
+            data: counts,
+            label: {
+              show: true,
+              position: 'right'
+            },
+            itemStyle: {
+              color: '#91cc75'
+            }
+          }
+        ]
       };
     },
-    complete: () => this.isChartLoading = false,
-    error: err => console.error('Domain chart error:', err)
+    error: err => {
+      console.error('Domain chart error:', err);
+    },
+    complete: () => this.isChartLoading = false
   });
 }
+
 
 }
