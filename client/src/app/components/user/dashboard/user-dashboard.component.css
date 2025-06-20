@@ -129,3 +129,50 @@
 .not-applied {
   text-align: center;
 }
+
+.charts-section {
+  margin-top: 3rem;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.chart-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+
+.chart {
+  width: 100%;
+  max-width: 600px;
+  height: 400px;
+}
+
+@media (min-width: 768px) {
+  .chart-container {
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  .chart {
+    width: 45%;
+  }
+}
+
+
+.loading {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 2rem;
+}

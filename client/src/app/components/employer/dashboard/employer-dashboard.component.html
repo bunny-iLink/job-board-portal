@@ -45,10 +45,20 @@
     <p>Please login to access the site.</p>
   </div>
 
-  <div *ngIf="isChartLoading">Loading charts...</div>
 
-  <div echarts [options]="lineChartOptions" class="chart" *ngIf="lineChartOptions"></div>
 
-  <div echarts [options]="pieChartOptions" class="chart" *ngIf="pieChartOptions"></div>
+  <!-- Charts Section -->
+  <section class="charts-section" *ngIf="!isChartLoading">
+    <h2 class="section-title">Application Statistics</h2>
+
+    <div class="chart-container">
+      <!-- Line Chart (e.g. Applications Over Time) -->
+      <div *ngIf="lineChartOptions?.series?.length" echarts [options]="lineChartOptions" class="chart line-chart"></div>
+
+      <!-- Pie Chart (e.g. Applications by Status) -->
+      <div *ngIf="pieChartOptions?.series?.length" echarts [options]="pieChartOptions" class="chart pie-chart"></div>
+    </div>
+  </section>
+    <div *ngIf="isChartLoading">Loading charts...</div>
 
 </div>

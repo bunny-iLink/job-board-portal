@@ -26,8 +26,19 @@ export class EmployerService {
     }
 
     getApplicationStatusSummary(employerId: string, token: string) {
-        return this.http.get<any>(`${environment.apiUrl}/echartStatusForEmployer/${employerId}`, {
+        return this.http.get<any>(`${environment.apiUrl}/echartStatus/${employerId}`, {
         headers: { Authorization: `Bearer ${token}` }
+  });
+}
+getStatusSummary(userId: string, token: string) {
+  return this.http.get<any>(`${environment.apiUrl}/echartStatus/${userId}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+}
+
+getDomainSummary(userId: string, token: string) {
+  return this.http.get<any[]>(`${environment.apiUrl}/user/${userId}/applications-by-domain`, {
+    headers: { Authorization: `Bearer ${token}` }
   });
 }
 

@@ -48,7 +48,7 @@ export class EmployerDashboardComponent implements OnInit {
     if (this.token && this.employerId) {
       this.fetchEmployerData();
       this.fetchJobSummaries();
-      this.fetchLineChartData();
+      this.fetchHorizontalBarChartData();
       this.fetchPieChartData();
     } else {
       console.warn('Missing token or employer ID.');
@@ -99,54 +99,73 @@ export class EmployerDashboardComponent implements OnInit {
       queryParams: { id: jobId }
     });
   }
-  fetchLineChartData() {
-    if (!this.employerId || !this.token) return;
+  fetchHorizontalBarChartData() {
+  if (!this.employerId || !this.token) return;
 
-    this.isChartLoading = true;
+  this.isChartLoading = true;
 
-    this.jobService.getJobSummaries(this.employerId, this.token).subscribe({
-      next: (jobs: any[]) => {
-        const titles = jobs.map(job => job.title);
-        const applicationCounts = jobs.map(job => job.applicantCount);
+  this.jobService.getJobSummaries(this.employerId, this.token).subscribe({
+    next: (jobs: any[]) => {
+      const titles = jobs.map(job => job.title);
+      const applicationCounts = jobs.map(job => job.applicantCount);
 
-        this.lineChartOptions = {
-          title: { text: 'Applications per Job Title' },
-          tooltip: {},
-          xAxis: {
-            type: 'category',
-            data: titles,
-            axisLabel: { rotate: 30 }
-          },
-          yAxis: {
-            type: 'value'
-          },
-          series: [
-            {
-              name: 'Applications',
-              type: 'line',
-              data: applicationCounts
+      this.lineChartOptions = {
+        title: { text: 'Applications per Job Title', left: 'center' },
+        tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+        grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+        xAxis: {
+          type: 'value',
+          name: 'Applications'
+        },
+        yAxis: {
+          type: 'category',
+          data: titles,
+          axisLabel: {
+            interval: 0,
+            formatter: (value: string) =>
+              value.length > 20 ? value.slice(0, 20) + '…' : value
+          }
+        },
+        series: [
+          {
+            name: 'Applications',
+            type: 'bar',
+            data: applicationCounts,
+            label: {
+              show: true,
+              position: 'right'
+            },
+            itemStyle: {
+              color: '#5470C6'
             }
-          ]
-        };
-      },
-      error: err => console.error('Error loading line chart data:', err),
-      complete: () => this.isChartLoading = false
-    });
-  }
+          }
+        ]
+      };
+    },
+    error: err => console.error('Error loading bar chart data:', err),
+    complete: () => this.isChartLoading = false
+  });
+}
+
 
   fetchPieChartData() {
   if (!this.employerId || !this.token) return;
 
   this.employerService.getApplicationStatusSummary(this.employerId, this.token).subscribe({
     next: (statusCounts: any) => {
-      const pieData = Object.keys(statusCounts).map(status => ({
+      const pieData = Object.entries(statusCounts).map(([status, count]) => ({
         name: status,
-        value: statusCounts[status]
+        value: count
       }));
 
       this.pieChartOptions = {
-        title: { text: 'Application Status Distribution', left: 'center' },
-        tooltip: { trigger: 'item' },
+        title: {
+          text: 'Application Status Distribution',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'item'
+        },
         legend: {
           orient: 'vertical',
           left: 'left'
@@ -168,10 +187,15 @@ export class EmployerDashboardComponent implements OnInit {
         ]
       };
     },
-    error: err => console.error('Error loading pie chart data:', err),
-    complete: () => this.isChartLoading = false
+    error: err => {
+      console.error('Error loading pie chart data:', err);
+    },
+    complete: () => {
+      this.isChartLoading = false;
+    }
   });
 }
+
 
 
 }

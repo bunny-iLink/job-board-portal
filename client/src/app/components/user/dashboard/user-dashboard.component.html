@@ -50,4 +50,21 @@
             </tbody>
         </table>
     </section>
+
+    <section class="charts-section" *ngIf="!isChartLoading && (pieChartOptions || barChartOptions)">
+        <h2 class="section-title">Application Insights</h2>
+
+        <div class="chart-container">
+            <!-- Application Status Pie Chart -->
+            <div *ngIf="pieChartOptions" echarts [options]="pieChartOptions" class="chart pie-chart"></div>
+
+            <!-- Application Domain Bar Chart -->
+            <div *ngIf="barChartOptions" echarts [options]="barChartOptions" class="chart bar-chart"></div>
+        </div>
+    </section>
+    <!-- Optional loading state -->
+    <div *ngIf="isChartLoading" class="loading">
+    Loading charts...
+    </div>
+
 </div>

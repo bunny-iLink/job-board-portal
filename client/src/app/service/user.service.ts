@@ -23,4 +23,16 @@ export class UserService {
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
         return this.http.delete(`${environment.apiUrl}/deleteUser/${userId}`, { headers });
     }
+getUserStatusSummary(userId: string, token: string) {
+  return this.http.get<any>(`${environment.apiUrl}/user/${userId}/status-summary`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+}
+
+
+getDomainSummary(userId: string, token: string) {
+  return this.http.get<any[]>(`${environment.apiUrl}/user/${userId}/applications-by-domain`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+}
 }

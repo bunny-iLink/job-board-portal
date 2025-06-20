@@ -13,7 +13,7 @@ import { applyForJob, updateApplicationStatus, getUserAppliedJobs, revokeApplica
 import { getUserNotifications } from '../controllers/notificationController.js';
 import { verifyToken } from '../middleware/authMiddleware.js';
 import { requireRole } from '../middleware/authMiddleware.js';
-import { getApplicationsByDomain, getApplicationsDataForEmployerBasedOnStatus } from '../controllers/chartsDataController.js';
+import { getApplicationsByDomain, getApplicationsDataForEmployerBasedOnStatus, getApplicationsDataForUserBasedOnStatus } from '../controllers/chartsDataController.js';
 
 const router = Router();
 
@@ -467,6 +467,8 @@ router.get('/searchJobs', searchJobsForUsers);
  *         description: Internal server error
  */
 router.get('/echartStatus/:userId', getApplicationsDataForEmployerBasedOnStatus)
+
+router.get('/user/:userId/status-summary', getApplicationsDataForUserBasedOnStatus);
 
 /**
  * @swagger
