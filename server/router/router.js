@@ -13,7 +13,7 @@ import { applyForJob, updateApplicationStatus, getUserAppliedJobs, revokeApplica
 import { getUserNotifications } from '../controllers/notificationController.js';
 import { verifyToken } from '../middleware/authMiddleware.js';
 import { requireRole } from '../middleware/authMiddleware.js';
-import { getApplicationsDataForEmployerBasedOnStatus } from '../controllers/chartsDataController.js';
+import { getApplicationsByDomain, getApplicationsDataForEmployerBasedOnStatus } from '../controllers/chartsDataController.js';
 
 const router = Router();
 
@@ -466,8 +466,47 @@ router.get('/searchJobs', searchJobsForUsers);
  *       500:
  *         description: Internal server error
  */
-router.get('/echartStatusForEmployer/:employerId', verifyToken, requireRole("employer"), getApplicationsDataForEmployerBasedOnStatus)
+router.get('/echartStatus/:userId', getApplicationsDataForEmployerBasedOnStatus)
 
+/**
+ * @swagger
+ * /user/{userId}/applications-by-domain:
+ *   get:
+ *     summary: Get count of applications per job domain for a user
+ *     tags: [Applications]
+ *     security:
+ *       - bearerAuth: []  # Assuming you're using JWT authentication
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user
+ *     responses:
+ *       200:
+ *         description: Application count per domain
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 additionalProperties:
+ *                   type: integer
+ *               example:
+ *                 - Technology & IT: 5
+ *                 - Finance: 2
+ *       400:
+ *         description: Missing or invalid user ID
+ *       401:
+ *         description: Unauthorized - missing or invalid token
+ *       403:
+ *         description: Forbidden - role not allowed
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/user/:userId/applications-by-domain', getApplicationsByDomain)
 
 // PUT methods
 
