@@ -24,4 +24,11 @@ export class EmployerService {
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
         return this.http.delete(`${environment.apiUrl}/deleteEmployer/${employerId}`, { headers })
     }
+
+    getApplicationStatusSummary(employerId: string, token: string) {
+        return this.http.get<any>(`${environment.apiUrl}/echartStatusForEmployer/${employerId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+  });
+}
+
 }

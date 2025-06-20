@@ -103,3 +103,10 @@
   color: #666;
   margin-top: 40px;
 }
+
+.chart {
+  width: 100%;
+  max-width: 800px;
+  height: 400px;
+  margin: 2rem auto;
+}

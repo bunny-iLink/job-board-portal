@@ -44,4 +44,11 @@
   <div *ngIf="!token" class="no-data" aria-live="polite">
     <p>Please login to access the site.</p>
   </div>
+
+  <div *ngIf="isChartLoading">Loading charts...</div>
+
+  <div echarts [options]="lineChartOptions" class="chart" *ngIf="lineChartOptions"></div>
+
+  <div echarts [options]="pieChartOptions" class="chart" *ngIf="pieChartOptions"></div>
+
 </div>

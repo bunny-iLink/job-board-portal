@@ -6,11 +6,18 @@ import { Router } from '@angular/router';
 import { EmployerService } from '../../../service/employer.service';
 import { JobService } from '../../../service/job.service';
 import { AuthService } from '../../../service/auth.service';
+import { NgxEchartsModule, provideEchartsCore } from 'ngx-echarts';
+
 
 @Component({
   selector: 'app-employer-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NgxEchartsModule],
+    providers: [
+    provideEchartsCore({
+      echarts: () => import('echarts')
+    })
+  ],
   templateUrl: './employer-dashboard.component.html',
   styleUrls: ['./employer-dashboard.component.css']
 })
@@ -23,7 +30,11 @@ export class EmployerDashboardComponent implements OnInit {
   token: string | null = null;
   // List of job summaries for this employer
   jobs: any = [];
+  lineChartOptions: any = {};
+  pieChartOptions: any = {};
 
+// Loading states for various data fetches
+  isChartLoading = false;
   isEmployerLoading = false;
   isJobsLoading = false;
 
@@ -37,6 +48,8 @@ export class EmployerDashboardComponent implements OnInit {
     if (this.token && this.employerId) {
       this.fetchEmployerData();
       this.fetchJobSummaries();
+      this.fetchLineChartData();
+      this.fetchPieChartData();
     } else {
       console.warn('Missing token or employer ID.');
     }
@@ -86,4 +99,79 @@ export class EmployerDashboardComponent implements OnInit {
       queryParams: { id: jobId }
     });
   }
+  fetchLineChartData() {
+    if (!this.employerId || !this.token) return;
+
+    this.isChartLoading = true;
+
+    this.jobService.getJobSummaries(this.employerId, this.token).subscribe({
+      next: (jobs: any[]) => {
+        const titles = jobs.map(job => job.title);
+        const applicationCounts = jobs.map(job => job.applicantCount);
+
+        this.lineChartOptions = {
+          title: { text: 'Applications per Job Title' },
+          tooltip: {},
+          xAxis: {
+            type: 'category',
+            data: titles,
+            axisLabel: { rotate: 30 }
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [
+            {
+              name: 'Applications',
+              type: 'line',
+              data: applicationCounts
+            }
+          ]
+        };
+      },
+      error: err => console.error('Error loading line chart data:', err),
+      complete: () => this.isChartLoading = false
+    });
+  }
+
+  fetchPieChartData() {
+  if (!this.employerId || !this.token) return;
+
+  this.employerService.getApplicationStatusSummary(this.employerId, this.token).subscribe({
+    next: (statusCounts: any) => {
+      const pieData = Object.keys(statusCounts).map(status => ({
+        name: status,
+        value: statusCounts[status]
+      }));
+
+      this.pieChartOptions = {
+        title: { text: 'Application Status Distribution', left: 'center' },
+        tooltip: { trigger: 'item' },
+        legend: {
+          orient: 'vertical',
+          left: 'left'
+        },
+        series: [
+          {
+            name: 'Applications',
+            type: 'pie',
+            radius: '50%',
+            data: pieData,
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }
+        ]
+      };
+    },
+    error: err => console.error('Error loading pie chart data:', err),
+    complete: () => this.isChartLoading = false
+  });
+}
+
+
 }
