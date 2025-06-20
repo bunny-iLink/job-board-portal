@@ -161,7 +161,8 @@ export class EmployerDashboardComponent implements OnInit {
       this.pieChartOptions = {
         title: {
           text: 'Application Status Distribution',
-          left: 'center'
+          left: 'center',
+          top: 'bottom'
         },
         tooltip: {
           trigger: 'item'

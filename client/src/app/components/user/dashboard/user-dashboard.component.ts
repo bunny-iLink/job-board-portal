@@ -116,9 +116,9 @@ export class UserDashboardComponent implements OnInit {
       }));
 
       this.pieChartOptions = {
-        title: { text: 'Application Status', left: 'center' },
+        title: { text: 'Application Status', left: 'left', top: 10 },
         tooltip: { trigger: 'item' },
-        legend: { orient: 'vertical', left: 'left' },
+        legend: { orient: 'vertical', left: 'right' },
         series: [{
           name: 'Applications',
           type: 'pie',
