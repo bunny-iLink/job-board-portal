@@ -2,7 +2,7 @@
 .auth-page {
   position: relative;
   min-height: 100vh;
-  background-image: url('https://images.unsplash.com/photo-1629904853716-f0bc54eea481?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); /* Use your preferred image */
+  background-image: url("https://images.unsplash.com/photo-1629904853716-f0bc54eea481?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"); /* Use your preferred image */
   background-size: cover;
   background-position: center;
   display: flex;
@@ -20,8 +20,7 @@
   z-index: 1;
 }
 
-.login-container
-{
+.login-container {
   position: relative;
   z-index: 2;
   width: 90%;

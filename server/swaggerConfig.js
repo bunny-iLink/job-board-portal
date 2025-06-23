@@ -1,5 +1,5 @@
 // swaggerConfig.js
-import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerJsdoc from "swagger-jsdoc";
 
 const options = {
   definition: {
@@ -7,12 +7,12 @@ const options = {
     info: {
       title: "Job Board Portal API",
       version: "1.0.0",
-      description: "API documentation for the Job Board Portal"
+      description: "API documentation for the Job Board Portal",
     },
     servers: [
       {
-        url: "http://localhost:3000/api"
-      }
+        url: "http://localhost:3000/api",
+      },
     ],
     components: {
       schemas: {
@@ -30,18 +30,18 @@ const options = {
               type: "object",
               properties: {
                 data: { type: "string" },
-                contentType: { type: "string" }
-              }
+                contentType: { type: "string" },
+              },
             },
             experience: { type: "number" },
             resume: {
               type: "object",
               properties: {
                 data: { type: "string" },
-                contentType: { type: "string" }
-              }
-            }
-          }
+                contentType: { type: "string" },
+              },
+            },
+          },
         },
         Employer: {
           type: "object",
@@ -58,10 +58,10 @@ const options = {
               type: "object",
               properties: {
                 data: { type: "string" },
-                contentType: { type: "string" }
-              }
-            }
-          }
+                contentType: { type: "string" },
+              },
+            },
+          },
         },
         Job: {
           type: "object",
@@ -77,8 +77,8 @@ const options = {
                 responsibilities: { type: "array", items: { type: "string" } },
                 requiredSkills: { type: "array", items: { type: "string" } },
                 preferredSkills: { type: "array", items: { type: "string" } },
-                whatWeOffer: { type: "array", items: { type: "string" } }
-              }
+                whatWeOffer: { type: "array", items: { type: "string" } },
+              },
             },
             company: { type: "string" },
             location: { type: "string" },
@@ -86,8 +86,8 @@ const options = {
             type: { type: "string" },
             experience: { type: "string" },
             vacancies: { type: "number" },
-            status: { type: "string" }
-          }
+            status: { type: "string" },
+          },
         },
         Application: {
           type: "object",
@@ -97,10 +97,10 @@ const options = {
             employer: { type: "string" },
             status: {
               type: "string",
-              enum: ["In Progress", "Accepted", "Rejected"]
+              enum: ["In Progress", "Accepted", "Rejected"],
             },
-            appliedAt: { type: "string", format: "date-time" }
-          }
+            appliedAt: { type: "string", format: "date-time" },
+          },
         },
         Notification: {
           type: "object",
@@ -108,11 +108,11 @@ const options = {
             userId: { type: "string" },
             message: { type: "string" },
             isRead: { type: "boolean" },
-            createdAt: { type: "string", format: "date-time" }
-          }
-        }
-      }
-    }
+            createdAt: { type: "string", format: "date-time" },
+          },
+        },
+      },
+    },
   },
   apis: ["./router/*.js"], // This scans your routes for Swagger comments
 };

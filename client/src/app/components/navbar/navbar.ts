@@ -11,7 +11,7 @@ import { AlertComponent } from './../alert/alert.component';
   standalone: true,
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.css'],
-  imports: [CommonModule, AlertComponent, ConfirmComponent]
+  imports: [CommonModule, AlertComponent, ConfirmComponent],
 })
 export class NavbarComponent implements OnInit {
   userName: string | null = null;
@@ -61,7 +61,7 @@ export class NavbarComponent implements OnInit {
       },
       error: () => {
         this.loadingNotifications = false;
-      }
+      },
     });
   }
 
@@ -85,7 +85,11 @@ export class NavbarComponent implements OnInit {
     this.showConfirm = false;
   }
 
-  showCustomAlert(message: string, type: 'success' | 'error' | 'info', navigate: boolean = false) {
+  showCustomAlert(
+    message: string,
+    type: 'success' | 'error' | 'info',
+    navigate: boolean = false
+  ) {
     this.alertMessage = message;
     this.alertType = type;
     this.showAlert = true;
@@ -105,7 +109,9 @@ export class NavbarComponent implements OnInit {
   }
 
   goToListings(): void {
-    this.router.navigate([`/${this.role}/${this.role === 'user' ? 'jobs' : 'my-listings'}`]);
+    this.router.navigate([
+      `/${this.role}/${this.role === 'user' ? 'jobs' : 'my-listings'}`,
+    ]);
     this.showMobileMenu = false;
   }
 
@@ -125,13 +131,20 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  parseNotification(message: string): { jobTitle: string; status: string; statusClass: string } | null {
+  parseNotification(
+    message: string
+  ): { jobTitle: string; status: string; statusClass: string } | null {
     const jobMatch = message.match(/job "(.*?)"/);
     const statusMatch = message.match(/'(Accepted|Rejected|In Progress)'/);
     if (jobMatch && statusMatch) {
       const jobTitle = jobMatch[1];
       const status = statusMatch[1];
-      const statusClass = status === 'Accepted' ? 'accepted' : status === 'Rejected' ? 'rejected' : 'in-progress';
+      const statusClass =
+        status === 'Accepted'
+          ? 'accepted'
+          : status === 'Rejected'
+          ? 'rejected'
+          : 'in-progress';
       return { jobTitle, status, statusClass };
     }
     return null;

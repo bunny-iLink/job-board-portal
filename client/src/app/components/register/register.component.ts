@@ -1,6 +1,11 @@
 // Angular component for handling user registration functionality
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -13,7 +18,7 @@ import { AlertComponent } from '../alert/alert.component';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, AlertComponent],
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent {
   // Reactive form group for registration
@@ -30,8 +35,12 @@ export class RegisterComponent {
   navigateAfterAlert: boolean = false;
   registrationSuccess: boolean = false;
 
-  private showCustomAlert(message: string, type: 'success' | 'error' | 'info', navigate: boolean = false) {
-    console.log("Alert Triggered:", { message, type });
+  private showCustomAlert(
+    message: string,
+    type: 'success' | 'error' | 'info',
+    navigate: boolean = false
+  ) {
+    console.log('Alert Triggered:', { message, type });
 
     this.alertMessage = message;
     this.alertType = type;
@@ -47,14 +56,19 @@ export class RegisterComponent {
     }
   }
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private registerService: RegisterService) {
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private router: Router,
+    private registerService: RegisterService
+  ) {
     // Initialize the registration form with validators
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       company: [''],
-      preferredDomain: ['']
+      preferredDomain: [''],
     });
   }
 
@@ -69,28 +83,35 @@ export class RegisterComponent {
   }
 
   goToLogin() {
-    this.router.navigate(['/login'])
+    this.router.navigate(['/login']);
   }
 
   // Handle form submission for registration
   onSubmit() {
     if (!this.selectedRole || this.registerForm.invalid) {
-      this.showCustomAlert('Please fill all required fields and select a role.', 'error');
+      this.showCustomAlert(
+        'Please fill all required fields and select a role.',
+        'error'
+      );
       return;
     }
 
     const userData = this.registerForm.value;
 
-    const url = this.selectedRole === 'candidate'
-      ? environment.apiUrl + '/addUser'
-      : environment.apiUrl + '/addEmployer';
+    const url =
+      this.selectedRole === 'candidate'
+        ? environment.apiUrl + '/addUser'
+        : environment.apiUrl + '/addEmployer';
 
     this.registerService.register(url, userData).subscribe({
-      next: res => {
-        this.showCustomAlert("Registration successful. Please log in....", 'success');
+      next: (res) => {
+        this.showCustomAlert(
+          'Registration successful. Please log in....',
+          'success'
+        );
         this.registrationSuccess = true;
       },
-      error: err => {
+      error: (err) => {
         let errorMessage = 'Registration failed. Please try again.';
         const status = err.status;
 
@@ -103,8 +124,7 @@ export class RegisterComponent {
         }
 
         this.showCustomAlert(errorMessage, 'error');
-      }
+      },
     });
   }
-
 }

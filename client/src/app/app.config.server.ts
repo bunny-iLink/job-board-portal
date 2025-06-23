@@ -8,7 +8,7 @@ const serverConfig: ApplicationConfig = {
   providers: [
     provideServerRendering(),
     // If routing setup is needed, use provideRouter or similar from @angular/router
-  ]
+  ],
 };
 
 export const config = mergeApplicationConfig(appConfig, serverConfig);

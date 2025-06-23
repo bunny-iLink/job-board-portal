@@ -13,7 +13,7 @@ import { ConfirmComponent } from '../../confirm/confirm.component';
   imports: [CommonModule, AlertComponent, ConfirmComponent],
   standalone: true,
   templateUrl: './applied-jobs.html',
-  styleUrls: ['./applied-jobs.css']
+  styleUrls: ['./applied-jobs.css'],
 })
 export class AppliedJobsComponent implements OnInit {
   // User profile data
@@ -37,13 +37,17 @@ export class AppliedJobsComponent implements OnInit {
   navigateAfterAlert: boolean = false;
 
   // Variables for Confirm
-  confirmMessage: string = "";
+  confirmMessage: string = '';
   showConfirm: boolean = false;
-  applicationIdToBeDeleted = "";
+  applicationIdToBeDeleted = '';
   jobIdToBeDeleted: string = '';
 
-  private showCustomAlert(message: string, type: 'success' | 'error' | 'info', navigate: boolean = false) {
-    console.log("Alert Triggered:", { message, type });
+  private showCustomAlert(
+    message: string,
+    type: 'success' | 'error' | 'info',
+    navigate: boolean = false
+  ) {
+    console.log('Alert Triggered:', { message, type });
 
     this.alertMessage = message;
     this.alertType = type;
@@ -56,7 +60,12 @@ export class AppliedJobsComponent implements OnInit {
     this.showAlert = false;
   }
 
-  constructor(private applicationService: ApplicationService, private authService: AuthService, private userService: UserService, private jobService: JobService) { }
+  constructor(
+    private applicationService: ApplicationService,
+    private authService: AuthService,
+    private userService: UserService,
+    private jobService: JobService
+  ) {}
 
   // On component initialization, load user and applied jobs data
   ngOnInit(): void {
@@ -79,9 +88,9 @@ export class AppliedJobsComponent implements OnInit {
             console.log('User data:', this.user);
             this.loadAppliedJobs(); // Now load applied jobs
           },
-          error: err => {
+          error: (err) => {
             console.error('Failed to load user data:', err);
-          }
+          },
         });
       } else {
         console.warn('No valid user in localStorage.');
@@ -101,10 +110,10 @@ export class AppliedJobsComponent implements OnInit {
         console.log('Applied jobs:', this.appliedJobs);
         this.loading = false; // Stop loading on success
       },
-      error: err => {
+      error: (err) => {
         console.error('Failed to load applied jobs:', err);
         this.loading = false; // Stop loading on error
-      }
+      },
     });
   }
 
@@ -113,7 +122,6 @@ export class AppliedJobsComponent implements OnInit {
     this.selectedJob = job;
     this.showModal = true;
     console.log('Job clicked:', job);
-
   }
 
   // Close the job details modal
@@ -127,33 +135,43 @@ export class AppliedJobsComponent implements OnInit {
     if (!jobId) return;
 
     // Find the application to get the applicationId
-    const application = this.appliedJobs.find(job => job._id === jobId);
+    const application = this.appliedJobs.find((job) => job._id === jobId);
     if (!application) {
-      this.showCustomAlert("Application not found!", 'info');
+      this.showCustomAlert('Application not found!', 'info');
       return;
     }
 
     this.applicationIdToBeDeleted = application.applicationId;
     this.jobIdToBeDeleted = jobId;
-    this.confirmMessage = 'Are you sure you want to revoke your application for this job?';
+    this.confirmMessage =
+      'Are you sure you want to revoke your application for this job?';
     this.showConfirm = true;
   }
 
   onConfirmRevoke() {
     if (!this.applicationIdToBeDeleted || !this.token) return;
 
-    this.applicationService.revokeApplication(this.applicationIdToBeDeleted, this.token).subscribe({
-      next: () => {
-        this.showCustomAlert('Application revoked successfully!', 'success');
-        this.appliedJobs = this.appliedJobs.filter(job => job._id !== this.jobIdToBeDeleted);
-        this.resetConfirmState();
-      },
-      error: err => {
-        console.error('Error revoking application:', err);
-        this.showCustomAlert(`Failed to revoke application: ${err.error?.message || 'Unknown error'}`, 'error');
-        this.resetConfirmState();
-      }
-    });
+    this.applicationService
+      .revokeApplication(this.applicationIdToBeDeleted, this.token)
+      .subscribe({
+        next: () => {
+          this.showCustomAlert('Application revoked successfully!', 'success');
+          this.appliedJobs = this.appliedJobs.filter(
+            (job) => job._id !== this.jobIdToBeDeleted
+          );
+          this.resetConfirmState();
+        },
+        error: (err) => {
+          console.error('Error revoking application:', err);
+          this.showCustomAlert(
+            `Failed to revoke application: ${
+              err.error?.message || 'Unknown error'
+            }`,
+            'error'
+          );
+          this.resetConfirmState();
+        },
+      });
   }
 
   onCancelConfirm() {

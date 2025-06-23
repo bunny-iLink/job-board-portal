@@ -1,14 +1,33 @@
 <!-- Alert and Confirm Components -->
-<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()"></app-alert>
-<app-confirm [message]="confirmMessage" [show]="showConfirm" (confirmed)="onConfirmLogout()" (cancelled)="onCancelLogout()"></app-confirm>
+<app-alert
+  [message]="alertMessage"
+  [type]="alertType"
+  [show]="showAlert"
+  (closed)="onAlertClosed()"
+></app-alert>
+<app-confirm
+  [message]="confirmMessage"
+  [show]="showConfirm"
+  (confirmed)="onConfirmLogout()"
+  (cancelled)="onCancelLogout()"
+></app-confirm>
 
 <!-- Navigation Bar -->
-<nav class="navbar" *ngIf="token" role="navigation" aria-label="Main Navigation">
+<nav
+  class="navbar"
+  *ngIf="token"
+  role="navigation"
+  aria-label="Main Navigation"
+>
   <div class="navbar-container">
-
     <!-- Left Section: Greeting -->
     <div class="navbar-left">
-      <a class="greeting clickable" (click)="goToDashboard()" role="link" tabindex="0">
+      <a
+        class="greeting clickable"
+        (click)="goToDashboard()"
+        role="link"
+        tabindex="0"
+      >
         {{ role === 'employer' ? 'Welcome' : 'Hello' }}, {{ userName }}!
       </a>
     </div>
@@ -21,21 +40,25 @@
 
     <!-- Right Section -->
     <div class="navbar-right">
-
       <!-- User: Notifications Bell -->
-      <button *ngIf="role === 'user'" class="icon-button notifications-btn" 
-              (click)="toggleNotifications()" 
-              aria-label="Open notifications" 
-              title="Notifications">
+      <button
+        *ngIf="role === 'user'"
+        class="icon-button notifications-btn"
+        (click)="toggleNotifications()"
+        aria-label="Open notifications"
+        title="Notifications"
+      >
         🔔
       </button>
 
       <!-- Hamburger Toggle -->
-      <button class="hamburger"
-              (click)="toggleMobileMenu()"
-              [class.active]="showMobileMenu"
-              aria-label="Toggle mobile menu"
-              [attr.aria-expanded]="showMobileMenu">
+      <button
+        class="hamburger"
+        (click)="toggleMobileMenu()"
+        [class.active]="showMobileMenu"
+        aria-label="Toggle mobile menu"
+        [attr.aria-expanded]="showMobileMenu"
+      >
         <span></span>
         <span></span>
         <span></span>
@@ -44,31 +67,64 @@
       <!-- Navigation Links (Hamburger dropdown) -->
       <div class="navbar-links" [class.show]="showMobileMenu">
         <!-- Employer: My Listings -->
-        <button *ngIf="role === 'employer'" class="nav-button" (click)="goToListings()"><strong>My Listings</strong></button>
+        <button
+          *ngIf="role === 'employer'"
+          class="nav-button"
+          (click)="goToListings()"
+        >
+          <strong>My Listings</strong>
+        </button>
 
         <!-- User: Jobs -->
-        <button *ngIf="role === 'user'" class="nav-button" (click)="goToListings()"><strong>Jobs</strong></button>
+        <button
+          *ngIf="role === 'user'"
+          class="nav-button"
+          (click)="goToListings()"
+        >
+          <strong>Jobs</strong>
+        </button>
 
         <!-- Common: Profile -->
-        <button class="nav-button" (click)="goToProfile()"><strong>Profile</strong></button>
+        <button class="nav-button" (click)="goToProfile()">
+          <strong>Profile</strong>
+        </button>
 
         <!-- User: Applied Jobs -->
-        <button *ngIf="role === 'user'" class="nav-button" (click)="goToAppliedJobs()"><strong>Applied Jobs</strong></button>
+        <button
+          *ngIf="role === 'user'"
+          class="nav-button"
+          (click)="goToAppliedJobs()"
+        >
+          <strong>Applied Jobs</strong>
+        </button>
 
         <!-- Common: Logout -->
-        <button class="nav-button logout-btn" (click)="logout()" title="Logout"><strong>Logout</strong></button>
+        <button class="nav-button logout-btn" (click)="logout()" title="Logout">
+          <strong>Logout</strong>
+        </button>
       </div>
-
-    </div> <!-- .navbar-right -->
-
-  </div> <!-- .navbar-container -->
+    </div>
+    <!-- .navbar-right -->
+  </div>
+  <!-- .navbar-container -->
 </nav>
 
 <!-- Notifications Modal (User Only) -->
-<div *ngIf="role === 'user' && showNotifications" class="notification-modal" role="dialog" aria-label="Notifications Panel">
+<div
+  *ngIf="role === 'user' && showNotifications"
+  class="notification-modal"
+  role="dialog"
+  aria-label="Notifications Panel"
+>
   <div class="notification-header">
     <h4>Notifications</h4>
-    <button class="close-btn" (click)="closeNotifications()" aria-label="Close notifications panel">×</button>
+    <button
+      class="close-btn"
+      (click)="closeNotifications()"
+      aria-label="Close notifications panel"
+    >
+      ×
+    </button>
   </div>
 
   <div class="notification-content">
@@ -77,17 +133,23 @@
       <div class="loading-text">Loading notifications...</div>
     </div>
 
-    <p *ngIf="!loadingNotifications && (!notifications || notifications.length === 0)" class="no-notifications">
+    <p
+      *ngIf="!loadingNotifications && (!notifications || notifications.length === 0)"
+      class="no-notifications"
+    >
       No new notifications
     </p>
 
-    <ul *ngIf="!loadingNotifications && notifications && notifications.length > 0">
+    <ul
+      *ngIf="!loadingNotifications && notifications && notifications.length > 0"
+    >
       <li *ngFor="let notification of notifications">
         <ng-container *ngIf="parseNotification(notification.message) as parsed">
-          Your application for the job
-          "<span class="job-title">{{ parsed.jobTitle }}</span>"
-          has been updated to
-          '<span [ngClass]="parsed.statusClass">{{ parsed.status }}</span>'.
+          Your application for the job "<span class="job-title"
+            >{{ parsed.jobTitle }}</span
+          >" has been updated to '<span [ngClass]="parsed.statusClass"
+            >{{ parsed.status }}</span
+          >'.
         </ng-container>
       </li>
     </ul>
@@ -95,4 +157,9 @@
 </div>
 
 <!-- Mobile Menu Overlay -->
-<div *ngIf="showMobileMenu" class="mobile-overlay" (click)="toggleMobileMenu()" aria-hidden="true"></div>
+<div
+  *ngIf="showMobileMenu"
+  class="mobile-overlay"
+  (click)="toggleMobileMenu()"
+  aria-hidden="true"
+></div>

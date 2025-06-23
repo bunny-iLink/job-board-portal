@@ -1,6 +1,10 @@
-<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()">
+<app-alert
+  [message]="alertMessage"
+  [type]="alertType"
+  [show]="showAlert"
+  (closed)="onAlertClosed()"
+>
 </app-alert>
-
 
 <!-- Login page container with overlay for visual effect -->
 <div class="auth-page">
@@ -13,20 +17,35 @@
       <!-- Email input field with validation feedback -->
       <label>Email:</label>
       <input type="email" formControlName="email" required />
-      <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-        <small class="invalid-feedback">Email is required and must be valid.</small>
+      <div
+        *ngIf="
+          loginForm.get('email')?.invalid && loginForm.get('email')?.touched
+        "
+      >
+        <small class="invalid-feedback"
+          >Email is required and must be valid.</small
+        >
       </div>
 
       <!-- Password input field with show/hide toggle and validation -->
       <label>Password:</label>
       <div class="password-wrapper">
-        <input [type]="showPassword ? 'text' : 'password'" formControlName="password" required />
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          formControlName="password"
+          required
+        />
         <button type="button" (click)="togglePassword()">
           <!-- Eye icon for toggling password visibility -->
           👁
         </button>
       </div>
-      <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+      <div
+        *ngIf="
+          loginForm.get('password')?.invalid &&
+          loginForm.get('password')?.touched
+        "
+      >
         <small class="invalid-feedback">Password is required.</small>
       </div>
 

@@ -1,6 +1,6 @@
 /* Base Navbar Styling */
 .navbar {
-  background-color: #0A66C2;
+  background-color: #0a66c2;
   color: white;
   position: sticky;
   top: 0;
@@ -164,7 +164,7 @@
     gap: 12px;
     padding: 16px 0;
     width: 100%;
-    background-color: #0A66C2;
+    background-color: #0a66c2;
   }
 
   .navbar-links.show {

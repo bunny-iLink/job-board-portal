@@ -13,7 +13,7 @@ import { AlertComponent } from '../../alert/alert.component';
   standalone: true,
   imports: [CommonModule, FormsModule, ConfirmComponent, AlertComponent],
   templateUrl: 'job-details.html',
-  styleUrls: ['job-details.css']
+  styleUrls: ['job-details.css'],
 })
 export class JobDetailsComponent implements OnInit {
   jobId: string = '';
@@ -23,7 +23,12 @@ export class JobDetailsComponent implements OnInit {
   token: string | null = null;
 
   loadingJobDetails = false;
-  constructor(private route: ActivatedRoute, private jobService: JobService, private applicationService: ApplicationService, private authService: AuthService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private jobService: JobService,
+    private applicationService: ApplicationService,
+    private authService: AuthService
+  ) {}
 
   // Variables for alert
   alertMessage: string = '';
@@ -31,15 +36,15 @@ export class JobDetailsComponent implements OnInit {
   showAlert: boolean = false;
 
   // Variables for Confirm
-  confirmMessage = "";
+  confirmMessage = '';
   showConfirm = false;
-  selectedApplicationId = "";
-  newStatusToSet = "";
+  selectedApplicationId = '';
+  newStatusToSet = '';
 
   ngOnInit(): void {
     this.token = this.authService.getToken();
 
-    this.route.queryParamMap.subscribe(params => {
+    this.route.queryParamMap.subscribe((params) => {
       this.jobId = params.get('id') || '';
       if (this.jobId && this.token) {
         this.loadJobDetails(); // ✅ Only one call now
@@ -48,7 +53,7 @@ export class JobDetailsComponent implements OnInit {
   }
 
   private showCustomAlert(message: string, type: 'success' | 'error' | 'info') {
-    console.log("Alert Triggered:", { message, type });
+    console.log('Alert Triggered:', { message, type });
 
     this.alertMessage = message;
     this.alertType = type;
@@ -62,27 +67,25 @@ export class JobDetailsComponent implements OnInit {
   // Fetch job details and list of applicants from backend
   loadJobDetails(): void {
     this.loadingJobDetails = true;
-    this.jobService.getJobById(this.jobId!, this.token!)
-      .subscribe({
-        next: res => {
-          this.job = res.job;
-          this.applicants = res.applicants;
-          // Pre-create blob URLs for all resumes for quick access
-          this.applicants.forEach(applicant => {
-            if (applicant.userId?.resume?.data) {
-              this.createResumeBlobUrl(applicant);
-            }
-          });
-          console.log(this.applicants);
-
-        },
-        error: err => {
-          console.error('Failed to load job details:', err);
-        },
-        complete: () => {
-          this.loadingJobDetails = false;
-        }
-      });
+    this.jobService.getJobById(this.jobId!, this.token!).subscribe({
+      next: (res) => {
+        this.job = res.job;
+        this.applicants = res.applicants;
+        // Pre-create blob URLs for all resumes for quick access
+        this.applicants.forEach((applicant) => {
+          if (applicant.userId?.resume?.data) {
+            this.createResumeBlobUrl(applicant);
+          }
+        });
+        console.log(this.applicants);
+      },
+      error: (err) => {
+        console.error('Failed to load job details:', err);
+      },
+      complete: () => {
+        this.loadingJobDetails = false;
+      },
+    });
   }
 
   // Create a blob URL for an applicant's resume (PDF) for viewing/downloading
@@ -94,7 +97,9 @@ export class JobDetailsComponent implements OnInit {
         byteNumbers[i] = byteCharacters.charCodeAt(i);
       }
       const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: applicant.userId.resume.contentType });
+      const blob = new Blob([byteArray], {
+        type: applicant.userId.resume.contentType,
+      });
       this.resumeBlobUrls[applicant._id] = URL.createObjectURL(blob);
     } catch (e) {
       console.error('Error creating resume blob URL:', e);
@@ -131,18 +136,24 @@ export class JobDetailsComponent implements OnInit {
 
   onConfirmStatusChange() {
     this.applicationService
-      .updateStatus(this.selectedApplicationId, this.token!, this.newStatusToSet)
+      .updateStatus(
+        this.selectedApplicationId,
+        this.token!,
+        this.newStatusToSet
+      )
       .subscribe({
         next: () => {
-          const a = this.applicants.find(x => x._id === this.selectedApplicationId);
+          const a = this.applicants.find(
+            (x) => x._id === this.selectedApplicationId
+          );
           if (a) a.status = this.newStatusToSet;
           this.resetConfirm();
-          this.showCustomAlert("Status changed successfuully", "success")
+          this.showCustomAlert('Status changed successfuully', 'success');
         },
-        error: err => {
+        error: (err) => {
           console.error('Failed to update status:', err);
           this.resetConfirm();
-        }
+        },
       });
   }
 
@@ -159,7 +170,9 @@ export class JobDetailsComponent implements OnInit {
 
   ngOnDestroy() {
     // Clean up blob URLs when component is destroyed to free memory
-    Object.values(this.resumeBlobUrls).forEach(url => URL.revokeObjectURL(url));
+    Object.values(this.resumeBlobUrls).forEach((url) =>
+      URL.revokeObjectURL(url)
+    );
   }
 
   // Change the status of an applicant's application (e.g., Accept/Reject)
@@ -168,34 +181,38 @@ export class JobDetailsComponent implements OnInit {
   }
 
   downloadAcceptedApplicantsCSV() {
-  const acceptedApplicants = this.applicants.filter(app => app.status === 'Accepted');
+    const acceptedApplicants = this.applicants.filter(
+      (app) => app.status === 'Accepted'
+    );
 
-  if (acceptedApplicants.length === 0) {
-    this.showCustomAlert('No accepted applicants found.', 'info');
-    return;
+    if (acceptedApplicants.length === 0) {
+      this.showCustomAlert('No accepted applicants found.', 'info');
+      return;
+    }
+
+    const csvRows = [
+      ['Name', 'Email', 'Contact Number'], // header
+      ...acceptedApplicants.map((app) => [
+        app.userId?.name || '',
+        app.userId?.email || '',
+        app.userId?.phone || 'N/A',
+      ]),
+    ];
+
+    const csvContent = csvRows
+      .map((row) =>
+        row.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(',')
+      )
+      .join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `accepted_applicants_${this.jobId}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
   }
-
-  const csvRows = [
-    ['Name', 'Email', 'Contact Number'], // header
-    ...acceptedApplicants.map(app => [
-      app.userId?.name || '',
-      app.userId?.email || '',
-      app.userId?.phone || 'N/A'
-    ])
-  ];
-
-  const csvContent = csvRows.map(row =>
-    row.map(value => `"${String(value).replace(/"/g, '""')}"`).join(',')
-  ).join('\n');
-
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `accepted_applicants_${this.jobId}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  window.URL.revokeObjectURL(url);
-}
 }

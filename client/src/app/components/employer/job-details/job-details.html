@@ -1,8 +1,17 @@
-<app-confirm [message]="confirmMessage" [show]="showConfirm" (confirmed)="onConfirmStatusChange()"
-  (cancelled)="onCancelStatusChange()">
+<app-confirm
+  [message]="confirmMessage"
+  [show]="showConfirm"
+  (confirmed)="onConfirmStatusChange()"
+  (cancelled)="onCancelStatusChange()"
+>
 </app-confirm>
 
-<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()">
+<app-alert
+  [message]="alertMessage"
+  [type]="alertType"
+  [show]="showAlert"
+  (closed)="onAlertClosed()"
+>
 </app-alert>
 
 <div *ngIf="loadingJobDetails" class="spinner-container" aria-busy="true">
@@ -45,16 +54,15 @@
       <li *ngFor="let offer of job.description.whatWeOffer">{{ offer }}</li>
     </ul>
   </section>
-  
+
   <section class="applicant-section">
     <div class="applicant-header">
       <h2>Applicants ({{ applicants.length }})</h2>
       <button (click)="downloadAcceptedApplicantsCSV()" class="download-btn">
-      ⬇️ Download Accepted Applicants (CSV)
+        ⬇️ Download Accepted Applicants (CSV)
       </button>
-    
     </div>
-    <hr/>
+    <hr />
 
     <div *ngIf="applicants.length === 0" class="no-applicants">
       <p>No one has applied for this job yet.</p>
@@ -63,14 +71,26 @@
     <div *ngFor="let applicant of applicants" class="applicant-card">
       <p><strong>Name:</strong> {{ applicant.userId?.name || 'N/A' }}</p>
       <p><strong>Email:</strong> {{ applicant.userId?.email || 'N/A' }}</p>
-      <p><strong>Contact Number:</strong> {{ applicant.userId?.phone || 'N/A'}}</p>
-      <p><strong>Applied At:</strong> {{ applicant.appliedAt | date:'medium' }}</p>
-      <a *ngIf="applicant.userId?.resume" (click)="openResume(applicant._id)" style="cursor: pointer;">
+      <p>
+        <strong>Contact Number:</strong> {{ applicant.userId?.phone || 'N/A'}}
+      </p>
+      <p>
+        <strong>Applied At:</strong> {{ applicant.appliedAt | date:'medium' }}
+      </p>
+      <a
+        *ngIf="applicant.userId?.resume"
+        (click)="openResume(applicant._id)"
+        style="cursor: pointer"
+      >
         View Resume
       </a>
-      <p><strong>Status:</strong>
-        <select [ngModel]="applicant.status" (ngModelChange)="onStatusChange(applicant._id, $event)"
-          class="status-dropdown">
+      <p>
+        <strong>Status:</strong>
+        <select
+          [ngModel]="applicant.status"
+          (ngModelChange)="onStatusChange(applicant._id, $event)"
+          class="status-dropdown"
+        >
           <option value="In Progress">In Progress</option>
           <option value="Accepted">Accepted</option>
           <option value="Rejected">Rejected</option>

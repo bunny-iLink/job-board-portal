@@ -1,4 +1,9 @@
-<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()">
+<app-alert
+  [message]="alertMessage"
+  [type]="alertType"
+  [show]="showAlert"
+  (closed)="onAlertClosed()"
+>
 </app-alert>
 
 <!-- Registration page container with overlay for visual effect -->
@@ -18,10 +23,20 @@
         <div class="form-group">
           <label>I am a:</label>
           <div class="role-buttons">
-            <button type="button" (click)="selectRole('candidate')"
-              [class.selected]="selectedRole === 'candidate'">Candidate</button>
-            <button type="button" (click)="selectRole('employer')"
-              [class.selected]="selectedRole === 'employer'">Employer</button>
+            <button
+              type="button"
+              (click)="selectRole('candidate')"
+              [class.selected]="selectedRole === 'candidate'"
+            >
+              Candidate
+            </button>
+            <button
+              type="button"
+              (click)="selectRole('employer')"
+              [class.selected]="selectedRole === 'employer'"
+            >
+              Employer
+            </button>
           </div>
         </div>
 
@@ -30,8 +45,19 @@
           <!-- Full Name Field with Validation -->
           <div class="form-group">
             <label for="name">Full Name *</label>
-            <input id="name" type="text" formControlName="name" placeholder="Enter your full name" />
-            <div *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched" class="error">
+            <input
+              id="name"
+              type="text"
+              formControlName="name"
+              placeholder="Enter your full name"
+            />
+            <div
+              *ngIf="
+                registerForm.get('name')?.invalid &&
+                registerForm.get('name')?.touched
+              "
+              class="error"
+            >
               Name is required
             </div>
           </div>
@@ -39,10 +65,25 @@
           <!-- Email Field with Validation -->
           <div class="form-group">
             <label for="email">Email Address *</label>
-            <input id="email" type="email" formControlName="email" placeholder="Enter your email" />
-            <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="error">
-              <span *ngIf="registerForm.get('email')?.errors?.['required']">Email is required</span>
-              <span *ngIf="registerForm.get('email')?.errors?.['email']">Please enter a valid email</span>
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="Enter your email"
+            />
+            <div
+              *ngIf="
+                registerForm.get('email')?.invalid &&
+                registerForm.get('email')?.touched
+              "
+              class="error"
+            >
+              <span *ngIf="registerForm.get('email')?.errors?.['required']"
+                >Email is required</span
+              >
+              <span *ngIf="registerForm.get('email')?.errors?.['email']"
+                >Please enter a valid email</span
+              >
             </div>
           </div>
 
@@ -50,16 +91,33 @@
           <div class="form-group">
             <label for="password">Password *</label>
             <div class="password-wrapper">
-              <input id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password"
-                placeholder="Create a password" />
-              <button type="button" (click)="togglePassword()" class="toggle-password">
-                {{ showPassword ? 'Hide' : 'Show' }}
+              <input
+                id="password"
+                [type]="showPassword ? 'text' : 'password'"
+                formControlName="password"
+                placeholder="Create a password"
+              />
+              <button
+                type="button"
+                (click)="togglePassword()"
+                class="toggle-password"
+              >
+                {{ showPassword ? "Hide" : "Show" }}
               </button>
             </div>
-            <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error">
-              <span *ngIf="registerForm.get('password')?.errors?.['required']">Password is required</span>
-              <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 6
-                characters</span>
+            <div
+              *ngIf="
+                registerForm.get('password')?.invalid &&
+                registerForm.get('password')?.touched
+              "
+              class="error"
+            >
+              <span *ngIf="registerForm.get('password')?.errors?.['required']"
+                >Password is required</span
+              >
+              <span *ngIf="registerForm.get('password')?.errors?.['minlength']"
+                >Password must be at least 6 characters</span
+              >
             </div>
           </div>
 
@@ -70,31 +128,54 @@
               <option value="">Select preferred domain</option>
               <option value="Technology & IT">Technology & IT</option>
               <option value="Sales & Marketing">Sales & Marketing</option>
-              <option value="Business & Management">Business & Management</option>
+              <option value="Business & Management">
+                Business & Management
+              </option>
               <option value="Finance & Accounting">Finance & Accounting</option>
-              <option value="Human Resources & Recruitment">Human Resources & Recruitment</option>
-              <option value="Healthcare & Life Sciences">Healthcare & Life Sciences</option>
+              <option value="Human Resources & Recruitment">
+                Human Resources & Recruitment
+              </option>
+              <option value="Healthcare & Life Sciences">
+                Healthcare & Life Sciences
+              </option>
               <option value="Education & Training">Education & Training</option>
-              <option value="Engineering & Manufacturing">Engineering & Manufacturing</option>
+              <option value="Engineering & Manufacturing">
+                Engineering & Manufacturing
+              </option>
               <option value="Creative & Design">Creative & Design</option>
               <option value="Legal & Compliance">Legal & Compliance</option>
-              <option value="Media & Communication">Media & Communication</option>
-              <option value="Logistics & Supply Chain">Logistics & Supply Chain</option>
-              <option value="Customer Service & Support">Customer Service & Support</option>
+              <option value="Media & Communication">
+                Media & Communication
+              </option>
+              <option value="Logistics & Supply Chain">
+                Logistics & Supply Chain
+              </option>
+              <option value="Customer Service & Support">
+                Customer Service & Support
+              </option>
             </select>
-
           </div>
 
           <!-- Employer-Specific Field: Company Name -->
           <div *ngIf="selectedRole === 'employer'" class="form-group">
             <label for="company">Company Name</label>
-            <input id="company" type="text" formControlName="company" placeholder="Enter your company name" />
+            <input
+              id="company"
+              type="text"
+              formControlName="company"
+              placeholder="Enter your company name"
+            />
           </div>
         </div>
 
         <!-- Submit Button: Create Account -->
-        <button type="submit" [disabled]="!registerForm.valid || !selectedRole" class="submit-btn">Create
-          Account</button>
+        <button
+          type="submit"
+          [disabled]="!registerForm.valid || !selectedRole"
+          class="submit-btn"
+        >
+          Create Account
+        </button>
       </form>
 
       <!-- Footer: Link to Sign In page -->

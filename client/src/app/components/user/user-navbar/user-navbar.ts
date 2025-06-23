@@ -12,7 +12,7 @@ import { AlertComponent } from '../../alert/alert.component';
   standalone: true,
   templateUrl: 'user-navbar.html',
   styleUrls: ['./user-navbar.css'],
-  imports: [CommonModule, AlertComponent, ConfirmComponent]
+  imports: [CommonModule, AlertComponent, ConfirmComponent],
 })
 export class UserNavbar implements OnInit {
   // Stores the user's name for display
@@ -38,8 +38,12 @@ export class UserNavbar implements OnInit {
   confirmMessage: string = '';
   showConfirm: boolean = false;
 
-  private showCustomAlert(message: string, type: 'success' | 'error' | 'info', navigate: boolean = false) {
-    console.log("Alert Triggered:", { message, type });
+  private showCustomAlert(
+    message: string,
+    type: 'success' | 'error' | 'info',
+    navigate: boolean = false
+  ) {
+    console.log('Alert Triggered:', { message, type });
 
     this.alertMessage = message;
     this.alertType = type;
@@ -50,14 +54,14 @@ export class UserNavbar implements OnInit {
   // Called when the alert is closed by the user
   onAlertClosed(): void {
     this.showAlert = false;
-    this.router.navigate(['/login'])
+    this.router.navigate(['/login']);
   }
 
   constructor(
     private router: Router,
     private authService: AuthService,
     private notificationService: NotificationsService
-  ) { }
+  ) {}
 
   // On component initialization, get token and user name from AuthService
   ngOnInit(): void {
@@ -120,7 +124,7 @@ export class UserNavbar implements OnInit {
       error: (error) => {
         console.error('Error fetching notifications', error);
         this.loadingNotifications = false;
-      }
+      },
     });
   }
 
@@ -133,11 +137,13 @@ export class UserNavbar implements OnInit {
     this.showMobileMenu = !this.showMobileMenu;
   }
 
-    goToHome(): void {
+  goToHome(): void {
     this.router.navigate(['/']);
   }
 
-  parseNotification(message: string): { jobTitle: string; status: string; statusClass: string } | null {
+  parseNotification(
+    message: string
+  ): { jobTitle: string; status: string; statusClass: string } | null {
     const jobMatch = message.match(/job "(.*?)"/);
     const statusMatch = message.match(/'(Accepted|Rejected|In Progress)'/);
 

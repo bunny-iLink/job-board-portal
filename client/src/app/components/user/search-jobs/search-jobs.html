@@ -1,100 +1,143 @@
-<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()">
+<app-alert
+  [message]="alertMessage"
+  [type]="alertType"
+  [show]="showAlert"
+  (closed)="onAlertClosed()"
+>
 </app-alert>
 
-<app-confirm [show]="showConfirm" [message]="confirmMessage" (confirmed)="onConfirmApply()" (cancelled)="onCancelConfirm()">
+<app-confirm
+  [show]="showConfirm"
+  [message]="confirmMessage"
+  (confirmed)="onConfirmApply()"
+  (cancelled)="onCancelConfirm()"
+>
 </app-confirm>
-
 
 <!-- Container for job search and filters -->
 <div class="search-container">
-    <!-- Search input for job title or keywords -->
-    <input [(ngModel)]="searchTerm" (input)="searchJobs()" placeholder="Search jobs..." />
+  <!-- Search input for job title or keywords -->
+  <input
+    [(ngModel)]="searchTerm"
+    (input)="searchJobs()"
+    placeholder="Search jobs..."
+  />
 
-    <!-- Filter options for job type, experience, and expected salary -->
-    <div class="filters">
-        <label>Type:
-            <select [(ngModel)]="filters.type" (change)="searchJobs()">
-                <option value="">All</option>
-                <option value="Full-Time">Full-Time</option>
-                <option value="Part-Time">Part-Time</option>
-                <option value="Internship">Internship</option>
-                <option value="Remote">Remote</option>
-            </select>
-        </label>
+  <!-- Filter options for job type, experience, and expected salary -->
+  <div class="filters">
+    <label
+      >Type:
+      <select [(ngModel)]="filters.type" (change)="searchJobs()">
+        <option value="">All</option>
+        <option value="Full-Time">Full-Time</option>
+        <option value="Part-Time">Part-Time</option>
+        <option value="Internship">Internship</option>
+        <option value="Remote">Remote</option>
+      </select>
+    </label>
 
-        <label>Experience (in Years):
-            <input type="number" [(ngModel)]="filters.experience" (input)="searchJobs()" placeholder="Years" />
-        </label>
+    <label
+      >Experience (in Years):
+      <input
+        type="number"
+        [(ngModel)]="filters.experience"
+        (input)="searchJobs()"
+        placeholder="Years"
+      />
+    </label>
 
-        <label>Expected Salary (in LPA):
-            <input type="number" [(ngModel)]="filters.expectedSalary" (input)="searchJobs()" />
-        </label>
+    <label
+      >Expected Salary (in LPA):
+      <input
+        type="number"
+        [(ngModel)]="filters.expectedSalary"
+        (input)="searchJobs()"
+      />
+    </label>
+  </div>
+
+  <div *ngIf="showDomainWarning && !loadingJobs" class="warning-message">
+    <p>
+      Please <strong>set your preferred domain</strong> in your profile, or
+      <strong>use the search box or filters</strong> to find relevant jobs.
+    </p>
+  </div>
+
+  <!-- Loading indicator -->
+  <div *ngIf="loadingJobs" class="spinner-container">
+    <div class="spinner"></div>
+    <div>Loading jobs, please wait...</div>
+  </div>
+
+  <!-- Grid of filtered job cards -->
+  <div class="jobs-grid">
+    <div
+      class="job-card"
+      *ngFor="let job of filteredJobs"
+      (click)="openJobModal(job)"
+    >
+      <h4>{{ job.title }}</h4>
+      <p><strong>{{ job.company }}</strong> - {{ job.location }}</p>
+      <p>{{ job.type }} | {{ job.salary }} LPA</p>
     </div>
-
-    <div *ngIf="showDomainWarning && !loadingJobs" class="warning-message">
-        <p>
-            Please <strong>set your preferred domain</strong> in your profile, or
-            <strong>use the search box or filters</strong> to find relevant jobs.
-        </p>
-    </div>
-
-    <!-- Loading indicator -->
-    <div *ngIf="loadingJobs" class="spinner-container">
-        <div class="spinner"></div>
-        <div>Loading jobs, please wait...</div>
-    </div>
-
-    <!-- Grid of filtered job cards -->
-    <div class="jobs-grid">
-        <div class="job-card" *ngFor="let job of filteredJobs" (click)="openJobModal(job)">
-            <h4>{{ job.title }}</h4>
-            <p><strong>{{ job.company }}</strong> - {{ job.location }}</p>
-            <p>{{ job.type }} | {{ job.salary }} LPA</p>
-        </div>
-    </div>
+  </div>
 </div>
 
 <!-- Modal for detailed job information -->
 <div class="modal" *ngIf="showModal">
-    <div class="modal-content">
-        <span class="close-btn" (click)="closeModal()">&times;</span>
+  <div class="modal-content">
+    <span class="close-btn" (click)="closeModal()">&times;</span>
 
-        <h2>{{ selectedJob.title }}</h2>
-        <p><strong>Company:</strong> {{ selectedJob.company }}</p>
-        <p><strong>Employer Name:</strong> {{ selectedJob.employerName}}</p>
-        <p><strong>Location:</strong> {{ selectedJob.location }}</p>
-        <p><strong>Type:</strong> {{ selectedJob.type }}</p>
-        <p><strong>Salary:</strong> ₹{{ selectedJob.salary }} LPA</p>
-        <p><strong>Experience Required:</strong> {{ selectedJob.experience }} Years</p>
-        <p><strong>Vacancies:</strong> {{ selectedJob.vacancies }}</p>
-        <p><strong>Status:</strong> {{ selectedJob.status }}</p>
+    <h2>{{ selectedJob.title }}</h2>
+    <p><strong>Company:</strong> {{ selectedJob.company }}</p>
+    <p><strong>Employer Name:</strong> {{ selectedJob.employerName}}</p>
+    <p><strong>Location:</strong> {{ selectedJob.location }}</p>
+    <p><strong>Type:</strong> {{ selectedJob.type }}</p>
+    <p><strong>Salary:</strong> ₹{{ selectedJob.salary }} LPA</p>
+    <p>
+      <strong>Experience Required:</strong> {{ selectedJob.experience }} Years
+    </p>
+    <p><strong>Vacancies:</strong> {{ selectedJob.vacancies }}</p>
+    <p><strong>Status:</strong> {{ selectedJob.status }}</p>
 
-        <!-- Job description details -->
-        <div *ngIf="selectedJob.description">
-            <p><strong>Overview:</strong></p>
-            <p>{{ selectedJob.description.overview }}</p>
+    <!-- Job description details -->
+    <div *ngIf="selectedJob.description">
+      <p><strong>Overview:</strong></p>
+      <p>{{ selectedJob.description.overview }}</p>
 
-            <p><strong>Responsibilities:</strong></p>
-            <ul>
-                <li *ngFor="let item of selectedJob.description.responsibilities">{{ item }}</li>
-            </ul>
+      <p><strong>Responsibilities:</strong></p>
+      <ul>
+        <li *ngFor="let item of selectedJob.description.responsibilities">
+          {{ item }}
+        </li>
+      </ul>
 
-            <p><strong>Required Skills:</strong></p>
-            <ul>
-                <li *ngFor="let skill of selectedJob.description.requiredSkills">{{ skill }}</li>
-            </ul>
+      <p><strong>Required Skills:</strong></p>
+      <ul>
+        <li *ngFor="let skill of selectedJob.description.requiredSkills">
+          {{ skill }}
+        </li>
+      </ul>
 
-            <p *ngIf="selectedJob.description.preferredSkills?.length"><strong>Preferred Skills:</strong></p>
-            <ul *ngIf="selectedJob.description.preferredSkills?.length">
-                <li *ngFor="let skill of selectedJob.description.preferredSkills">{{ skill }}</li>
-            </ul>
+      <p *ngIf="selectedJob.description.preferredSkills?.length">
+        <strong>Preferred Skills:</strong>
+      </p>
+      <ul *ngIf="selectedJob.description.preferredSkills?.length">
+        <li *ngFor="let skill of selectedJob.description.preferredSkills">
+          {{ skill }}
+        </li>
+      </ul>
 
-            <p *ngIf="selectedJob.description.whatWeOffer?.length"><strong>What We Offer:</strong></p>
-            <ul *ngIf="selectedJob.description.whatWeOffer?.length">
-                <li *ngFor="let benefit of selectedJob.description.whatWeOffer">{{ benefit }}</li>
-            </ul>
-        </div>
-
-        <button (click)="applyToJob(selectedJob)">Apply</button>
+      <p *ngIf="selectedJob.description.whatWeOffer?.length">
+        <strong>What We Offer:</strong>
+      </p>
+      <ul *ngIf="selectedJob.description.whatWeOffer?.length">
+        <li *ngFor="let benefit of selectedJob.description.whatWeOffer">
+          {{ benefit }}
+        </li>
+      </ul>
     </div>
+
+    <button (click)="applyToJob(selectedJob)">Apply</button>
+  </div>
 </div>

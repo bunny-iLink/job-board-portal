@@ -12,7 +12,7 @@ import { ConfirmComponent } from '../../confirm/confirm.component';
   standalone: true,
   imports: [CommonModule, FormsModule, AlertComponent, ConfirmComponent],
   templateUrl: 'search-jobs.html',
-  styleUrls: ['search-jobs.css']
+  styleUrls: ['search-jobs.css'],
 })
 export class SearchJobsComponent implements OnInit {
   allJobs: any[] = [];
@@ -27,7 +27,7 @@ export class SearchJobsComponent implements OnInit {
   filters = {
     type: '',
     experience: '',
-    expectedSalary: ''
+    expectedSalary: '',
   };
 
   alertMessage: string = '';
@@ -44,7 +44,7 @@ export class SearchJobsComponent implements OnInit {
     private jobService: JobService,
     private authService: AuthService,
     private applicationService: ApplicationService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.searchJobs();
@@ -70,7 +70,10 @@ export class SearchJobsComponent implements OnInit {
     }
 
     this.loadingJobs = true;
-    const hasFilters = this.filters.type || this.filters.experience || this.filters.expectedSalary;
+    const hasFilters =
+      this.filters.type ||
+      this.filters.experience ||
+      this.filters.expectedSalary;
     const hasSearch = this.searchTerm.trim().length > 0;
     const hasPreferredDomain = user.preferredDomain?.trim().length > 0;
 
@@ -86,7 +89,7 @@ export class SearchJobsComponent implements OnInit {
         error: (err) => {
           console.error('Error fetching all jobs:', err);
           this.loadingJobs = false;
-        }
+        },
       });
 
       return;
@@ -96,7 +99,7 @@ export class SearchJobsComponent implements OnInit {
 
     const queryParams: any = {
       userId: user._id,
-      search: this.searchTerm.trim()
+      search: this.searchTerm.trim(),
     };
 
     if (user.preferredDomain && user.preferredDomain !== 'null') {
@@ -104,8 +107,10 @@ export class SearchJobsComponent implements OnInit {
     }
 
     if (this.filters.type) queryParams.type = this.filters.type;
-    if (this.filters.experience) queryParams.experience = this.filters.experience;
-    if (this.filters.expectedSalary) queryParams.expectedSalary = this.filters.expectedSalary;
+    if (this.filters.experience)
+      queryParams.experience = this.filters.experience;
+    if (this.filters.expectedSalary)
+      queryParams.expectedSalary = this.filters.expectedSalary;
 
     const queryString = new URLSearchParams(queryParams).toString();
 
@@ -118,7 +123,7 @@ export class SearchJobsComponent implements OnInit {
       error: (err) => {
         console.error('Error fetching jobs:', err);
         this.loadingJobs = false;
-      }
+      },
     });
   }
 
@@ -141,15 +146,25 @@ export class SearchJobsComponent implements OnInit {
     }
 
     if (!user?.name?.trim() || !user?.email?.trim() || !user?.resume?.data) {
-      this.showCustomAlert('Please complete your profile (name, email, and resume are required) before applying.', 'info');
+      this.showCustomAlert(
+        'Please complete your profile (name, email, and resume are required) before applying.',
+        'info'
+      );
       return;
     }
 
-    const recommendedFields = ['phone', 'address', 'experience', 'preferredDomain'];
-    const missingFields = recommendedFields.filter(field => !user[field]);
+    const recommendedFields = [
+      'phone',
+      'address',
+      'experience',
+      'preferredDomain',
+    ];
+    const missingFields = recommendedFields.filter((field) => !user[field]);
 
     if (missingFields.length > 0) {
-      this.confirmMessage = `Your profile is missing recommended info (${missingFields.join(', ')}). Apply anyway?`;
+      this.confirmMessage = `Your profile is missing recommended info (${missingFields.join(
+        ', '
+      )}). Apply anyway?`;
       this.pendingJobApplication = job;
       this.showConfirm = true;
       return;
@@ -184,12 +199,15 @@ export class SearchJobsComponent implements OnInit {
 
     const payload = {
       userId: user._id,
-      jobId: job._id
+      jobId: job._id,
     };
 
     this.applicationService.applyForJob(payload, this.token).subscribe({
       next: (res: any) => {
-        this.showCustomAlert(res.message || 'Application submitted!', 'success');
+        this.showCustomAlert(
+          res.message || 'Application submitted!',
+          'success'
+        );
         this.closeModal();
         this.searchJobs();
       },
@@ -201,11 +219,15 @@ export class SearchJobsComponent implements OnInit {
           this.showCustomAlert('Failed to apply.', 'error');
         }
         this.closeModal();
-      }
+      },
     });
   }
 
-  private showCustomAlert(message: string, type: 'success' | 'error' | 'info', navigate: boolean = false) {
+  private showCustomAlert(
+    message: string,
+    type: 'success' | 'error' | 'info',
+    navigate: boolean = false
+  ) {
     this.alertMessage = message;
     this.alertType = type;
     this.showAlert = true;

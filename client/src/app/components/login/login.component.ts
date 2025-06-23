@@ -1,6 +1,11 @@
 // Angular component for handling user login functionality
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LoginService } from '../../service/login.service';
@@ -11,7 +16,7 @@ import { AlertComponent } from '../alert/alert.component';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, AlertComponent],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
   // Reactive form group for login
@@ -25,8 +30,12 @@ export class LoginComponent {
   showAlert: boolean = false;
   navigateAfterAlert: boolean = false;
 
-  private showCustomAlert(message: string, type: 'success' | 'error' | 'info', navigate: boolean = false) {
-    console.log("Alert Triggered:", { message, type });
+  private showCustomAlert(
+    message: string,
+    type: 'success' | 'error' | 'info',
+    navigate: boolean = false
+  ) {
+    console.log('Alert Triggered:', { message, type });
 
     this.alertMessage = message;
     this.alertType = type;
@@ -52,7 +61,7 @@ export class LoginComponent {
     // Initialize the login form with validators
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]]
+      password: ['', [Validators.required]],
     });
   }
 
@@ -86,7 +95,8 @@ export class LoginComponent {
         this.showCustomAlert('Login successful!', 'success', true);
       },
       error: (error) => {
-        let errorMessage = 'An unexpected error occurred. Please try again later.';
+        let errorMessage =
+          'An unexpected error occurred. Please try again later.';
         const status = error.status;
 
         if (status === 400) {
@@ -100,7 +110,7 @@ export class LoginComponent {
         }
 
         this.showCustomAlert(errorMessage, 'error');
-      }
+      },
     });
   }
 }

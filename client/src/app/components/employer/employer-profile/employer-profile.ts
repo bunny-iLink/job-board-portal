@@ -5,14 +5,14 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../service/auth.service';
 import { EmployerService } from '../../../service/employer.service';
 import { AlertComponent } from '../../alert/alert.component';
-import { ConfirmComponent } from '../../confirm/confirm.component'
+import { ConfirmComponent } from '../../confirm/confirm.component';
 
 @Component({
   selector: 'app-employer-profile',
   standalone: true,
   imports: [CommonModule, FormsModule, AlertComponent, ConfirmComponent],
   templateUrl: 'employer-profile.html',
-  styleUrls: ['./employer-profile.css']
+  styleUrls: ['./employer-profile.css'],
 })
 export class EmployerProfileComponent implements OnInit {
   employerId: string | null = null;
@@ -32,11 +32,11 @@ export class EmployerProfileComponent implements OnInit {
   showAlert: boolean = false;
 
   // Variables for confirm
-  confirmMessage: string = "";
+  confirmMessage: string = '';
   showConfirm: boolean = false;
 
   private showCustomAlert(message: string, type: 'success' | 'error' | 'info') {
-    console.log("Alert Triggered:", { message, type });
+    console.log('Alert Triggered:', { message, type });
 
     this.alertMessage = message;
     this.alertType = type;
@@ -56,7 +56,7 @@ export class EmployerProfileComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private employerService: EmployerService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.employerId = this.authService.getUserId();
@@ -70,7 +70,8 @@ export class EmployerProfileComponent implements OnInit {
 
   fetchEmployer() {
     this.loading = true;
-    this.employerService.getEmployerData(this.employerId!, this.token!)
+    this.employerService
+      .getEmployerData(this.employerId!, this.token!)
       .subscribe({
         next: (data: any) => {
           this.employer = data.employer;
@@ -83,7 +84,7 @@ export class EmployerProfileComponent implements OnInit {
         },
         complete: () => {
           this.loading = false;
-        }
+        },
       });
   }
 
@@ -104,11 +105,12 @@ export class EmployerProfileComponent implements OnInit {
     if (this.selectedBase64 && this.selectedMimeType) {
       updatedEmployer.profilePicture = {
         data: this.selectedBase64,
-        contentType: this.selectedMimeType
+        contentType: this.selectedMimeType,
       };
     }
 
-    this.employerService.updateEmployer(this.employerId!, updatedEmployer, this.token!)
+    this.employerService
+      .updateEmployer(this.employerId!, updatedEmployer, this.token!)
       .subscribe({
         next: () => {
           this.success = 'Profile updated successfully!';
@@ -119,7 +121,7 @@ export class EmployerProfileComponent implements OnInit {
         },
         error: () => {
           this.error = 'Failed to update profile.';
-        }
+        },
       });
   }
 
@@ -128,12 +130,15 @@ export class EmployerProfileComponent implements OnInit {
     if (!this.employerId) return;
 
     // Confirm with the user before deleting the profile
-    this.showCustomConfirm('Are you sure you want to delete your profile? This action cannot be undone.')
+    this.showCustomConfirm(
+      'Are you sure you want to delete your profile? This action cannot be undone.'
+    );
   }
 
   onConfirmDelete() {
     // Send DELETE request to backend to remove employer profile
-    this.employerService.deleteEmployer(this.employerId!, this.token!)
+    this.employerService
+      .deleteEmployer(this.employerId!, this.token!)
       .subscribe({
         next: () => {
           alert('Profile deleted successfully.');
@@ -147,7 +152,7 @@ export class EmployerProfileComponent implements OnInit {
         },
         error: () => {
           this.error = 'Failed to delete profile.';
-        }
+        },
       });
   }
 

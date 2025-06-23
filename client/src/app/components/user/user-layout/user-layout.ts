@@ -7,8 +7,6 @@ import { NavbarComponent } from '../../navbar/navbar';
   standalone: true,
   imports: [RouterOutlet, NavbarComponent],
   templateUrl: 'user-layout.html',
-  styleUrl: './user-layout.css'
+  styleUrl: './user-layout.css',
 })
-export class UserLayoutComponent {
-
-}
+export class UserLayoutComponent {}

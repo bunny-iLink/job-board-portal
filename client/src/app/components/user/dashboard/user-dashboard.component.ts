@@ -10,10 +10,10 @@ import { NgxEchartsModule, provideEchartsCore } from 'ngx-echarts';
   standalone: true,
   imports: [CommonModule, NgxEchartsModule],
   providers: [
-    provideEchartsCore({ echarts: () => import('echarts') }) // 👈 REQUIRED
+    provideEchartsCore({ echarts: () => import('echarts') }), 
   ],
   templateUrl: 'user-dashboard.component.html',
-  styleUrls: ['user-dashboard.component.css']
+  styleUrls: ['user-dashboard.component.css'],
 })
 export class UserDashboardComponent implements OnInit {
   // User data object
@@ -33,7 +33,11 @@ export class UserDashboardComponent implements OnInit {
   isUserLoading = false;
   isJobsLoading = false;
 
-  constructor(private userService: UserService, private authService: AuthService, private jobService: JobService) { }
+  constructor(
+    private userService: UserService,
+    private authService: AuthService,
+    private jobService: JobService
+  ) {}
 
   // After the view initializes, load user data from localStorage and API
   ngOnInit(): void {
@@ -52,7 +56,7 @@ export class UserDashboardComponent implements OnInit {
           this.fetchDomainChart();
         }
       } else {
-        console.warn("No valid employer");
+        console.warn('No valid employer');
       }
     }
   }
@@ -60,8 +64,7 @@ export class UserDashboardComponent implements OnInit {
   // Load user data from localStorage and fetch from backend
   loadUserData() {
     if (typeof window !== 'undefined') {
-
-      const storedData = this.authService.getUser();;
+      const storedData = this.authService.getUser();
 
       if (storedData && storedData !== 'null') {
         this.userId = storedData._id;
@@ -73,11 +76,11 @@ export class UserDashboardComponent implements OnInit {
             this.isUserLoading = false;
             // this.loadAppliedJobs();
           },
-          error: err => {
+          error: (err) => {
             console.error('Failed to load user data:', err);
             this.user = null;
             this.isUserLoading = false;
-          }
+          },
         });
       } else {
         console.warn('No valid user in localStorage.');
@@ -98,65 +101,68 @@ export class UserDashboardComponent implements OnInit {
         console.log('Applied jobs:', this.appliedJobs);
         this.isJobsLoading = false;
       },
-      error: err => {
+      error: (err) => {
         console.error('Failed to load applied jobs:', err);
         this.isJobsLoading = false;
-      }
+      },
     });
   }
 
   fetchStatusChart() {
-  this.isChartLoading = true;
+    this.isChartLoading = true;
 
-  this.userService.getUserStatusSummary(this.userId!, this.token!).subscribe({
-    next: (statusCounts: any) => {
-      const pieData = Object.entries(statusCounts).map(([status, count]) => ({
-        name: status,
-        value: count
-      }));
+    this.userService.getUserStatusSummary(this.userId!, this.token!).subscribe({
+      next: (statusCounts: any) => {
+        const pieData = Object.entries(statusCounts).map(([status, count]) => ({
+          name: status,
+          value: count,
+        }));
 
-      this.pieChartOptions = {
-        title: { text: 'Application Status', left: 'left', top: 10 },
-        tooltip: { trigger: 'item' },
-        legend: { orient: 'vertical', left: 'right' },
-        series: [{
-          name: 'Applications',
-          type: 'pie',
-          radius: '50%',
-          data: pieData
-        }]
-      };
-    },
-    complete: () => this.isChartLoading = false,
-    error: err => console.error('Status chart error:', err)
-  });
-}
+        this.pieChartOptions = {
+          title: { text: 'Application Status', left: 'left', top: 10 },
+          tooltip: { trigger: 'item' },
+          legend: { orient: 'vertical', left: 'right' },
+          series: [
+            {
+              name: 'Applications',
+              type: 'pie',
+              radius: '50%',
+              data: pieData,
+            },
+          ],
+        };
+      },
+      complete: () => (this.isChartLoading = false),
+      error: (err) => console.error('Status chart error:', err),
+    });
+  }
 
-fetchDomainChart() {
-  this.isChartLoading = true;
+  fetchDomainChart() {
+    this.isChartLoading = true;
 
-  this.userService.getDomainSummary(this.userId!, this.token!).subscribe({
-    next: (domainData: any[]) => {
-      const domains = domainData.map(d => d.domain);  // ✅ FIXED here
-      const counts = domainData.map(d => d.count);     // e.g. 4
+    this.userService.getDomainSummary(this.userId!, this.token!).subscribe({
+      next: (domainData: any[]) => {
+        const domains = domainData.map((d) => d.domain); // ✅ FIXED here
+        const counts = domainData.map((d) => d.count); // e.g. 4
 
-      this.barChartOptions = {
-        title: { text: 'Applications by Job Domain' },
-        tooltip: {},
-        xAxis: {
-          type: 'category',
-          data: domains
-        },
-        yAxis: { type: 'value' },
-        series: [{
-          data: counts,
-          type: 'bar'
-        }]
-      };
-    },
-    complete: () => this.isChartLoading = false,
-    error: err => console.error('Domain chart error:', err)
-  });
-}
-
+        this.barChartOptions = {
+          title: { text: 'Applications by Job Domain' },
+          tooltip: {},
+          xAxis: {
+            type: 'category',
+            data: domains,
+          },
+          yAxis: { type: 'value' },
+          series: [
+            {
+              data: counts,
+              type: 'bar',
+            },
+          ],
+        };
+      },
+      complete: () => (this.isChartLoading = false),
+      error: (err) => console.error('Domain chart error:', err),
+    });
+  }
 }

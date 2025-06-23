@@ -24,7 +24,8 @@ export const authGuard: CanActivateFn = (route, state) => {
 
         // If route restricts roles and user's role is not allowed, redirect accordingly
         if (allowedRoles && !allowedRoles.includes(role)) {
-          if (role === 'employer') return router.parseUrl('/employer/dashboard');
+          if (role === 'employer')
+            return router.parseUrl('/employer/dashboard');
           if (role === 'user') return router.parseUrl('/user/dashboard');
           return router.parseUrl('/unauthorized'); // fallback redirect
         }

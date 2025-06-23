@@ -35,7 +35,7 @@ interface Job {
   selector: 'app-my-listings',
   templateUrl: 'my-listings.html',
   styleUrls: ['./my-listings.css'],
-  imports: [CommonModule, FormsModule, ConfirmComponent, AlertComponent]
+  imports: [CommonModule, FormsModule, ConfirmComponent, AlertComponent],
 })
 export class MyListingsComponent implements OnInit {
   // List of jobs for the employer
@@ -62,9 +62,9 @@ export class MyListingsComponent implements OnInit {
   showAlert: boolean = false;
 
   // Variables for Confirm
-  confirmMessage: string = ""
+  confirmMessage: string = '';
   showConfirm: boolean = false;
-  jobIdToDelete: string = "";
+  jobIdToDelete: string = '';
 
   private showCustomConfirm(message: string) {
     this.confirmMessage = message;
@@ -73,7 +73,11 @@ export class MyListingsComponent implements OnInit {
 
   loading = false;
 
-  constructor(private http: HttpClient, private authService: AuthService, private jobService: JobService) { }
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+    private jobService: JobService
+  ) {}
 
   ngOnInit() {
     // Load employer and token from localStorage via AuthService
@@ -88,7 +92,6 @@ export class MyListingsComponent implements OnInit {
 
     this.fetchJobs();
   }
-
 
   // Returns a blank job object for form reset
   getEmptyJob(): Job {
@@ -110,12 +113,12 @@ export class MyListingsComponent implements OnInit {
       type: '',
       experience: '',
       vacancies: null as any,
-      status: 'open'
+      status: 'open',
     };
   }
 
   private showCustomAlert(message: string, type: 'success' | 'error' | 'info') {
-    console.log("Alert Triggered:", { message, type });
+    console.log('Alert Triggered:', { message, type });
 
     this.alertMessage = message;
     this.alertType = type;
@@ -147,7 +150,7 @@ export class MyListingsComponent implements OnInit {
       error: (err) => {
         console.error('Failed to fetch jobs:', err);
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -179,7 +182,10 @@ export class MyListingsComponent implements OnInit {
 
   // Convert comma-separated string to array for form fields
   toArray(str: string): string[] {
-    return str.split(',').map(s => s.trim()).filter(Boolean);
+    return str
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
   }
 
   // Convert array to comma-separated string for form fields
@@ -203,18 +209,20 @@ export class MyListingsComponent implements OnInit {
         ...this.jobForm.description,
         preferredSkills: this.jobForm.description.preferredSkills || [],
         whatWeOffer: this.jobForm.description.whatWeOffer || [],
-      }
+      },
     };
 
     if (this.isEditMode && this.selectedJobId) {
-      this.jobService.updateJob(this.selectedJobId, payload, this.token!).subscribe({
-        next: () => {
-          this.showCustomAlert('Job updated successfully!', 'success');
-          this.fetchJobs();
-          this.closeModal();
-        },
-        error: (err) => console.error('Failed to update job:', err)
-      });
+      this.jobService
+        .updateJob(this.selectedJobId, payload, this.token!)
+        .subscribe({
+          next: () => {
+            this.showCustomAlert('Job updated successfully!', 'success');
+            this.fetchJobs();
+            this.closeModal();
+          },
+          error: (err) => console.error('Failed to update job:', err),
+        });
     } else {
       this.jobService.addJob(payload, this.token!).subscribe({
         next: () => {
@@ -222,7 +230,7 @@ export class MyListingsComponent implements OnInit {
           this.fetchJobs();
           this.closeModal();
         },
-        error: (err) => console.error('Failed to add job:', err)
+        error: (err) => console.error('Failed to add job:', err),
       });
     }
   }
@@ -230,16 +238,18 @@ export class MyListingsComponent implements OnInit {
   // Delete a job after confirmation
   deleteJob(jobId: string) {
     this.jobIdToDelete = jobId;
-    this.showCustomConfirm('Are you sure you want to delete this job? This action cannot be undone.')
+    this.showCustomConfirm(
+      'Are you sure you want to delete this job? This action cannot be undone.'
+    );
   }
 
   onConfirmDelete() {
     this.jobService.deleteJob(this.jobIdToDelete!, this.token!).subscribe({
       next: () => {
-        this.showCustomAlert("Job deleted successfully!", "success"),
-          this.fetchJobs()
+        this.showCustomAlert('Job deleted successfully!', 'success'),
+          this.fetchJobs();
       },
-      error: (err) => console.error('Failed to delete job:', err)
+      error: (err) => console.error('Failed to delete job:', err),
     });
     this.showConfirm = false;
   }

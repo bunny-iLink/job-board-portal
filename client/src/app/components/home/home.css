@@ -28,7 +28,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d');
+  background-image: url("https://images.unsplash.com/photo-1504384308090-c894fdcc538d");
   background-size: cover;
   background-position: center;
   opacity: 0.2;

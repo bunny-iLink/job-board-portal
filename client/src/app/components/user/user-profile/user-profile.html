@@ -1,109 +1,148 @@
-<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()">
+<app-alert
+  [message]="alertMessage"
+  [type]="alertType"
+  [show]="showAlert"
+  (closed)="onAlertClosed()"
+>
 </app-alert>
 
-<app-confirm [message]="confirmMessage" [show]="showConfirm" (confirmed)="onConfirmDelete()" (cancelled)="onCancelConfirm()">
+<app-confirm
+  [message]="confirmMessage"
+  [show]="showConfirm"
+  (confirmed)="onConfirmDelete()"
+  (cancelled)="onCancelConfirm()"
+>
 </app-confirm>
 
 <div *ngIf="loading" class="spinner-container">
-    <div class="spinner"></div>
-    <div class="loading-text">
-        Loading profile...
-    </div>
+  <div class="spinner"></div>
+  <div class="loading-text">Loading profile...</div>
 </div>
 
 <div *ngIf="error" class="error">{{ error }}</div>
 
 <div *ngIf="!loading && !error" class="profile-container">
-    <form (ngSubmit)="updateProfile()">
-        <h2>User Profile</h2>
+  <form (ngSubmit)="updateProfile()">
+    <h2>User Profile</h2>
 
-        <div class="profile-picture-section">
-            <div class="current-picture">
-                <img *ngIf="user?.profilePicture?.data && user?.profilePicture?.contentType"
-                    [src]="'data:' + user.profilePicture.contentType + ';base64,' + user.profilePicture.data"
-                    alt="Profile Picture" class="profile-picture" />
+    <div class="profile-picture-section">
+      <div class="current-picture">
+        <img
+          *ngIf="user?.profilePicture?.data && user?.profilePicture?.contentType"
+          [src]="'data:' + user.profilePicture.contentType + ';base64,' + user.profilePicture.data"
+          alt="Profile Picture"
+          class="profile-picture"
+        />
 
-                <div *ngIf="!user?.profilePicture?.data" class="no-picture">
-                    No profile picture
-                </div>
-            </div>
-
-            <div class="upload-section">
-                <input type="file" (change)="onProfilePictureSelected($event)" accept="image/*" />
-            </div>
+        <div *ngIf="!user?.profilePicture?.data" class="no-picture">
+          No profile picture
         </div>
+      </div>
 
-        <label>
-            Name:
-            <input type="text" [(ngModel)]="user.name" name="name" required />
-        </label>
+      <div class="upload-section">
+        <input
+          type="file"
+          (change)="onProfilePictureSelected($event)"
+          accept="image/*"
+        />
+      </div>
+    </div>
 
-        <label>
-            Email:
-            <input type="email" [(ngModel)]="user.email" name="email" required />
-        </label>
+    <label>
+      Name:
+      <input type="text" [(ngModel)]="user.name" name="name" required />
+    </label>
 
-        <label>
-            Password:
-            <input type="password" [(ngModel)]="user.password" name="password" />
-        </label>
+    <label>
+      Email:
+      <input type="email" [(ngModel)]="user.email" name="email" required />
+    </label>
 
-        <label>
-            Role:
-            <input type="text" [(ngModel)]="user.role" name="role" readonly />
-        </label>
+    <label>
+      Password:
+      <input type="password" [(ngModel)]="user.password" name="password" />
+    </label>
 
-        <label>
-            Address:
-            <input type="text" [(ngModel)]="user.address" name="company" />
-        </label>
+    <label>
+      Role:
+      <input type="text" [(ngModel)]="user.role" name="role" readonly />
+    </label>
 
-        <label>
-            Experience (years):
-            <input type="number" [(ngModel)]="user.experience" name="experience" />
-        </label>
+    <label>
+      Address:
+      <input type="text" [(ngModel)]="user.address" name="company" />
+    </label>
 
-        <label>
-            Phone:
-            <input type="text" [(ngModel)]="user.phone" name="designation" />
-        </label>
+    <label>
+      Experience (years):
+      <input type="number" [(ngModel)]="user.experience" name="experience" />
+    </label>
 
-        <label>
-            Preferred Domain:
-            <select id="preferredDomain" [(ngModel)]="user.preferredDomain" name="preferredDomain">
-                <option value="">Select preferred domain</option>
-                <option value="Technology & IT">Technology & IT</option>
-                <option value="Sales & Marketing">Sales & Marketing</option>
-                <option value="Business & Management">Business & Management</option>
-                <option value="Finance & Accounting">Finance & Accounting</option>
-                <option value="Human Resources & Recruitment">Human Resources & Recruitment</option>
-                <option value="Healthcare & Life Sciences">Healthcare & Life Sciences</option>
-                <option value="Education & Training">Education & Training</option>
-                <option value="Engineering & Manufacturing">Engineering & Manufacturing</option>
-                <option value="Creative & Design">Creative & Design</option>
-                <option value="Legal & Compliance">Legal & Compliance</option>
-                <option value="Media & Communication">Media & Communication</option>
-                <option value="Logistics & Supply Chain">Logistics & Supply Chain</option>
-                <option value="Customer Service & Support">Customer Service & Support</option>
-            </select>
-        </label>
+    <label>
+      Phone:
+      <input type="text" [(ngModel)]="user.phone" name="designation" />
+    </label>
 
-        <div class="resume-section">
-            <div class="current-resume">
-                <a *ngIf="resumeURL" (click)="openResume()" target="_blank" rel="noopener noreferrer">
-                    View Resume
-                </a>
-                <div *ngIf="!resumeURL">No resume uploaded</div>
-            </div>
-            <div class="upload-section">
-                <input type="file" (change)="onResumeSelected($event)" accept="application/pdf" />
-            </div>
-        </div>
+    <label>
+      Preferred Domain:
+      <select
+        id="preferredDomain"
+        [(ngModel)]="user.preferredDomain"
+        name="preferredDomain"
+      >
+        <option value="">Select preferred domain</option>
+        <option value="Technology & IT">Technology & IT</option>
+        <option value="Sales & Marketing">Sales & Marketing</option>
+        <option value="Business & Management">Business & Management</option>
+        <option value="Finance & Accounting">Finance & Accounting</option>
+        <option value="Human Resources & Recruitment">
+          Human Resources & Recruitment
+        </option>
+        <option value="Healthcare & Life Sciences">
+          Healthcare & Life Sciences
+        </option>
+        <option value="Education & Training">Education & Training</option>
+        <option value="Engineering & Manufacturing">
+          Engineering & Manufacturing
+        </option>
+        <option value="Creative & Design">Creative & Design</option>
+        <option value="Legal & Compliance">Legal & Compliance</option>
+        <option value="Media & Communication">Media & Communication</option>
+        <option value="Logistics & Supply Chain">
+          Logistics & Supply Chain
+        </option>
+        <option value="Customer Service & Support">
+          Customer Service & Support
+        </option>
+      </select>
+    </label>
 
+    <div class="resume-section">
+      <div class="current-resume">
+        <a
+          *ngIf="resumeURL"
+          (click)="openResume()"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          View Resume
+        </a>
+        <div *ngIf="!resumeURL">No resume uploaded</div>
+      </div>
+      <div class="upload-section">
+        <input
+          type="file"
+          (change)="onResumeSelected($event)"
+          accept="application/pdf"
+        />
+      </div>
+    </div>
 
-        <div class="buttons">
-            <button type="submit">Save Changes</button>
-            <button type="button" (click)="deleteProfile()" class="delete-btn">Delete Profile</button>
-        </div>
-    </form>
+    <div class="buttons">
+      <button type="submit">Save Changes</button>
+      <button type="button" (click)="deleteProfile()" class="delete-btn">
+        Delete Profile
+      </button>
+    </div>
+  </form>
 </div>

@@ -1,19 +1,39 @@
-import { Router } from 'express';
+import { Router } from "express";
 import {
-    addUser, addEmployer, getEmployerData, getUserData,
-    updateUserData, updateEmployerData, deleteUserData, deleteEmployerData,
-} from '../controllers/userController.js';
-import { loginUser } from '../controllers/loginController.js';
+  addUser,
+  addEmployer,
+  getEmployerData,
+  getUserData,
+  updateUserData,
+  updateEmployerData,
+  deleteUserData,
+  deleteEmployerData,
+} from "../controllers/userController.js";
+import { loginUser } from "../controllers/loginController.js";
 import {
-    addJob, deleteJob, updateJob,
-    getJobsSummaryForEmployer, getJobsByDomain, getJobById,
-    getJobsForEmployer, searchJobsForUsers
-} from '../controllers/jobsController.js';
-import { applyForJob, updateApplicationStatus, getUserAppliedJobs, revokeApplication } from '../controllers/applicationController.js';
-import { getUserNotifications } from '../controllers/notificationController.js';
-import { verifyToken } from '../middleware/authMiddleware.js';
-import { requireRole } from '../middleware/authMiddleware.js';
-import { getApplicationsByDomain, getApplicationsDataForEmployerBasedOnStatus, getApplicationsDataForUserBasedOnStatus } from '../controllers/chartsDataController.js';
+  addJob,
+  deleteJob,
+  updateJob,
+  getJobsSummaryForEmployer,
+  getJobsByDomain,
+  getJobById,
+  getJobsForEmployer,
+  searchJobsForUsers,
+} from "../controllers/jobsController.js";
+import {
+  applyForJob,
+  updateApplicationStatus,
+  getUserAppliedJobs,
+  revokeApplication,
+} from "../controllers/applicationController.js";
+import { getUserNotifications } from "../controllers/notificationController.js";
+import { verifyToken } from "../middleware/authMiddleware.js";
+import { requireRole } from "../middleware/authMiddleware.js";
+import {
+  getApplicationsByDomain,
+  getApplicationsDataForEmployerBasedOnStatus,
+  getApplicationsDataForUserBasedOnStatus,
+} from "../controllers/chartsDataController.js";
 
 const router = Router();
 
@@ -49,7 +69,7 @@ const router = Router();
  *       400:
  *         description: Invalid input
  */
-router.post('/addUser', addUser);
+router.post("/addUser", addUser);
 
 /**
  * @swagger
@@ -88,7 +108,7 @@ router.post('/addUser', addUser);
  *       400:
  *         description: Invalid input
  */
-router.post('/addEmployer', addEmployer);
+router.post("/addEmployer", addEmployer);
 
 /**
  * @swagger
@@ -117,7 +137,7 @@ router.post('/addEmployer', addEmployer);
  *       401:
  *         description: Invalid credentials
  */
-router.post('/login', loginUser);
+router.post("/login", loginUser);
 
 /**
  * @swagger
@@ -192,7 +212,7 @@ router.post('/login', loginUser);
  *       400:
  *         description: Validation error
  */
-router.post('/addJob', verifyToken, requireRole("employer"), addJob);
+router.post("/addJob", verifyToken, requireRole("employer"), addJob);
 
 /**
  * @swagger
@@ -223,7 +243,7 @@ router.post('/addJob', verifyToken, requireRole("employer"), addJob);
  *       400:
  *         description: Invalid input
  */
-router.post('/applyForJob/', verifyToken, requireRole("user"), applyForJob)
+router.post("/applyForJob/", verifyToken, requireRole("user"), applyForJob);
 
 // GET methods
 
@@ -246,7 +266,12 @@ router.post('/applyForJob/', verifyToken, requireRole("user"), applyForJob)
  *       404:
  *         description: Employer or jobs not found
  */
-router.get('/getJobs/:employerId', verifyToken, requireRole("employer"), getJobsForEmployer);
+router.get(
+  "/getJobs/:employerId",
+  verifyToken,
+  requireRole("employer"),
+  getJobsForEmployer
+);
 
 /**
  * @swagger
@@ -267,7 +292,12 @@ router.get('/getJobs/:employerId', verifyToken, requireRole("employer"), getJobs
  *       404:
  *         description: Employer not found
  */
-router.get('/getEmployerData/:employerId', verifyToken, requireRole("employer"), getEmployerData);
+router.get(
+  "/getEmployerData/:employerId",
+  verifyToken,
+  requireRole("employer"),
+  getEmployerData
+);
 
 /**
  * @swagger
@@ -288,7 +318,7 @@ router.get('/getEmployerData/:employerId', verifyToken, requireRole("employer"),
  *       404:
  *         description: User not found
  */
-router.get('/getUserData/:userId', getUserData);
+router.get("/getUserData/:userId", getUserData);
 
 /**
  * @swagger
@@ -309,7 +339,12 @@ router.get('/getUserData/:userId', getUserData);
  *       404:
  *         description: Employer not found
  */
-router.get('/employer/:employerId/jobs-summary', verifyToken, requireRole("employer"), getJobsSummaryForEmployer);
+router.get(
+  "/employer/:employerId/jobs-summary",
+  verifyToken,
+  requireRole("employer"),
+  getJobsSummaryForEmployer
+);
 
 /**
  * @swagger
@@ -330,7 +365,12 @@ router.get('/employer/:employerId/jobs-summary', verifyToken, requireRole("emplo
  *       404:
  *         description: User or notifications not found
  */
-router.get('/notifications/:userId', verifyToken, requireRole("user"), getUserNotifications)
+router.get(
+  "/notifications/:userId",
+  verifyToken,
+  requireRole("user"),
+  getUserNotifications
+);
 
 /**
  * @swagger
@@ -351,7 +391,7 @@ router.get('/notifications/:userId', verifyToken, requireRole("user"), getUserNo
  *       404:
  *         description: User or applications not found
  */
-router.get('/appliedJobs/:userId', getUserAppliedJobs);
+router.get("/appliedJobs/:userId", getUserAppliedJobs);
 
 /**
  * @swagger
@@ -363,7 +403,7 @@ router.get('/appliedJobs/:userId', getUserAppliedJobs);
  *       200:
  *         description: Jobs grouped by domain
  */
-router.get('/jobs-by-domain', getJobsByDomain);
+router.get("/jobs-by-domain", getJobsByDomain);
 
 /**
  * @swagger
@@ -384,7 +424,12 @@ router.get('/jobs-by-domain', getJobsByDomain);
  *       404:
  *         description: Job not found
  */
-router.get('/getJobById/:jobId', verifyToken, requireRole("employer"), getJobById);
+router.get(
+  "/getJobById/:jobId",
+  verifyToken,
+  requireRole("employer"),
+  getJobById
+);
 
 /**
  * @swagger
@@ -402,7 +447,7 @@ router.get('/getJobById/:jobId', verifyToken, requireRole("employer"), getJobByI
  *       200:
  *         description: List of matching jobs
  */
-router.get('/getJobsForUser', searchJobsForUsers)
+router.get("/getJobsForUser", searchJobsForUsers);
 
 /**
  * @swagger
@@ -420,7 +465,7 @@ router.get('/getJobsForUser', searchJobsForUsers)
  *       200:
  *         description: Filtered job results
  */
-router.get('/searchJobs', searchJobsForUsers);
+router.get("/searchJobs", searchJobsForUsers);
 
 /**
  * @swagger
@@ -466,9 +511,15 @@ router.get('/searchJobs', searchJobsForUsers);
  *       500:
  *         description: Internal server error
  */
-router.get('/echartStatus/:userId', getApplicationsDataForEmployerBasedOnStatus)
+router.get(
+  "/echartStatus/:userId",
+  getApplicationsDataForEmployerBasedOnStatus
+);
 
-router.get('/user/:userId/status-summary', getApplicationsDataForUserBasedOnStatus);
+router.get(
+  "/user/:userId/status-summary",
+  getApplicationsDataForUserBasedOnStatus
+);
 
 /**
  * @swagger
@@ -508,7 +559,7 @@ router.get('/user/:userId/status-summary', getApplicationsDataForUserBasedOnStat
  *       500:
  *         description: Internal server error
  */
-router.get('/user/:userId/applications-by-domain', getApplicationsByDomain)
+router.get("/user/:userId/applications-by-domain", getApplicationsByDomain);
 
 // PUT methods
 
@@ -544,7 +595,12 @@ router.get('/user/:userId/applications-by-domain', getApplicationsByDomain)
  *       404:
  *         description: Job not found
  */
-router.put('/updateJob/:jobId', verifyToken, requireRole("employer"), updateJob);
+router.put(
+  "/updateJob/:jobId",
+  verifyToken,
+  requireRole("employer"),
+  updateJob
+);
 
 /**
  * @swagger
@@ -575,7 +631,12 @@ router.put('/updateJob/:jobId', verifyToken, requireRole("employer"), updateJob)
  *       404:
  *         description: User not found
  */
-router.put('/updateUser/:userId', verifyToken, requireRole("user"), updateUserData);
+router.put(
+  "/updateUser/:userId",
+  verifyToken,
+  requireRole("user"),
+  updateUserData
+);
 
 /**
  * @swagger
@@ -606,7 +667,7 @@ router.put('/updateUser/:userId', verifyToken, requireRole("user"), updateUserDa
  *       404:
  *         description: Employer not found
  */
-router.put('/updateEmployer/:employerId', updateEmployerData);
+router.put("/updateEmployer/:employerId", updateEmployerData);
 
 /**
  * @swagger
@@ -640,7 +701,12 @@ router.put('/updateEmployer/:employerId', updateEmployerData);
  *       400:
  *         description: Invalid status
  */
-router.put('/:applicationId/status', verifyToken, requireRole("employer"), updateApplicationStatus);
+router.put(
+  "/:applicationId/status",
+  verifyToken,
+  requireRole("employer"),
+  updateApplicationStatus
+);
 
 // DELETE methods
 
@@ -663,7 +729,12 @@ router.put('/:applicationId/status', verifyToken, requireRole("employer"), updat
  *       404:
  *         description: Job not found
  */
-router.delete('/deleteJob/:jobId', verifyToken, requireRole("employer"), deleteJob);
+router.delete(
+  "/deleteJob/:jobId",
+  verifyToken,
+  requireRole("employer"),
+  deleteJob
+);
 
 /**
  * @swagger
@@ -684,7 +755,12 @@ router.delete('/deleteJob/:jobId', verifyToken, requireRole("employer"), deleteJ
  *       404:
  *         description: User not found
  */
-router.delete('/deleteUser/:userId', verifyToken, requireRole("user"), deleteUserData);
+router.delete(
+  "/deleteUser/:userId",
+  verifyToken,
+  requireRole("user"),
+  deleteUserData
+);
 
 /**
  * @swagger
@@ -705,7 +781,12 @@ router.delete('/deleteUser/:userId', verifyToken, requireRole("user"), deleteUse
  *       404:
  *         description: Employer not found
  */
-router.delete('/deleteEmployer/:employerId', verifyToken, requireRole("employer"), deleteEmployerData);
+router.delete(
+  "/deleteEmployer/:employerId",
+  verifyToken,
+  requireRole("employer"),
+  deleteEmployerData
+);
 
 /**
  * @swagger
@@ -726,6 +807,11 @@ router.delete('/deleteEmployer/:employerId', verifyToken, requireRole("employer"
  *       404:
  *         description: Application not found
  */
-router.delete('/revokeApplication/:application_id', verifyToken, requireRole("user"), revokeApplication);
+router.delete(
+  "/revokeApplication/:application_id",
+  verifyToken,
+  requireRole("user"),
+  revokeApplication
+);
 
 export default router;

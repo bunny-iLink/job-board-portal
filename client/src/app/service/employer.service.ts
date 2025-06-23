@@ -1,45 +1,63 @@
-import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { environment } from "../environments/environment";
-import { Observable } from "rxjs";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class EmployerService {
-    constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-    getEmployerData(employerId: string, token: string): Observable<any> {
-        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-        return this.http.get<any>(`${environment.apiUrl}/getEmployerData/${employerId}`, { headers })
-    }
+  getEmployerData(employerId: string, token: string): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any>(
+      `${environment.apiUrl}/getEmployerData/${employerId}`,
+      { headers }
+    );
+  }
 
-    updateEmployer(employerId: string, data: any, token: string): Observable<any> {
-        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-        return this.http.put(`${environment.apiUrl}/updateEmployer/${employerId}`, data, { headers });
-    }
+  updateEmployer(
+    employerId: string,
+    data: any,
+    token: string
+  ): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.put(
+      `${environment.apiUrl}/updateEmployer/${employerId}`,
+      data,
+      { headers }
+    );
+  }
 
-    deleteEmployer(employerId: string, token: string): Observable<any> {
-        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-        return this.http.delete(`${environment.apiUrl}/deleteEmployer/${employerId}`, { headers })
-    }
+  deleteEmployer(employerId: string, token: string): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.delete(
+      `${environment.apiUrl}/deleteEmployer/${employerId}`,
+      { headers }
+    );
+  }
 
-    getApplicationStatusSummary(employerId: string, token: string) {
-        return this.http.get<any>(`${environment.apiUrl}/echartStatus/${employerId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-  });
-}
-getStatusSummary(userId: string, token: string) {
-  return this.http.get<any>(`${environment.apiUrl}/echartStatus/${userId}`, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-}
+  getApplicationStatusSummary(employerId: string, token: string) {
+    return this.http.get<any>(
+      `${environment.apiUrl}/echartStatus/${employerId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+  }
+  getStatusSummary(userId: string, token: string) {
+    return this.http.get<any>(`${environment.apiUrl}/echartStatus/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  }
 
-getDomainSummary(userId: string, token: string) {
-  return this.http.get<any[]>(`${environment.apiUrl}/user/${userId}/applications-by-domain`, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-}
-
+  getDomainSummary(userId: string, token: string) {
+    return this.http.get<any[]>(
+      `${environment.apiUrl}/user/${userId}/applications-by-domain`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+  }
 }

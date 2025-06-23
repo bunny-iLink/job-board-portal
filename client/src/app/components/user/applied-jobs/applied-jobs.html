@@ -1,7 +1,17 @@
-<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()">
+<app-alert
+  [message]="alertMessage"
+  [type]="alertType"
+  [show]="showAlert"
+  (closed)="onAlertClosed()"
+>
 </app-alert>
 
-<app-confirm [message]="confirmMessage" [show]="showConfirm" (confirmed)="onConfirmRevoke()" (cancelled)="onCancelConfirm()">
+<app-confirm
+  [message]="confirmMessage"
+  [show]="showConfirm"
+  (confirmed)="onConfirmRevoke()"
+  (cancelled)="onCancelConfirm()"
+>
 </app-confirm>
 
 <!-- Container for displaying all jobs the user has applied to -->
@@ -21,24 +31,35 @@
 
   <!-- List of applied jobs as cards -->
   <div *ngIf="!loading && appliedJobs.length > 0">
-    <div *ngFor="let job of appliedJobs" class="job-card" (click)="openJobModal(job)">
+    <div
+      *ngFor="let job of appliedJobs"
+      class="job-card"
+      (click)="openJobModal(job)"
+    >
       <h3>{{ job.title }}</h3>
       <p><strong>Company:</strong> {{ job.company }}</p>
       <p><strong>Location:</strong> {{ job.location }}</p>
       <p><strong>Status:</strong> {{ job.status || 'Under Review' }}</p>
-      <p><strong>Applied On:</strong> {{ job.createdAt | date:'mediumDate' }}</p>
+      <p>
+        <strong>Applied On:</strong> {{ job.createdAt | date:'mediumDate' }}
+      </p>
 
       <div class="description">
-        <p><strong>Description:</strong> {{ job.description?.overview || 'No description available.' }}</p>
+        <p>
+          <strong>Description:</strong> {{ job.description?.overview || 'No
+          description available.' }}
+        </p>
       </div>
       <!-- Button to revoke application, stops event propagation to avoid opening modal -->
-      <button class="revoke-btn" (click)="revokeApplication(job._id); $event.stopPropagation()">
+      <button
+        class="revoke-btn"
+        (click)="revokeApplication(job._id); $event.stopPropagation()"
+      >
         Revoke Application
       </button>
     </div>
   </div>
 </div>
-
 
 <!-- Modal for detailed job information -->
 <div class="modal" *ngIf="showModal">
@@ -51,7 +72,9 @@
     <p><strong>Location:</strong> {{ selectedJob.location }}</p>
     <p><strong>Type:</strong> {{ selectedJob.type }}</p>
     <p><strong>Salary:</strong> ₹{{ selectedJob.salary }} LPA</p>
-    <p><strong>Experience Required:</strong> {{ selectedJob.experience }} Years</p>
+    <p>
+      <strong>Experience Required:</strong> {{ selectedJob.experience }} Years
+    </p>
     <p><strong>Vacancies:</strong> {{ selectedJob.vacancies }}</p>
     <p><strong>Status:</strong> {{ selectedJob.status }}</p>
 
@@ -62,24 +85,35 @@
 
       <p><strong>Responsibilities:</strong></p>
       <ul>
-        <li *ngFor="let item of selectedJob.description.responsibilities">{{ item }}</li>
+        <li *ngFor="let item of selectedJob.description.responsibilities">
+          {{ item }}
+        </li>
       </ul>
 
       <p><strong>Required Skills:</strong></p>
       <ul>
-        <li *ngFor="let skill of selectedJob.description.requiredSkills">{{ skill }}</li>
+        <li *ngFor="let skill of selectedJob.description.requiredSkills">
+          {{ skill }}
+        </li>
       </ul>
 
-      <p *ngIf="selectedJob.description.preferredSkills?.length"><strong>Preferred Skills:</strong></p>
+      <p *ngIf="selectedJob.description.preferredSkills?.length">
+        <strong>Preferred Skills:</strong>
+      </p>
       <ul *ngIf="selectedJob.description.preferredSkills?.length">
-        <li *ngFor="let skill of selectedJob.description.preferredSkills">{{ skill }}</li>
+        <li *ngFor="let skill of selectedJob.description.preferredSkills">
+          {{ skill }}
+        </li>
       </ul>
 
-      <p *ngIf="selectedJob.description.whatWeOffer?.length"><strong>What We Offer:</strong></p>
+      <p *ngIf="selectedJob.description.whatWeOffer?.length">
+        <strong>What We Offer:</strong>
+      </p>
       <ul *ngIf="selectedJob.description.whatWeOffer?.length">
-        <li *ngFor="let benefit of selectedJob.description.whatWeOffer">{{ benefit }}</li>
+        <li *ngFor="let benefit of selectedJob.description.whatWeOffer">
+          {{ benefit }}
+        </li>
       </ul>
     </div>
-
   </div>
 </div>

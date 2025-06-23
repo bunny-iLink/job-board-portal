@@ -14,23 +14,23 @@ export async function getApplicationsDataForEmployerBasedOnStatus(req, res) {
     const results = await Application.aggregate([
       {
         $match: {
-          employerId: new ObjectId(userId) // ✅ match employerId, not userId
-        }
+          employerId: new ObjectId(userId), // ✅ match employerId, not userId
+        },
       },
       {
         $group: {
           _id: "$status",
-          count: { $sum: 1 }
-        }
-      }
+          count: { $sum: 1 },
+        },
+      },
     ]);
 
     // Ensure all 4 statuses are always included
     const allStatuses = ["Applied", "In Progress", "Accepted", "Rejected"];
     const statusCounts = {};
-    allStatuses.forEach(status => (statusCounts[status] = 0));
+    allStatuses.forEach((status) => (statusCounts[status] = 0));
 
-    results.forEach(r => {
+    results.forEach((r) => {
       statusCounts[r._id] = r.count;
     });
 
@@ -48,37 +48,37 @@ export async function getApplicationsByDomain(req, res) {
     const result = await Application.aggregate([
       {
         $match: {
-          userId: new mongoose.Types.ObjectId(userId)
-        }
+          userId: new mongoose.Types.ObjectId(userId),
+        },
       },
       {
         $lookup: {
-          from: 'jobs',
-          localField: 'jobId',
-          foreignField: '_id',
-          as: 'jobDetails'
-        }
+          from: "jobs",
+          localField: "jobId",
+          foreignField: "_id",
+          as: "jobDetails",
+        },
       },
-      { $unwind: '$jobDetails' },
+      { $unwind: "$jobDetails" },
       {
         $group: {
-          _id: '$jobDetails.domain',
-          count: { $sum: 1 }
-        }
+          _id: "$jobDetails.domain",
+          count: { $sum: 1 },
+        },
       },
       {
         $project: {
           _id: 0,
-          domain: '$_id',
-          count: 1
-        }
-      }
+          domain: "$_id",
+          count: 1,
+        },
+      },
     ]);
 
     res.status(200).json(result); // no custom formatting
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 }
 
@@ -93,22 +93,22 @@ export async function getApplicationsDataForUserBasedOnStatus(req, res) {
     const results = await Application.aggregate([
       {
         $match: {
-          userId: new mongoose.Types.ObjectId(userId)
-        }
+          userId: new mongoose.Types.ObjectId(userId),
+        },
       },
       {
         $group: {
           _id: "$status",
-          count: { $sum: 1 }
-        }
-      }
+          count: { $sum: 1 },
+        },
+      },
     ]);
 
     const allStatuses = ["Applied", "In Progress", "Accepted", "Rejected"];
     const statusCounts = {};
-    allStatuses.forEach(status => (statusCounts[status] = 0));
+    allStatuses.forEach((status) => (statusCounts[status] = 0));
 
-    results.forEach(r => {
+    results.forEach((r) => {
       statusCounts[r._id] = r.count;
     });
 
@@ -118,7 +118,3 @@ export async function getApplicationsDataForUserBasedOnStatus(req, res) {
     return res.status(500).json({ message: "Internal server error" });
   }
 }
-
-
-
-

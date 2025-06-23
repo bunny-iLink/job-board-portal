@@ -9,7 +9,9 @@
     <div *ngIf="!isEmployerLoading && employer">
       <h1>Welcome, {{ employer?.name }}</h1>
       <p><strong>Email:</strong> {{ employer?.email }}</p>
-      <p *ngIf="employer?.company"><strong>Company:</strong> {{ employer?.company }}</p>
+      <p *ngIf="employer?.company">
+        <strong>Company:</strong> {{ employer?.company }}
+      </p>
     </div>
   </header>
 
@@ -23,15 +25,28 @@
       <div class="loading-text">Loading job listings...</div>
     </div>
 
-
     <div *ngIf="!isJobsLoading && jobs.length === 0" class="no-jobs">
       <p>No jobs posted yet.</p>
     </div>
 
     <div *ngIf="!isJobsLoading && jobs.length > 0" class="job-grid" role="list">
-      <div *ngFor="let job of jobs" class="job-tile" role="listitem" tabindex="0" (click)="viewJobDetails(job._id)"
+      <div
+        *ngFor="let job of jobs"
+        class="job-tile"
+        role="listitem"
+        tabindex="0"
+        (click)="viewJobDetails(job._id)"
         (keyup.enter)="viewJobDetails(job._id)"
-        [attr.aria-label]="'Job listing for ' + job.title + ' with ' + job.applicantCount + ' applicants and ' + job.vacancies + ' vacancies'">
+        [attr.aria-label]="
+          'Job listing for ' +
+          job.title +
+          ' with ' +
+          job.applicantCount +
+          ' applicants and ' +
+          job.vacancies +
+          ' vacancies'
+        "
+      >
         <h4>{{ job.title }}</h4>
         <p><strong>Applicants:</strong> {{ job.applicantCount }}</p>
         <p><strong>Vacancies:</strong> {{ job.vacancies }}</p>
@@ -39,13 +54,10 @@
     </div>
   </section>
 
-
   <!-- Message for users who are not logged in -->
   <div *ngIf="!token" class="no-data" aria-live="polite">
     <p>Please login to access the site.</p>
   </div>
-
-
 
   <!-- Charts Section -->
   <section class="charts-section" *ngIf="!isChartLoading">
@@ -53,12 +65,21 @@
 
     <div class="chart-container">
       <!-- Line Chart (e.g. Applications Over Time) -->
-      <div *ngIf="lineChartOptions?.series?.length" echarts [options]="lineChartOptions" class="chart line-chart"></div>
+      <div
+        *ngIf="lineChartOptions?.series?.length"
+        echarts
+        [options]="lineChartOptions"
+        class="chart line-chart"
+      ></div>
 
       <!-- Pie Chart (e.g. Applications by Status) -->
-      <div *ngIf="pieChartOptions?.series?.length" echarts [options]="pieChartOptions" class="chart pie-chart"></div>
+      <div
+        *ngIf="pieChartOptions?.series?.length"
+        echarts
+        [options]="pieChartOptions"
+        class="chart pie-chart"
+      ></div>
     </div>
   </section>
-    <div *ngIf="isChartLoading">Loading charts...</div>
-
+  <div *ngIf="isChartLoading">Loading charts...</div>
 </div>

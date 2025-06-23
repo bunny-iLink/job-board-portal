@@ -13,7 +13,7 @@ import { ConfirmComponent } from '../../confirm/confirm.component';
   standalone: true,
   imports: [CommonModule, FormsModule, AlertComponent, ConfirmComponent],
   templateUrl: 'user-profile.html',
-  styleUrls: ['./user-profile.css']
+  styleUrls: ['./user-profile.css'],
 })
 export class UserProfileComponent implements OnInit {
   userId: string | null = null;
@@ -36,9 +36,8 @@ export class UserProfileComponent implements OnInit {
   showConfirm: boolean = false;
   pendingDelete: boolean = false;
 
-
   private showCustomAlert(message: string, type: 'success' | 'error' | 'info') {
-    console.log("Alert Triggered:", { message, type });
+    console.log('Alert Triggered:', { message, type });
 
     this.alertMessage = message;
     this.alertType = type;
@@ -59,7 +58,7 @@ export class UserProfileComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private sanitizer: DomSanitizer
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.userId = this.authService.getUserId();
@@ -73,26 +72,25 @@ export class UserProfileComponent implements OnInit {
 
   fetchuser() {
     this.loading = true;
-    this.userService.getUserData(this.userId!)
-      .subscribe({
-        next: (data: any) => {
-          this.user = data.user;
+    this.userService.getUserData(this.userId!).subscribe({
+      next: (data: any) => {
+        this.user = data.user;
 
-          if (this.user) {
-            this.user.password = '';
-            // Add this - create URL only after user data is loaded
-            if (this.user?.resume?.data) {
-              const url = `data:${this.user.resume.contentType};base64,${this.user.resume.data}`;
-              this.resumeURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-            }
+        if (this.user) {
+          this.user.password = '';
+          // Add this - create URL only after user data is loaded
+          if (this.user?.resume?.data) {
+            const url = `data:${this.user.resume.contentType};base64,${this.user.resume.data}`;
+            this.resumeURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
           }
-          this.loading = false;
-        },
-        error: () => {
-          this.error = 'Failed to load user data.';
-          this.loading = false;
         }
-      });
+        this.loading = false;
+      },
+      error: () => {
+        this.error = 'Failed to load user data.';
+        this.loading = false;
+      },
+    });
   }
 
   updateProfile() {
@@ -109,7 +107,8 @@ export class UserProfileComponent implements OnInit {
       delete updatedUser.password;
     }
 
-    this.userService.updateUserData(this.userId!, updatedUser, this.token!)
+    this.userService
+      .updateUserData(this.userId!, updatedUser, this.token!)
       .subscribe({
         next: (res: any) => {
           this.success = 'Profile updated successfully!';
@@ -123,12 +122,13 @@ export class UserProfileComponent implements OnInit {
         },
         error: () => {
           this.error = 'Failed to update profile.';
-        }
+        },
       });
   }
 
   deleteProfile() {
-    this.confirmMessage = 'Are you sure you want to delete your profile? This action cannot be undone.';
+    this.confirmMessage =
+      'Are you sure you want to delete your profile? This action cannot be undone.';
     this.showConfirm = true;
     this.pendingDelete = true;
   }
@@ -146,7 +146,7 @@ export class UserProfileComponent implements OnInit {
         },
         error: () => {
           this.error = 'Failed to delete profile.';
-        }
+        },
       });
     }
     this.resetConfirm();
@@ -170,13 +170,12 @@ export class UserProfileComponent implements OnInit {
         const base64 = (reader.result as string).split(',')[1];
         this.user.profilePicture = {
           data: base64,
-          contentType: file.type
+          contentType: file.type,
         };
       };
       reader.readAsDataURL(file);
     }
   }
-
 
   onResumeSelected(event: any) {
     const file = event.target.files?.[0];
@@ -195,10 +194,9 @@ export class UserProfileComponent implements OnInit {
         const base64 = (reader.result as string).split(',')[1];
         this.user.resume = {
           data: base64,
-          contentType: file.type
+          contentType: file.type,
         };
         console.log(this.user.resume);
-
       };
       reader.readAsDataURL(file);
     }
@@ -229,7 +227,7 @@ export class UserProfileComponent implements OnInit {
       a.href = url;
       a.target = '_blank';
       a.rel = 'noopener noreferrer';
-      a.download = 'resume.pdf';  // Optional: forces download
+      a.download = 'resume.pdf'; // Optional: forces download
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);

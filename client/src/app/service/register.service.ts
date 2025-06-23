@@ -1,15 +1,14 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class RegisterService {
-    constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-    register(url: string, data: any): Observable<any> {
-        return this.http.post(url, data);
-    }
+  register(url: string, data: any): Observable<any> {
+    return this.http.post(url, data);
+  }
 }

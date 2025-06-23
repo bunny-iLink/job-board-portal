@@ -8,18 +8,17 @@ import { JobService } from '../../../service/job.service';
 import { AuthService } from '../../../service/auth.service';
 import { NgxEchartsModule, provideEchartsCore } from 'ngx-echarts';
 
-
 @Component({
   selector: 'app-employer-dashboard',
   standalone: true,
   imports: [CommonModule, FormsModule, NgxEchartsModule],
-    providers: [
+  providers: [
     provideEchartsCore({
-      echarts: () => import('echarts')
-    })
+      echarts: () => import('echarts'),
+    }),
   ],
   templateUrl: './employer-dashboard.component.html',
-  styleUrls: ['./employer-dashboard.component.css']
+  styleUrls: ['./employer-dashboard.component.css'],
 })
 export class EmployerDashboardComponent implements OnInit {
   // Employer data object
@@ -33,12 +32,17 @@ export class EmployerDashboardComponent implements OnInit {
   lineChartOptions: any = {};
   pieChartOptions: any = {};
 
-// Loading states for various data fetches
+  // Loading states for various data fetches
   isChartLoading = false;
   isEmployerLoading = false;
   isJobsLoading = false;
 
-  constructor(private jobService: JobService, private employerService: EmployerService, private authService: AuthService, private router: Router) { }
+  constructor(
+    private jobService: JobService,
+    private employerService: EmployerService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   // On component initialization, load employer and job data from localStorage and API
   ngOnInit(): void {
@@ -60,18 +64,20 @@ export class EmployerDashboardComponent implements OnInit {
     if (!this.employerId || !this.token) return;
 
     this.isEmployerLoading = true;
-    this.employerService.getEmployerData(this.employerId, this.token).subscribe({
-      next: (res: any) => {
-        this.employer = res.employer;
-        console.log('Employer loaded:', this.employer);
-      },
-      error: err => {
-        console.error('Failed to load employer data:', err);
-      },
-      complete: () => {
-        this.isEmployerLoading = false;
-      }
-    });
+    this.employerService
+      .getEmployerData(this.employerId, this.token)
+      .subscribe({
+        next: (res: any) => {
+          this.employer = res.employer;
+          console.log('Employer loaded:', this.employer);
+        },
+        error: (err) => {
+          console.error('Failed to load employer data:', err);
+        },
+        complete: () => {
+          this.isEmployerLoading = false;
+        },
+      });
   }
 
   // Fetch job summaries for this employer from backend
@@ -84,119 +90,119 @@ export class EmployerDashboardComponent implements OnInit {
         this.jobs = res;
         console.log('Jobs loaded:', this.jobs);
       },
-      error: err => {
+      error: (err) => {
         console.error('Failed to load job summaries:', err);
       },
       complete: () => {
         this.isJobsLoading = false;
-      }
+      },
     });
   }
 
   // Navigate to job details page for a specific job
   viewJobDetails(jobId: string) {
     this.router.navigate(['/employer/job-details'], {
-      queryParams: { id: jobId }
+      queryParams: { id: jobId },
     });
   }
   fetchHorizontalBarChartData() {
-  if (!this.employerId || !this.token) return;
+    if (!this.employerId || !this.token) return;
 
-  this.isChartLoading = true;
+    this.isChartLoading = true;
 
-  this.jobService.getJobSummaries(this.employerId, this.token).subscribe({
-    next: (jobs: any[]) => {
-      const titles = jobs.map(job => job.title);
-      const applicationCounts = jobs.map(job => job.applicantCount);
+    this.jobService.getJobSummaries(this.employerId, this.token).subscribe({
+      next: (jobs: any[]) => {
+        const titles = jobs.map((job) => job.title);
+        const applicationCounts = jobs.map((job) => job.applicantCount);
 
-      this.lineChartOptions = {
-        title: { text: 'Applications per Job Title', left: 'center' },
-        tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-        grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
-        xAxis: {
-          type: 'value',
-          name: 'Applications'
-        },
-        yAxis: {
-          type: 'category',
-          data: titles,
-          axisLabel: {
-            interval: 0,
-            formatter: (value: string) =>
-              value.length > 20 ? value.slice(0, 20) + '…' : value
-          }
-        },
-        series: [
-          {
+        this.lineChartOptions = {
+          title: { text: 'Applications per Job Title', left: 'center' },
+          tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+          grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+          xAxis: {
+            type: 'value',
             name: 'Applications',
-            type: 'bar',
-            data: applicationCounts,
-            label: {
-              show: true,
-              position: 'right'
+          },
+          yAxis: {
+            type: 'category',
+            data: titles,
+            axisLabel: {
+              interval: 0,
+              formatter: (value: string) =>
+                value.length > 20 ? value.slice(0, 20) + '…' : value,
             },
-            itemStyle: {
-              color: '#5470C6'
-            }
-          }
-        ]
-      };
-    },
-    error: err => console.error('Error loading bar chart data:', err),
-    complete: () => this.isChartLoading = false
-  });
-}
-
+          },
+          series: [
+            {
+              name: 'Applications',
+              type: 'bar',
+              data: applicationCounts,
+              label: {
+                show: true,
+                position: 'right',
+              },
+              itemStyle: {
+                color: '#5470C6',
+              },
+            },
+          ],
+        };
+      },
+      error: (err) => console.error('Error loading bar chart data:', err),
+      complete: () => (this.isChartLoading = false),
+    });
+  }
 
   fetchPieChartData() {
-  if (!this.employerId || !this.token) return;
+    if (!this.employerId || !this.token) return;
 
-  this.employerService.getApplicationStatusSummary(this.employerId, this.token).subscribe({
-    next: (statusCounts: any) => {
-      const pieData = Object.entries(statusCounts).map(([status, count]) => ({
-        name: status,
-        value: count
-      }));
+    this.employerService
+      .getApplicationStatusSummary(this.employerId, this.token)
+      .subscribe({
+        next: (statusCounts: any) => {
+          const pieData = Object.entries(statusCounts).map(
+            ([status, count]) => ({
+              name: status,
+              value: count,
+            })
+          );
 
-      this.pieChartOptions = {
-        title: {
-          text: 'Application Status Distribution',
-          left: 'center',
-          top: 'bottom'
+          this.pieChartOptions = {
+            title: {
+              text: 'Application Status Distribution',
+              left: 'center',
+              top: 'bottom',
+            },
+            tooltip: {
+              trigger: 'item',
+            },
+            legend: {
+              orient: 'vertical',
+              left: 'left',
+            },
+            series: [
+              {
+                name: 'Applications',
+                type: 'pie',
+                radius: '50%',
+                data: pieData,
+                emphasis: {
+                  itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)',
+                  },
+                },
+              },
+            ],
+          };
         },
-        tooltip: {
-          trigger: 'item'
+        error: (err) => {
+          console.error('Error loading pie chart data:', err);
         },
-        legend: {
-          orient: 'vertical',
-          left: 'left'
+        complete: () => {
+          this.isChartLoading = false;
         },
-        series: [
-          {
-            name: 'Applications',
-            type: 'pie',
-            radius: '50%',
-            data: pieData,
-            emphasis: {
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
-              }
-            }
-          }
-        ]
-      };
-    },
-    error: err => {
-      console.error('Error loading pie chart data:', err);
-    },
-    complete: () => {
-      this.isChartLoading = false;
-    }
-  });
-}
-
-
-
+      });
+  }
 }

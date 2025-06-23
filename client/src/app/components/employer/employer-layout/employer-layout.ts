@@ -6,9 +6,9 @@ import { NavbarComponent } from '../../navbar/navbar';
 @Component({
   selector: 'app-employer-layout',
   standalone: true,
-  imports: [RouterOutlet,  NavbarComponent],
+  imports: [RouterOutlet, NavbarComponent],
   templateUrl: './employer-layout.html',
-  styleUrl: './employer-layout.css'
+  styleUrl: './employer-layout.css',
 })
 export class EmployerLayoutComponent {
   // This component acts as a shell for all employer-related routes
