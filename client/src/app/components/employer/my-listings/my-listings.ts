@@ -77,14 +77,12 @@ export class MyListingsComponent implements OnInit {
     private http: HttpClient,
     private authService: AuthService,
     private jobService: JobService
-  ) {}
+  ) { }
 
   ngOnInit() {
     // Load employer and token from localStorage via AuthService
-    if (typeof window !== 'undefined') {
-      this.employer = this.authService.getUser(); // already parsed JSON
-      this.token = this.authService.getToken();
-    }
+    this.employer = this.authService.getUser(); // already parsed JSON
+    this.token = this.authService.getToken();
 
     this.employerId = this.authService.getUserId() ?? '';
     console.log('Employer ID from AuthService:', this.employerId);
@@ -131,10 +129,9 @@ export class MyListingsComponent implements OnInit {
 
   // Fetch all jobs for the current employer from backend
   fetchJobs() {
-    const token = this.token;
     const employerId = this.employerId;
 
-    if (!employerId || !token) {
+    if (!employerId || !this.token) {
       console.warn('Cannot fetch jobs: employerId or token is missing');
       return;
     }
@@ -250,8 +247,9 @@ export class MyListingsComponent implements OnInit {
           this.fetchJobs();
       },
       error: (err) => console.error('Failed to delete job:', err),
+      complete: () => { this.showConfirm = false; }
     });
-    this.showConfirm = false;
+
   }
 
   onCancelConfirm() {

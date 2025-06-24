@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { LoginService } from '../../service/login.service';
+import { AuthService } from '../../service/auth.service';
 import { AlertComponent } from '../alert/alert.component';
 
 @Component({
@@ -56,7 +56,7 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private loginService: LoginService
+    private authService: AuthService,
   ) {
     // Initialize the login form with validators
     this.loginForm = this.fb.group({
@@ -83,20 +83,17 @@ export class LoginComponent {
 
     const loginData = this.loginForm.value;
 
-    this.loginService.login(loginData).subscribe({
+    this.authService.login(loginData).subscribe({
       next: (response: any) => {
-        console.log(response);
-
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('user', JSON.stringify(response.user));
-        }
-
+        // Optionally log or handle the response
+        console.log('Login response:', response);
         this.showCustomAlert('Login successful!', 'success', true);
+
+        // Optional: redirect or update UI
+        this.router.navigate(['/dashboard']);
       },
       error: (error) => {
-        let errorMessage =
-          'An unexpected error occurred. Please try again later.';
+        let errorMessage = 'An unexpected error occurred. Please try again later.';
         const status = error.status;
 
         if (status === 400) {
@@ -110,7 +107,8 @@ export class LoginComponent {
         }
 
         this.showCustomAlert(errorMessage, 'error');
-      },
+      }
     });
   }
+
 }

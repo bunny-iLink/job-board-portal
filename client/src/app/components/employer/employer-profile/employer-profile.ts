@@ -137,21 +137,22 @@ export class EmployerProfileComponent implements OnInit {
 
   onConfirmDelete() {
     // Send DELETE request to backend to remove employer profile
+    this.showConfirm = false; // Hide confirm dialog
     this.employerService
       .deleteEmployer(this.employerId!, this.token!)
       .subscribe({
         next: () => {
-          alert('Profile deleted successfully.');
+          this.showCustomAlert('Profile deleted successfully.', 'success');
           // Remove session data from localStorage
-          if (typeof window !== 'undefined') {
-            localStorage.removeItem('id');
-            localStorage.removeItem('token');
-          }
+          this.authService.logout();
           // Redirect to login page
           this.router.navigate(['/login']);
         },
         error: () => {
           this.error = 'Failed to delete profile.';
+        },
+        complete: () => {
+          this.showAlert = false; // Hide alert dialog
         },
       });
   }

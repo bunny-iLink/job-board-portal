@@ -42,7 +42,7 @@ export class EmployerDashboardComponent implements OnInit {
     private employerService: EmployerService,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   // On component initialization, load employer and job data from localStorage and API
   ngOnInit(): void {
@@ -105,6 +105,7 @@ export class EmployerDashboardComponent implements OnInit {
       queryParams: { id: jobId },
     });
   }
+
   fetchHorizontalBarChartData() {
     if (!this.employerId || !this.token) return;
 
