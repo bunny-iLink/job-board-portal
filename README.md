@@ -89,10 +89,6 @@ Check out the live version of our application here:
 
 
 
-- testing cookie hijacking
-
-
-
 
 
 
