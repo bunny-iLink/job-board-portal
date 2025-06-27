@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
+declare var AOS: any;
 
 @Component({
   selector: 'app-home',
@@ -8,4 +9,8 @@ import { RouterModule } from '@angular/router';
   templateUrl: 'home.html',
   styleUrls: ['home.css'],
 })
-export class HomeComponent {}
+export class HomeComponent implements AfterViewInit {
+  ngAfterViewInit(): void {
+    AOS.init({ once: true });
+  }
+}

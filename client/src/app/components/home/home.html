@@ -1,68 +1,64 @@
-<!-- Hero section with background and overlay for visual effect -->
-<div class="hero-section">
-  <div class="hero-bg"></div>
-  <!-- Decorative background -->
-  <div class="hero-overlay"></div>
-  <!-- Overlay for darkening the background -->
-  <div class="hero-content">
-    <h1 class="title animate-reveal">
-      Empower Your Career with <span class="highlight">JobHunt Pro</span>
+<div class="position-relative text-white text-center d-flex flex-column justify-content-center"
+  style="background: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d') center/cover no-repeat; min-height: 100vh;">
+
+  <!-- Overlay -->
+  <div class="position-absolute top-0 start-0 w-100 h-100" style="background: rgba(0, 115, 230, 0.6); z-index: 1;">
+  </div>
+
+  <!-- Hero Content -->
+  <div class="position-relative z-2 container">
+    <h1 class="display-4 fw-bold mb-3 animate-fade-up">
+      Empower Your Career with <span style="color: #ffd700;">JobHunt Pro</span>
     </h1>
-    <p class="subtitle animate-reveal delay-1">
-      <!-- Brief description of the platform -->
-      Discover opportunities, connect with top employers, and elevate your
-      career.
+    <p class="lead mb-4 animate-fade-up" style="animation-delay: 0.2s;">
+      <strong>Discover opportunities, connect with top employers, and elevate your career.</strong>
     </p>
-    <div class="action-buttons">
-      <!-- Navigation buttons for login and registration -->
-      <button routerLink="/login" class="btn primary-btn animate-pop">
-        Login
-      </button>
-      <button
-        routerLink="/register"
-        class="btn secondary-btn animate-pop delay-2"
-      >
-        Register
-      </button>
+    <div class="d-flex justify-content-center gap-3 animate-fade-up" style="animation-delay: 0.4s;">
+      <button class="btn btn-light text-primary fw-bold" routerLink="/login">Login</button>
+      <button class="btn btn-primary fw-bold" routerLink="/register">Register</button>
     </div>
+
+    <!-- Scroll Down Indicator -->
+    <div class="mt-5 animate-fade-up" style="animation-delay: 0.6s;">
+      <i class="bi bi-chevron-down fs-1 text-white"></i>
+    </div>
+    <a href="#features" class="text-white mt-4 d-inline-block">
+      <i class="bi bi-chevron-down fs-1"></i>
+    </a>
   </div>
 </div>
 
-<!-- Features section highlighting platform benefits -->
-<section class="features-section">
-  <h2 class="section-title animate-reveal">Why JobHunt Pro?</h2>
-  <div class="features-container">
-    <!-- Feature card: Smart Job Search -->
-    <div class="feature-card animate-card" style="--card-index: 0">
-      <!-- Icon placeholder for job search -->
-      <!-- <div class="feature-icon-wrapper">
-        <img src="/job%20search.jpg" alt="Job Search" class="feature-icon">
-      </div> -->
-      <h3>Smart Job Search</h3>
-      <p>AI-driven job recommendations tailored to your skills and goals.</p>
-    </div>
-    <!-- Feature card: Trusted Employers -->
-    <div class="feature-card animate-card" style="--card-index: 1">
-      <!-- Icon placeholder for verified employers -->
-      <!-- <div class="feature-icon-wrapper">
-        <img src="verified%20employers.png" alt="Verified Employers" class="feature-icon">
-      </div> -->
-      <h3>Trusted Employers</h3>
-      <p>Connect with verified companies for secure job opportunities.</p>
-    </div>
-    <!-- Feature card: Career Insights -->
-    <div class="feature-card animate-card" style="--card-index: 2">
-      <!-- Icon placeholder for career insights -->
-      <!-- <div class="feature-icon-wrapper">
-        <img src="career%20insights.jpg" alt="Career Insights" class="feature-icon">
-      </div>   -->
-      <h3>Career Insights</h3>
-      <p>Gain expert advice, salary trends, and industry insights.</p>
+<section id="features" class="py-5 bg-white text-center">
+  <div class="container">
+    <h2 class="text-primary mb-5" data-aos="fade-up"><strong>Why JobHunt Pro?</strong></h2>
+    <div class="row g-4">
+      <!-- Feature 1 -->
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
+        <div class="p-4 bg-light rounded shadow-sm h-100">
+          <h5>Smart Job Search</h5>
+          <p class="mb-0">AI-driven job recommendations tailored to your skills and goals.</p>
+        </div>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="300" data-aos-duration="600">
+        <div class="p-4 bg-light rounded shadow-sm h-100">
+          <h5>Trusted Employers</h5>
+          <p class="mb-0">Connect with verified companies for secure job opportunities.</p>
+        </div>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="500" data-aos-duration="600">
+        <div class="p-4 bg-light rounded shadow-sm h-100">
+          <h5>Career Insights</h5>
+          <p class="mb-0">Gain expert advice, salary trends, and industry insights.</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- Footer with copyright information -->
-<footer class="footer animate-reveal">
-  <p>© 2025 JobHunt Pro. All Rights Reserved.</p>
+<footer class="text-center py-4 bg-light text-muted mt-5">
+  <small>© 2025 JobHunt Pro. All Rights Reserved.</small>
 </footer>

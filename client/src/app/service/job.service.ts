@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../environments/environment';
 import { Observable } from 'rxjs';
 
@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class JobService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   addJob(data: any, token: string): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
@@ -58,11 +58,17 @@ export class JobService {
     return this.http.get(`${environment.apiUrl}/appliedJobs/${userId}`);
   }
 
-  searchJobs(): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/searchJobs`);
-  }
+  searchJobs(params: Record<string, any> = {}) {
+    let httpParams = new HttpParams();
+    Object.keys(params).forEach((key) => {
+      const value = params[key];
+      if (value !== undefined && value !== null && value !== '') {
+        httpParams = httpParams.set(key, value);
+      }
+    });
 
-  searchJobsWithFilter(queryString: string): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/searchJobs?${queryString}`);
+    return this.http.get(`${environment.apiUrl}/searchJobs`, {
+      params: httpParams,
+    });
   }
 }

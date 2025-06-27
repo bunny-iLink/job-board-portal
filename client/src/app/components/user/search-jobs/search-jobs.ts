@@ -35,7 +35,6 @@ export class SearchJobsComponent implements OnInit {
   showAlert: boolean = false;
   navigateAfterAlert: boolean = false;
 
-  // ✅ ConfirmComponent state
   confirmMessage: string = '';
   showConfirm: boolean = false;
   pendingJobApplication: any = null;
@@ -44,7 +43,7 @@ export class SearchJobsComponent implements OnInit {
     private jobService: JobService,
     private authService: AuthService,
     private applicationService: ApplicationService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.searchJobs();
@@ -70,51 +69,29 @@ export class SearchJobsComponent implements OnInit {
     }
 
     this.loadingJobs = true;
-    const hasFilters =
-      this.filters.type ||
-      this.filters.experience ||
-      this.filters.expectedSalary;
-    const hasSearch = this.searchTerm.trim().length > 0;
-    const hasPreferredDomain = user.preferredDomain?.trim().length > 0;
 
-    if (!hasFilters && !hasSearch && !hasPreferredDomain) {
-      this.showDomainWarning = true;
-
-      this.jobService.searchJobs().subscribe({
-        next: (res: any) => {
-          this.allJobs = res;
-          this.filteredJobs = [...res];
-          this.loadingJobs = false;
-        },
-        error: (err) => {
-          console.error('Error fetching all jobs:', err);
-          this.loadingJobs = false;
-        },
-      });
-
-      return;
-    }
-
-    this.showDomainWarning = false;
-
-    const queryParams: any = {
+    const params: any = {
       userId: user._id,
-      search: this.searchTerm.trim(),
     };
 
+    const search = this.searchTerm.trim();
+    if (search) params.search = search;
+
+    if (this.filters.type) params.type = this.filters.type;
+    if (this.filters.experience) params.experience = this.filters.experience;
+    if (this.filters.expectedSalary) params.expectedSalary = this.filters.expectedSalary;
+
     if (user.preferredDomain && user.preferredDomain !== 'null') {
-      queryParams.domain = user.preferredDomain;
+      params.preferredDomain = user.preferredDomain;
     }
 
-    if (this.filters.type) queryParams.type = this.filters.type;
-    if (this.filters.experience)
-      queryParams.experience = this.filters.experience;
-    if (this.filters.expectedSalary)
-      queryParams.expectedSalary = this.filters.expectedSalary;
+    const hasFilters = !!(params.type || params.experience || params.expectedSalary);
+    const hasSearch = !!params.search;
+    const hasPreferredDomain = !!params.preferredDomain;
 
-    const queryString = new URLSearchParams(queryParams).toString();
+    this.showDomainWarning = !hasFilters && !hasSearch && !hasPreferredDomain;
 
-    this.jobService.searchJobsWithFilter(queryString).subscribe({
+    this.jobService.searchJobs(params).subscribe({
       next: (res: any) => {
         this.allJobs = res;
         this.filteredJobs = [...res];
@@ -137,7 +114,6 @@ export class SearchJobsComponent implements OnInit {
     this.showModal = false;
   }
 
-  // ✅ Updated to handle confirm component logic
   applyToJob(job: any) {
     const user = this.getStoredUser();
     if (!user) {
@@ -153,18 +129,11 @@ export class SearchJobsComponent implements OnInit {
       return;
     }
 
-    const recommendedFields = [
-      'phone',
-      'address',
-      'experience',
-      'preferredDomain',
-    ];
+    const recommendedFields = ['phone', 'address', 'experience', 'preferredDomain'];
     const missingFields = recommendedFields.filter((field) => !user[field]);
 
     if (missingFields.length > 0) {
-      this.confirmMessage = `Your profile is missing recommended info (${missingFields.join(
-        ', '
-      )}). Apply anyway?`;
+      this.confirmMessage = `Your profile is missing recommended info (${missingFields.join(', ')}). Apply anyway?`;
       this.pendingJobApplication = job;
       this.showConfirm = true;
       return;
@@ -173,7 +142,6 @@ export class SearchJobsComponent implements OnInit {
     this.submitApplication(job);
   }
 
-  // ✅ Called if user accepts confirm modal
   onConfirmApply() {
     if (this.pendingJobApplication) {
       this.submitApplication(this.pendingJobApplication);
@@ -181,7 +149,6 @@ export class SearchJobsComponent implements OnInit {
     }
   }
 
-  // ✅ Called if user cancels confirm modal
   onCancelConfirm() {
     this.resetConfirmState();
     this.closeModal();
@@ -204,10 +171,7 @@ export class SearchJobsComponent implements OnInit {
 
     this.applicationService.applyForJob(payload, this.token).subscribe({
       next: (res: any) => {
-        this.showCustomAlert(
-          res.message || 'Application submitted!',
-          'success'
-        );
+        this.showCustomAlert(res.message || 'Application submitted!', 'success');
         this.closeModal();
         this.searchJobs();
       },
