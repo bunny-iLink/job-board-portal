@@ -1,61 +1,52 @@
-<app-alert
-  [message]="alertMessage"
-  [type]="alertType"
-  [show]="showAlert"
-  (closed)="onAlertClosed()"
->
-</app-alert>
+<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()"></app-alert>
 
-<!-- Login page container with overlay for visual effect -->
-<div class="auth-page">
-  <div class="auth-overlay"></div>
-  <div class="login-container">
+<!-- Login page container with overlay -->
+<div class="min-vh-100 position-relative d-flex align-items-center justify-content-center"
+  style="background-image: url('login-register-bg.jpg'); background-size: cover; background-position: center top;">
+
+  <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
+
+  <div class="position-relative z-2 w-100" style="max-width: 400px;">
     <!-- Login form using Angular Reactive Forms -->
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <h2>Login</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="bg-white rounded-3 shadow p-4 mx-3">
+      <h2 class="text-center text-primary mb-4">Login</h2>
 
       <!-- Email input field with validation feedback -->
-      <label>Email:</label>
-      <input type="email" formControlName="email" required />
-      <div
-        *ngIf="
-          loginForm.get('email')?.invalid && loginForm.get('email')?.touched
-        "
-      >
-        <small class="invalid-feedback"
-          >Email is required and must be valid.</small
-        >
+      <div class="mb-3">
+        <label class="form-label">Email:</label>
+        <input type="email" formControlName="email" class="form-control" required />
+        <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+          <small class="text-danger">Email is required and must be valid.</small>
+        </div>
       </div>
 
-      <!-- Password input field with show/hide toggle and validation -->
-      <label>Password:</label>
-      <div class="password-wrapper">
-        <input
-          [type]="showPassword ? 'text' : 'password'"
-          formControlName="password"
-          required
-        />
-        <button type="button" (click)="togglePassword()">
-          <!-- Eye icon for toggling password visibility -->
-          👁
-        </button>
-      </div>
-      <div
-        *ngIf="
-          loginForm.get('password')?.invalid &&
-          loginForm.get('password')?.touched
-        "
-      >
-        <small class="invalid-feedback">Password is required.</small>
+      <!-- Password input field with toggle -->
+      <div class="mb-3">
+        <label class="form-label">Password:</label>
+        <div class="position-relative">
+          <input [type]="showPassword ? 'text' : 'password'" formControlName="password" class="form-control" required />
+          <button type="button"
+            class="btn position-absolute top-50 end-0 translate-middle-y me-2 p-0 border-0 bg-transparent text-secondary"
+            (click)="togglePassword()">
+            👁
+          </button>
+        </div>
+        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          <small class="text-danger">Password is required.</small>
+        </div>
       </div>
 
-      <!-- Submit button, disabled if form is invalid -->
-      <button type="submit" [disabled]="loginForm.invalid">Login</button>
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-primary w-100" [disabled]="loginForm.invalid">
+        Login
+      </button>
 
-      <!-- Link to registration page for new users -->
-      <div class="register-link">
+      <!-- Link to register -->
+      <div class="text-center mt-3">
         <span>New user? </span>
-        <a (click)="goToRegister()">Click here</a>
+        <a (click)="goToRegister()" class="text-primary text-decoration-underline" role="button">
+          Click here
+        </a>
       </div>
     </form>
   </div>

@@ -1,186 +1,128 @@
-<app-alert
-  [message]="alertMessage"
-  [type]="alertType"
-  [show]="showAlert"
-  (closed)="onAlertClosed()"
->
-</app-alert>
+<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()"></app-alert>
 
-<!-- Registration page container with overlay for visual effect -->
-<div class="auth-page">
-  <div class="auth-overlay"></div>
+<!-- Registration Page Container with Overlay -->
+<div class="min-vh-100 position-relative d-flex align-items-center justify-content-center"
+  style="background-image: url('login-register-bg.jpg'); background-size: cover; background-position: center top;">
+  <div class="position-absolute top-0 start-0 end-0 bottom-0 bg-dark opacity-50"></div>
 
-  <div class="container">
-    <div class="card">
-      <div class="header">
-        <h1>Create Account</h1>
-        <p>Join our platform today</p>
+  <div class="container position-relative z-2" style="max-width: 450px;">
+    <div class="bg-white rounded-3 shadow p-4">
+      <div class="text-center mb-4">
+        <h1 class="h3 text-primary mb-1">Create Account</h1>
+        <p class="text-muted mb-0">Join our platform today</p>
       </div>
 
-      <!-- Registration form using Angular Reactive Forms -->
-      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="form">
-        <!-- Role Selection Buttons (Candidate or Employer) -->
-        <div class="form-group">
-          <label>I am a:</label>
-          <div class="role-buttons">
-            <button
-              type="button"
-              (click)="selectRole('candidate')"
-              [class.selected]="selectedRole === 'candidate'"
-            >
-              Candidate
+      <!-- Reactive Registration Form -->
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <!-- Role Selection -->
+        <div class="mb-3">
+          <label class="form-label">I am a:</label>
+          <!-- Role Selection Buttons -->
+          <div class="d-flex gap-2 mb-3">
+            <!-- Candidate Button -->
+            <button type="button" class="btn flex-fill" [ngClass]="{
+      'btn-outline-primary': selectedRole !== 'candidate',
+      'btn-primary text-white': selectedRole === 'candidate'
+    }" (click)="selectRole('candidate')">
+              <strong>Candidate</strong>
             </button>
-            <button
-              type="button"
-              (click)="selectRole('employer')"
-              [class.selected]="selectedRole === 'employer'"
-            >
-              Employer
+
+            <!-- Employer Button -->
+            <button type="button" class="btn flex-fill" [ngClass]="{
+      'btn-outline-primary': selectedRole !== 'employer',
+      'btn-primary text-white': selectedRole === 'employer'
+    }" (click)="selectRole('employer')">
+              <strong>Employer</strong>
             </button>
           </div>
+
         </div>
 
-        <!-- Dynamic Fields: Only show if a role is selected -->
+        <!-- Dynamic Fields -->
         <div *ngIf="selectedRole">
-          <!-- Full Name Field with Validation -->
-          <div class="form-group">
-            <label for="name">Full Name *</label>
-            <input
-              id="name"
-              type="text"
-              formControlName="name"
-              placeholder="Enter your full name"
-            />
-            <div
-              *ngIf="
-                registerForm.get('name')?.invalid &&
-                registerForm.get('name')?.touched
-              "
-              class="error"
-            >
+          <!-- Full Name -->
+          <div class="mb-3">
+            <label for="name" class="form-label">Full Name *</label>
+            <input id="name" type="text" class="form-control" formControlName="name"
+              placeholder="Enter your full name" />
+            <div *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched"
+              class="text-danger small mt-1">
               Name is required
             </div>
           </div>
 
-          <!-- Email Field with Validation -->
-          <div class="form-group">
-            <label for="email">Email Address *</label>
-            <input
-              id="email"
-              type="email"
-              formControlName="email"
-              placeholder="Enter your email"
-            />
-            <div
-              *ngIf="
-                registerForm.get('email')?.invalid &&
-                registerForm.get('email')?.touched
-              "
-              class="error"
-            >
-              <span *ngIf="registerForm.get('email')?.errors?.['required']"
-                >Email is required</span
-              >
-              <span *ngIf="registerForm.get('email')?.errors?.['email']"
-                >Please enter a valid email</span
-              >
+          <!-- Email -->
+          <div class="mb-3">
+            <label for="email" class="form-label">Email Address *</label>
+            <input id="email" type="email" class="form-control" formControlName="email"
+              placeholder="Enter your email" />
+            <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+              class="text-danger small mt-1">
+              <span *ngIf="registerForm.get('email')?.errors?.['required']">Email is required</span>
+              <span *ngIf="registerForm.get('email')?.errors?.['email']">Please enter a valid email</span>
             </div>
           </div>
 
-          <!-- Password Field with Show/Hide Toggle and Validation -->
-          <div class="form-group">
-            <label for="password">Password *</label>
-            <div class="password-wrapper">
-              <input
-                id="password"
-                [type]="showPassword ? 'text' : 'password'"
-                formControlName="password"
-                placeholder="Create a password"
-              />
-              <button
-                type="button"
-                (click)="togglePassword()"
-                class="toggle-password"
-              >
+          <!-- Password -->
+          <div class="mb-3">
+            <label for="password" class="form-label">Password *</label>
+            <div class="position-relative">
+              <input id="password" [type]="showPassword ? 'text' : 'password'" class="form-control"
+                formControlName="password" placeholder="Create a password" />
+              <button type="button"
+                class="btn btn-link position-absolute top-50 end-0 translate-middle-y text-primary pe-3"
+                (click)="togglePassword()">
                 {{ showPassword ? "Hide" : "Show" }}
               </button>
             </div>
-            <div
-              *ngIf="
-                registerForm.get('password')?.invalid &&
-                registerForm.get('password')?.touched
-              "
-              class="error"
-            >
-              <span *ngIf="registerForm.get('password')?.errors?.['required']"
-                >Password is required</span
-              >
-              <span *ngIf="registerForm.get('password')?.errors?.['minlength']"
-                >Password must be at least 6 characters</span
-              >
+            <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+              class="text-danger small mt-1">
+              <span *ngIf="registerForm.get('password')?.errors?.['required']">Password is required</span>
+              <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 6
+                characters</span>
             </div>
           </div>
 
-          <!-- Candidate-Specific Field: Preferred Domain -->
-          <div *ngIf="selectedRole === 'candidate'" class="form-group">
-            <label for="preferredDomain">Preferred Domain</label>
-            <select id="preferredDomain" formControlName="preferredDomain">
+          <!-- Candidate Field -->
+          <div *ngIf="selectedRole === 'candidate'" class="mb-3">
+            <label for="preferredDomain" class="form-label">Preferred Domain</label>
+            <select id="preferredDomain" class="form-select" formControlName="preferredDomain">
               <option value="">Select preferred domain</option>
               <option value="Technology & IT">Technology & IT</option>
               <option value="Sales & Marketing">Sales & Marketing</option>
-              <option value="Business & Management">
-                Business & Management
-              </option>
+              <option value="Business & Management">Business & Management</option>
               <option value="Finance & Accounting">Finance & Accounting</option>
-              <option value="Human Resources & Recruitment">
-                Human Resources & Recruitment
-              </option>
-              <option value="Healthcare & Life Sciences">
-                Healthcare & Life Sciences
-              </option>
+              <option value="Human Resources & Recruitment">Human Resources & Recruitment</option>
+              <option value="Healthcare & Life Sciences">Healthcare & Life Sciences</option>
               <option value="Education & Training">Education & Training</option>
-              <option value="Engineering & Manufacturing">
-                Engineering & Manufacturing
-              </option>
+              <option value="Engineering & Manufacturing">Engineering & Manufacturing</option>
               <option value="Creative & Design">Creative & Design</option>
               <option value="Legal & Compliance">Legal & Compliance</option>
-              <option value="Media & Communication">
-                Media & Communication
-              </option>
-              <option value="Logistics & Supply Chain">
-                Logistics & Supply Chain
-              </option>
-              <option value="Customer Service & Support">
-                Customer Service & Support
-              </option>
+              <option value="Media & Communication">Media & Communication</option>
+              <option value="Logistics & Supply Chain">Logistics & Supply Chain</option>
+              <option value="Customer Service & Support">Customer Service & Support</option>
             </select>
           </div>
 
-          <!-- Employer-Specific Field: Company Name -->
-          <div *ngIf="selectedRole === 'employer'" class="form-group">
-            <label for="company">Company Name</label>
-            <input
-              id="company"
-              type="text"
-              formControlName="company"
-              placeholder="Enter your company name"
-            />
+          <!-- Employer Field -->
+          <div *ngIf="selectedRole === 'employer'" class="mb-3">
+            <label for="company" class="form-label">Company Name</label>
+            <input id="company" type="text" class="form-control" formControlName="company"
+              placeholder="Enter your company name" />
           </div>
         </div>
 
-        <!-- Submit Button: Create Account -->
-        <button
-          type="submit"
-          [disabled]="!registerForm.valid || !selectedRole"
-          class="submit-btn"
-        >
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary w-100" [disabled]="!registerForm.valid || !selectedRole">
           Create Account
         </button>
       </form>
 
-      <!-- Footer: Link to Sign In page -->
-      <div class="footer">
-        <p>Already have an account? <a (click)="goToLogin()">Sign in</a></p>
+      <!-- Footer -->
+      <div class="text-center mt-3">
+        <p class="mb-0 text-secondary">Already have an account?
+          <a (click)="goToLogin()" class="text-primary text-decoration-underline" role="button">Sign in</a>
+        </p>
       </div>
     </div>
   </div>
