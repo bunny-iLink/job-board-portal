@@ -36,7 +36,7 @@ export class NavbarComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private notificationService: NotificationsService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.token = this.authService.getToken();
@@ -50,6 +50,14 @@ export class NavbarComponent implements OnInit {
 
   toggleNotifications(): void {
     if (this.role !== 'user') return;
+
+    // If already open, close it
+    if (this.showNotifications) {
+      this.showNotifications = false;
+      return;
+    }
+
+    // Otherwise, open it and fetch notifications
     this.showNotifications = true;
     this.loadingNotifications = true;
 
@@ -143,8 +151,8 @@ export class NavbarComponent implements OnInit {
         status === 'Accepted'
           ? 'accepted'
           : status === 'Rejected'
-          ? 'rejected'
-          : 'in-progress';
+            ? 'rejected'
+            : 'in-progress';
       return { jobTitle, status, statusClass };
     }
     return null;

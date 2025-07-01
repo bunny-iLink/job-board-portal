@@ -1,165 +1,116 @@
 <!-- Alert and Confirm Components -->
-<app-alert
-  [message]="alertMessage"
-  [type]="alertType"
-  [show]="showAlert"
-  (closed)="onAlertClosed()"
-></app-alert>
-<app-confirm
-  [message]="confirmMessage"
-  [show]="showConfirm"
-  (confirmed)="onConfirmLogout()"
-  (cancelled)="onCancelLogout()"
-></app-confirm>
+<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()"></app-alert>
+<app-confirm [message]="confirmMessage" [show]="showConfirm" (confirmed)="onConfirmLogout()"
+  (cancelled)="onCancelLogout()"></app-confirm>
 
 <!-- Navigation Bar -->
-<nav
-  class="navbar"
-  *ngIf="token"
-  role="navigation"
-  aria-label="Main Navigation"
->
-  <div class="navbar-container">
+<nav *ngIf="token" class="navbar navbar-expand-md navbar-dark bg-primary fixed-top shadow-sm position-relative"
+  role="navigation" aria-label="Main Navigation">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+
     <!-- Left Section: Greeting -->
-    <div class="navbar-left">
-      <a
-        class="greeting clickable"
-        (click)="goToDashboard()"
-        role="link"
-        tabindex="0"
-      >
+    <div class="d-flex align-items-center">
+      <a *ngIf="!showMobileMenu" class="navbar-brand fw-semibold me-3" style="cursor: pointer" (click)="goToDashboard()"
+        role="link" tabindex="0">
         {{ role === 'employer' ? 'Welcome' : 'Hello' }}, {{ userName }}!
       </a>
     </div>
 
     <!-- Center Section: Brand -->
-    <div class="navbar-title">
-      <span class="title" (click)="goToHome()"><h3>JobHunt</h3></span>
-      <span class="title-pro" (click)="goToHome()"><h3>Pro</h3></span>
+    <div class="position-absolute start-50 translate-middle-x d-none d-md-block">
+      <span class="text-white fw-bold fs-5" (click)="goToHome()" role="button">
+        JobHunt <span class="text-warning">Pro</span>
+      </span>
     </div>
 
+
     <!-- Right Section -->
-    <div class="navbar-right">
-      <!-- User: Notifications Bell -->
-      <button
-        *ngIf="role === 'user'"
-        class="icon-button notifications-btn"
-        (click)="toggleNotifications()"
-        aria-label="Open notifications"
-        title="Notifications"
-      >
+    <div class="d-flex align-items-center">
+      <button *ngIf="role === 'user'" class="btn bg-transparent border-0 nav-link fw-bold d-md-none me-2" (click)="toggleNotifications()" title="Notifications">
         🔔
       </button>
 
-      <!-- Hamburger Toggle -->
-      <button
-        class="hamburger"
-        (click)="toggleMobileMenu()"
-        [class.active]="showMobileMenu"
-        aria-label="Toggle mobile menu"
-        [attr.aria-expanded]="showMobileMenu"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
+      <!-- Toggler / Hamburger -->
+      <button class="navbar-toggler" type="button" (click)="toggleMobileMenu()" [attr.aria-expanded]="showMobileMenu"
+        aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
       </button>
-
-      <!-- Navigation Links (Hamburger dropdown) -->
-      <div class="navbar-links" [class.show]="showMobileMenu">
-        <!-- Employer: My Listings -->
-        <button
-          *ngIf="role === 'employer'"
-          class="nav-button"
-          (click)="goToListings()"
-        >
-          <strong>My Listings</strong>
-        </button>
-
-        <!-- User: Jobs -->
-        <button
-          *ngIf="role === 'user'"
-          class="nav-button"
-          (click)="goToListings()"
-        >
-          <strong>Jobs</strong>
-        </button>
-
-        <!-- Common: Profile -->
-        <button class="nav-button" (click)="goToProfile()">
-          <strong>Profile</strong>
-        </button>
-
-        <!-- User: Applied Jobs -->
-        <button
-          *ngIf="role === 'user'"
-          class="nav-button"
-          (click)="goToAppliedJobs()"
-        >
-          <strong>Applied Jobs</strong>
-        </button>
-
-        <!-- Common: Logout -->
-        <button class="nav-button logout-btn" (click)="logout()" title="Logout">
-          <strong>Logout</strong>
-        </button>
-      </div>
     </div>
-    <!-- .navbar-right -->
+
+    <!-- Collapsible Nav Links -->
+    <div [ngClass]="{'collapse navbar-collapse': true, 'show': showMobileMenu}">
+      <ul class="navbar-nav ms-auto text-end">
+        <!-- Employer -->
+        <li class="nav-item" *ngIf="role === 'employer'">
+          <button class="btn btn-white nav-link fw-bold" (click)="goToListings()">My Listings</button>
+        </li>
+
+        <!-- User -->
+        <!-- Notification Button (desktop only) -->
+        <li class="nav-item d-none d-md-block" *ngIf="role === 'user'">
+          <button class="btn bg-transparent border-0 pt-2 fw-bold" (click)="toggleNotifications()" title="Notifications">
+            🔔
+          </button>
+        </li>
+
+        <!-- User -->
+        <li class="nav-item" *ngIf="role === 'user'">
+          <button class="btn btn-white nav-link fw-bold" (click)="goToListings()">Jobs</button>
+        </li>
+
+        <!-- Profile (common) -->
+        <li class="nav-item">
+          <button class="btn btn-white nav-link fw-bold" (click)="goToProfile()">Profile</button>
+        </li>
+
+        <!-- Applied Jobs -->
+        <li class="nav-item" *ngIf="role === 'user'">
+          <button class="btn btn-white nav-link fw-bold" (click)="goToAppliedJobs()">Applied Jobs</button>
+        </li>
+
+        <!-- Logout -->
+        <li class="nav-item">
+          <button class="btn btn-danger nav-link text-white fw-bold" (click)="logout()" title="Logout">Logout</button>
+        </li>
+      </ul>
+    </div>
   </div>
-  <!-- .navbar-container -->
 </nav>
 
+
 <!-- Notifications Modal (User Only) -->
-<div
-  *ngIf="role === 'user' && showNotifications"
-  class="notification-modal"
-  role="dialog"
-  aria-label="Notifications Panel"
->
-  <div class="notification-header">
-    <h4>Notifications</h4>
-    <button
-      class="close-btn"
-      (click)="closeNotifications()"
-      aria-label="Close notifications panel"
-    >
-      ×
-    </button>
+<div *ngIf="role === 'user' && showNotifications"
+  class="position-absolute end-0 mt-2 me-3 bg-white border rounded shadow p-3 zindex-tooltip" role="dialog"
+  aria-label="Notifications Panel" style="width: 280px;">
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h5 class="text-primary mb-0">Notifications</h5>
+    <button class="btn-close" (click)="closeNotifications()" aria-label="Close notifications panel"></button>
   </div>
 
-  <div class="notification-content">
-    <div *ngIf="loadingNotifications" class="spinner-container">
-      <div class="spinner" aria-hidden="true"></div>
-      <div class="loading-text">Loading notifications...</div>
+  <div>
+    <!-- Spinner -->
+    <div *ngIf="loadingNotifications" class="d-flex align-items-center gap-2 mb-2">
+      <div class="spinner-border text-secondary" role="status" style="width: 1.5rem; height: 1.5rem;"></div>
+      <strong>Loading notifications...</strong>
     </div>
 
-    <p
-      *ngIf="!loadingNotifications && (!notifications || notifications.length === 0)"
-      class="no-notifications"
-    >
-      No new notifications
-    </p>
+    <!-- No notifications -->
+    <p *ngIf="!loadingNotifications && (!notifications || notifications.length === 0)" class="text-muted">No new
+      notifications</p>
 
-    <ul
-      *ngIf="!loadingNotifications && notifications && notifications.length > 0"
-    >
-      <li *ngFor="let notification of notifications">
+    <!-- Notifications list -->
+    <ul *ngIf="!loadingNotifications && notifications?.length" class="list-unstyled mb-0">
+      <li *ngFor="let notification of notifications" class="mb-2">
         <ng-container *ngIf="parseNotification(notification.message) as parsed">
-          Your application for the job "<span class="job-title"
-            >{{ parsed.jobTitle }}</span
-          >" has been updated to '<span [ngClass]="parsed.statusClass"
-            >{{ parsed.status }}</span
-          >'.
+          Your application for "<strong>{{ parsed.jobTitle }}</strong>" is now
+          <span [ngClass]="parsed.statusClass">{{ parsed.status }}</span>.
         </ng-container>
       </li>
     </ul>
   </div>
 </div>
 
+
 <!-- Mobile Menu Overlay -->
-<div
-  *ngIf="showMobileMenu"
-  class="mobile-overlay"
-  (click)="toggleMobileMenu()"
-  aria-hidden="true"
-></div>
+<div *ngIf="showMobileMenu" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 zindex-fixed"
+  (click)="toggleMobileMenu()" aria-hidden="true"></div>
