@@ -1,9 +1,19 @@
-<div class="confirm-modal" *ngIf="show">
-  <div class="confirm-box">
-    <p>{{ message }}</p>
-    <div class="button-group">
-      <button (click)="onConfirm()">{{ confirmText }}</button>
-      <button (click)="onCancel()">{{ cancelText }}</button>
+<!-- Bootstrap Confirm Modal -->
+<div class="modal fade show d-block" tabindex="-1" role="dialog" *ngIf="show"
+  style="background-color: rgba(0, 0, 0, 0.5);">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-body p-4">
+        <p class="mb-4 text-dark fs-6">{{ message }}</p>
+        <div class="d-flex justify-content-end gap-2 flex-wrap">
+          <button type="button" class="btn btn-primary px-3 py-2" (click)="onConfirm()">
+            {{ confirmText }}
+          </button>
+          <button type="button" class="btn btn-danger px-3 py-2" (click)="onCancel()">
+            {{ cancelText }}
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
