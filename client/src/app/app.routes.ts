@@ -41,8 +41,8 @@ export const routes: Routes = [
         path: 'profile',
         loadComponent: () =>
           import(
-            './components/employer-specific-components/employer-profile/employer-profile'
-          ).then((m) => m.EmployerProfileComponent),
+            './components/profile/profile' // Use the existing profile component
+          ).then((m) => m.ProfileComponent),
       },
       {
         path: 'my-listings',
@@ -81,8 +81,8 @@ export const routes: Routes = [
       {
         path: 'profile',
         loadComponent: () =>
-          import('./components/user-specific-components/user-profile/user-profile').then(
-            (m) => m.UserProfileComponent
+          import('./components/profile/profile').then(
+            (m) => m.ProfileComponent
           ),
       },
       {
