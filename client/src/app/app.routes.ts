@@ -1,7 +1,7 @@
 import { Routes, Route } from '@angular/router';
 import { authGuard } from './auth/auth-guard';
 // Import the eagerly loaded EmployerLayoutComponent since we need to use it as `component` (not lazy-loaded)
-import { EmployerLayoutComponent } from './components/employer-specific-components/employer-layout/employer-layout';
+import { LayoutComponent } from './components/layout/layout';
 
 export const routes: Routes = [
   {
@@ -26,7 +26,7 @@ export const routes: Routes = [
 
   {
     path: 'employer',
-    component: EmployerLayoutComponent,
+    component: LayoutComponent,
     canActivate: [authGuard],
     data: { roles: ['employer'] }, // Use component here for layout with children
     children: [
@@ -34,8 +34,8 @@ export const routes: Routes = [
         path: 'dashboard',
         loadComponent: () =>
           import(
-            './components/employer-specific-components/dashboard/employer-dashboard.component'
-          ).then((m) => m.EmployerDashboardComponent),
+            './components/dashboard/dashboard'
+          ).then((m) => m.DashboardComponent),  
       },
       {
         path: 'profile',
@@ -65,8 +65,8 @@ export const routes: Routes = [
   {
     path: 'user',
     loadComponent: () =>
-      import('./components/user-specific-components/user-layout/user-layout').then(
-        (m) => m.UserLayoutComponent
+      import('./components/layout/layout').then(
+        (m) => m.LayoutComponent
       ),
     canActivate: [authGuard],
     data: { roles: ['user'] },
@@ -74,8 +74,8 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         loadComponent: () =>
-          import('./components/user-specific-components/dashboard/user-dashboard.component').then(
-            (m) => m.UserDashboardComponent
+          import('./components/dashboard/dashboard').then(
+            (m) => m.DashboardComponent
           ),
       },
       {

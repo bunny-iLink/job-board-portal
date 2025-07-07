@@ -1,0 +1,176 @@
+<!-- Main container -->
+<div class="dashboard-container">
+
+  <!-- ========== COMMON LOGIN CHECK ========== -->
+  <div *ngIf="!token" class="no-data" aria-live="polite">
+    <p>Please login to access the site.</p>
+  </div>
+
+  <!-- ========== USER DASHBOARD ========== -->
+  <ng-container *ngIf="token && role === 'user'">
+    <!-- Loading user data -->
+    <div *ngIf="isUserLoading" class="spinner-container">
+      <div class="spinner"></div>
+      <div class="loading-text">Loading user data...</div>
+    </div>
+
+    <!-- Display user info -->
+    <header class="dashboard-header" *ngIf="!isUserLoading && user">
+      <h1>Welcome, {{ user.name }}</h1>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+    </header>
+
+    <!-- Loading applied jobs -->
+    <div *ngIf="isUserJobsLoading" class="spinner-container">
+      <div class="spinner"></div>
+      <div>Loading your applied jobs...</div>
+    </div>
+
+    <!-- Message if no applied jobs -->
+    <div
+      *ngIf="!isUserJobsLoading && appliedJobs.length === 0 && user"
+      class="not-applied"
+    >
+      <p>You haven’t applied for any jobs yet.</p>
+    </div>
+
+    <!-- Applied jobs section -->
+    <section
+      class="applied-jobs"
+      *ngIf="!isUserJobsLoading && appliedJobs.length > 0"
+    >
+      <h2>Your Applied Jobs</h2>
+      <table class="job-table">
+        <thead>
+          <tr>
+            <th>Job Title</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let job of appliedJobs">
+            <td>{{ job.title }}</td>
+            <td>
+              <span
+                [ngClass]="{
+                  accepted: job.status === 'Accepted',
+                  rejected: job.status === 'Rejected',
+                  'in-progress': job.status === 'In Progress'
+                }"
+              >
+                {{ job.status }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Charts Section -->
+    <section
+      class="charts-section"
+      *ngIf="!isChartLoading && (userPieChartOptions || userBarChartOptions)"
+    >
+      <h2 class="section-title">Application Insights</h2>
+      <div class="chart-container">
+        <div
+          *ngIf="userPieChartOptions"
+          echarts
+          [options]="userPieChartOptions"
+          class="chart pie-chart"
+        ></div>
+
+        <div
+          *ngIf="userBarChartOptions"
+          echarts
+          [options]="userBarChartOptions"
+          class="chart bar-chart"
+        ></div>
+      </div>
+    </section>
+
+    <div *ngIf="isChartLoading" class="loading">Loading charts...</div>
+  </ng-container>
+
+  <!-- ========== EMPLOYER DASHBOARD ========== -->
+  <ng-container *ngIf="token && role === 'employer'">
+    <!-- Header section displaying employer details if logged in -->
+    <header class="dashboard-header">
+      <div *ngIf="isEmployerLoading" class="spinner-container">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading employer data...</div>
+      </div>
+      <div *ngIf="!isEmployerLoading && employer">
+        <h1>Welcome, {{ employer?.name }}</h1>
+        <p><strong>Email:</strong> {{ employer?.email }}</p>
+        <p *ngIf="employer?.company">
+          <strong>Company:</strong> {{ employer?.company }}
+        </p>
+      </div>
+    </header>
+
+    <!-- Job listings -->
+    <section aria-labelledby="jobListingsHeading">
+      <h2 id="jobListingsHeading" class="section-title">My Job Listings</h2>
+
+      <div *ngIf="isEmployerJobsLoading" class="spinner-container">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading job listings...</div>
+      </div>
+
+      <div *ngIf="!isEmployerJobsLoading && jobs.length === 0" class="no-jobs">
+        <p>No jobs posted yet.</p>
+      </div>
+
+      <div
+        *ngIf="!isEmployerJobsLoading && jobs.length > 0"
+        class="job-grid"
+        role="list"
+      >
+        <div
+          *ngFor="let job of jobs"
+          class="job-tile"
+          role="listitem"
+          tabindex="0"
+          (click)="viewJobDetails(job._id)"
+          (keyup.enter)="viewJobDetails(job._id)"
+          [attr.aria-label]="
+            'Job listing for ' +
+            job.title +
+            ' with ' +
+            job.applicantCount +
+            ' applicants and ' +
+            job.vacancies +
+            ' vacancies'
+          "
+        >
+          <h4>{{ job.title }}</h4>
+          <p><strong>Applicants:</strong> {{ job.applicantCount }}</p>
+          <p><strong>Vacancies:</strong> {{ job.vacancies }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Charts Section -->
+    <section class="charts-section" *ngIf="!isChartLoading">
+      <h2 class="section-title">Application Statistics</h2>
+
+      <div class="chart-container">
+        <div
+          *ngIf="employerBarChartOptions?.series?.length"
+          echarts
+          [options]="employerBarChartOptions"
+          class="chart line-chart"
+        ></div>
+
+        <div
+          *ngIf="employerPieChartOptions?.series?.length"
+          echarts
+          [options]="employerPieChartOptions"
+          class="chart pie-chart"
+        ></div>
+      </div>
+    </section>
+    <div *ngIf="isChartLoading">Loading charts...</div>
+  </ng-container>
+</div>

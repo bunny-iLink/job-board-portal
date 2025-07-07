@@ -30,6 +30,32 @@
   margin-left: 5px;
 }
 
+/* Alert overlay stays fixed above everything */
+.alert-overlay {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999; /* Must be higher than modal */
+  pointer-events: none;
+}
+
+.alert-overlay app-alert {
+  pointer-events: auto;
+}
+
+.confirm-overlay {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999; /* Must be higher than modal */
+  pointer-events: none;
+}
+.confirm-overlay app-confirm {
+  pointer-events: auto;
+}
+
 .filters {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

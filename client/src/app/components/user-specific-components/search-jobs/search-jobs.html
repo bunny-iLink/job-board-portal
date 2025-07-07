@@ -1,18 +1,19 @@
-<app-alert
-  [message]="alertMessage"
-  [type]="alertType"
-  [show]="showAlert"
-  (closed)="onAlertClosed()"
->
-</app-alert>
 
-<app-confirm
-  [show]="showConfirm"
-  [message]="confirmMessage"
-  (confirmed)="onConfirmApply()"
-  (cancelled)="onCancelConfirm()"
->
-</app-confirm>
+  <app-alert
+    [message]="alertMessage"
+    [type]="alertType"
+    [show]="showAlert"
+    (closed)="onAlertClosed()"
+  ></app-alert>
+
+
+  <app-confirm
+    [show]="showConfirm"
+    [message]="confirmMessage"
+    (confirmed)="onConfirmApply()"
+    (cancelled)="onCancelConfirm()"
+  >
+  </app-confirm>
 
 <!-- Container for job search and filters -->
 <div class="search-container">
