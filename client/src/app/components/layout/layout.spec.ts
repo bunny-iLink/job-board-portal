@@ -1,18 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { Layout } from './layout';
+import { provideHttpClient } from '@angular/common/http'; // Modern replacement for HttpClientTestingModule
+import { LayoutComponent } from './layout';
 
 describe('Layout', () => {
-  let component: Layout;
-  let fixture: ComponentFixture<Layout>;
+  let component: LayoutComponent;
+  let fixture: ComponentFixture<LayoutComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Layout]
+      imports: [LayoutComponent],
+      providers: [provideHttpClient()] // ✅ modern replacement for HttpClientTestingModule
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Layout);
+    fixture = TestBed.createComponent(LayoutComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
