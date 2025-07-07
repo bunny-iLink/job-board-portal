@@ -3,117 +3,102 @@
   [type]="alertType"
   [show]="showAlert"
   (closed)="onAlertClosed()"
->
-</app-alert>
+></app-alert>
 
 <app-confirm
   [message]="confirmMessage"
   [show]="showConfirm"
   (confirmed)="onConfirmRevoke()"
   (cancelled)="onCancelConfirm()"
->
-</app-confirm>
+></app-confirm>
 
-<!-- Container for displaying all jobs the user has applied to -->
-<div class="applied-jobs-container">
-  <h2>Your Applied Jobs</h2>
+<div class="container my-5">
+  <h2 class="text-center mb-4">Your Applied Jobs</h2>
 
-  <!-- Show loading spinner -->
-  <div *ngIf="loading" class="apinner-container">
-    <div class="spinner"></div>
-    <div class="loading-text">Loading applied jobs...</div>
+  <div *ngIf="loading" class="d-flex align-items-center justify-content-center gap-2 text-secondary">
+    <div class="spinner-border text-primary" role="status"></div>
+    <span>Loading applied jobs...</span>
   </div>
 
-  <!-- Message if user hasn't applied to any jobs -->
-  <div *ngIf="!loading && appliedJobs.length === 0" class="empty-message">
+  <div *ngIf="!loading && appliedJobs.length === 0" class="text-center text-muted fs-5">
     You haven't applied to any jobs yet.
   </div>
 
-  <!-- List of applied jobs as cards -->
-  <div *ngIf="!loading && appliedJobs.length > 0">
-    <div
-      *ngFor="let job of appliedJobs"
-      class="job-card"
-      (click)="openJobModal(job)"
-    >
-      <h3>{{ job.title }}</h3>
-      <p><strong>Company:</strong> {{ job.company }}</p>
-      <p><strong>Location:</strong> {{ job.location }}</p>
-      <p><strong>Status:</strong> {{ job.status || 'Under Review' }}</p>
-      <p>
-        <strong>Applied On:</strong> {{ job.createdAt | date:'mediumDate' }}
-      </p>
+  <div *ngIf="!loading && appliedJobs.length > 0" class="row">
+    <div *ngFor="let job of appliedJobs" class="col-md-6 mb-4">
+      <div class="card h-100 shadow-sm" (click)="openJobModal(job)" style="cursor: pointer;">
+        <div class="card-body">
+          <h5 class="card-title text-primary">{{ job.title }}</h5>
+          <p class="card-text"><strong>Company:</strong> {{ job.company }}</p>
+          <p class="card-text"><strong>Location:</strong> {{ job.location }}</p>
+          <p class="card-text"><strong>Status:</strong> {{ job.status || 'Under Review' }}</p>
+          <p class="card-text"><strong>Applied On:</strong> {{ job.createdAt | date:'mediumDate' }}</p>
+          <p class="card-text"><strong>Description:</strong> {{ job.description?.overview || 'No description available.' }}</p>
 
-      <div class="description">
-        <p>
-          <strong>Description:</strong> {{ job.description?.overview || 'No
-          description available.' }}
-        </p>
+          <button class="btn btn-danger mt-3"
+            (click)="revokeApplication(job._id); $event.stopPropagation()">
+            Revoke Application
+          </button>
+        </div>
       </div>
-      <!-- Button to revoke application, stops event propagation to avoid opening modal -->
-      <button
-        class="revoke-btn"
-        (click)="revokeApplication(job._id); $event.stopPropagation()"
-      >
-        Revoke Application
-      </button>
     </div>
   </div>
 </div>
 
-<!-- Modal for detailed job information -->
-<div class="modal" *ngIf="showModal">
-  <div class="modal-content">
-    <span class="close-btn" (click)="closeModal()">&times;</span>
+<!-- Modal -->
+<div class="modal fade show d-block" tabindex="-1" *ngIf="showModal" style="background: rgba(0,0,0,0.45);">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ selectedJob.title }}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Company:</strong> {{ selectedJob.company }}</p>
+        <p><strong>Employer Name:</strong> {{ selectedJob.employerName }}</p>
+        <p><strong>Location:</strong> {{ selectedJob.location }}</p>
+        <p><strong>Type:</strong> {{ selectedJob.type }}</p>
+        <p><strong>Salary:</strong> ₹{{ selectedJob.salary }} LPA</p>
+        <p><strong>Experience Required:</strong> {{ selectedJob.experience }} Years</p>
+        <p><strong>Vacancies:</strong> {{ selectedJob.vacancies }}</p>
+        <p><strong>Status:</strong> {{ selectedJob.status }}</p>
 
-    <h2>{{ selectedJob.title }}</h2>
-    <p><strong>Company:</strong> {{ selectedJob.company }}</p>
-    <p><strong>Employer Name:</strong> {{ selectedJob.employerName }}</p>
-    <p><strong>Location:</strong> {{ selectedJob.location }}</p>
-    <p><strong>Type:</strong> {{ selectedJob.type }}</p>
-    <p><strong>Salary:</strong> ₹{{ selectedJob.salary }} LPA</p>
-    <p>
-      <strong>Experience Required:</strong> {{ selectedJob.experience }} Years
-    </p>
-    <p><strong>Vacancies:</strong> {{ selectedJob.vacancies }}</p>
-    <p><strong>Status:</strong> {{ selectedJob.status }}</p>
+        <div *ngIf="selectedJob.description">
+          <p><strong>Overview:</strong> {{ selectedJob.description.overview }}</p>
 
-    <!-- Job description details -->
-    <div *ngIf="selectedJob.description">
-      <p><strong>Overview:</strong></p>
-      <p>{{ selectedJob.description.overview }}</p>
+          <p><strong>Responsibilities:</strong></p>
+          <ul class="list-group mb-3">
+            <li class="list-group-item" *ngFor="let item of selectedJob.description.responsibilities">
+              {{ item }}
+            </li>
+          </ul>
 
-      <p><strong>Responsibilities:</strong></p>
-      <ul>
-        <li *ngFor="let item of selectedJob.description.responsibilities">
-          {{ item }}
-        </li>
-      </ul>
+          <p><strong>Required Skills:</strong></p>
+          <ul class="list-group mb-3">
+            <li class="list-group-item" *ngFor="let skill of selectedJob.description.requiredSkills">
+              {{ skill }}
+            </li>
+          </ul>
 
-      <p><strong>Required Skills:</strong></p>
-      <ul>
-        <li *ngFor="let skill of selectedJob.description.requiredSkills">
-          {{ skill }}
-        </li>
-      </ul>
+          <ng-container *ngIf="selectedJob.description.preferredSkills?.length">
+            <p><strong>Preferred Skills:</strong></p>
+            <ul class="list-group mb-3">
+              <li class="list-group-item" *ngFor="let skill of selectedJob.description.preferredSkills">
+                {{ skill }}
+              </li>
+            </ul>
+          </ng-container>
 
-      <p *ngIf="selectedJob.description.preferredSkills?.length">
-        <strong>Preferred Skills:</strong>
-      </p>
-      <ul *ngIf="selectedJob.description.preferredSkills?.length">
-        <li *ngFor="let skill of selectedJob.description.preferredSkills">
-          {{ skill }}
-        </li>
-      </ul>
-
-      <p *ngIf="selectedJob.description.whatWeOffer?.length">
-        <strong>What We Offer:</strong>
-      </p>
-      <ul *ngIf="selectedJob.description.whatWeOffer?.length">
-        <li *ngFor="let benefit of selectedJob.description.whatWeOffer">
-          {{ benefit }}
-        </li>
-      </ul>
+          <ng-container *ngIf="selectedJob.description.whatWeOffer?.length">
+            <p><strong>What We Offer:</strong></p>
+            <ul class="list-group">
+              <li class="list-group-item" *ngFor="let benefit of selectedJob.description.whatWeOffer">
+                {{ benefit }}
+              </li>
+            </ul>
+          </ng-container>
+        </div>
+      </div>
     </div>
   </div>
 </div>

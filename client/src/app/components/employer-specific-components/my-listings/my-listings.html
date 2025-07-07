@@ -3,230 +3,175 @@
   [show]="showConfirm"
   (confirmed)="onConfirmDelete()"
   (cancelled)="onCancelConfirm()"
->
-</app-confirm>
+></app-confirm>
 
 <app-alert
   [message]="alertMessage"
   [type]="alertType"
   [show]="showAlert"
   (closed)="onAlertClosed()"
->
-</app-alert>
+></app-alert>
 
-<div class="header">
-  <button class="add-btn" (click)="openModal()">+ Add Job</button>
+<!-- Add Job Button -->
+<div class="d-flex justify-content-end p-3 bg-light border-bottom">
+  <button class="btn btn-primary fw-semibold" (click)="openModal()">+ Add Job</button>
 </div>
 
 <!-- Modal -->
-<div class="modal" *ngIf="isModalOpen">
-  <div class="modal-content">
-    <h2>{{ isEditMode ? 'Edit Job' : 'Add New Job' }}</h2>
-    <div class="form-scroll-area">
-      <form #jobFormEl="ngForm">
-        <label for="title">Title</label>
-        <input
-          id="title"
-          type="text"
-          [(ngModel)]="jobForm.title"
-          name="title"
-          placeholder="Title"
-          required
-        />
+<div class="modal fade show d-block" tabindex="-1" *ngIf="isModalOpen" style="background: rgba(0,0,0,0.5)">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ isEditMode ? 'Edit Job' : 'Add New Job' }}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+      </div>
 
-        <label for="employerName">Employer Name</label>
-        <input
-          id="employerName"
-          type="text"
-          [(ngModel)]="jobForm.employerName"
-          name="employerName"
-          placeholder="Employer Name"
-          required
-        />
+      <form #jobFormEl="ngForm" (ngSubmit)="handleFormSubmit(jobFormEl)">
+        <div class="modal-body">
 
-        <label for="domain">Domain</label>
-        <select id="domain" [(ngModel)]="jobForm.domain" name="domain" required>
-          <option value="">Select domain</option>
-          <option value="Technology & IT">Technology & IT</option>
-          <option value="Sales & Marketing">Sales & Marketing</option>
-          <option value="Business & Management">Business & Management</option>
-          <option value="Finance & Accounting">Finance & Accounting</option>
-          <option value="Human Resources & Recruitment">
-            Human Resources & Recruitment
-          </option>
-          <option value="Healthcare & Life Sciences">
-            Healthcare & Life Sciences
-          </option>
-          <option value="Education & Training">Education & Training</option>
-          <option value="Engineering & Manufacturing">
-            Engineering & Manufacturing
-          </option>
-          <option value="Creative & Design">Creative & Design</option>
-          <option value="Legal & Compliance">Legal & Compliance</option>
-          <option value="Media & Communication">Media & Communication</option>
-          <option value="Logistics & Supply Chain">
-            Logistics & Supply Chain
-          </option>
-          <option value="Customer Service & Support">
-            Customer Service & Support
-          </option>
-        </select>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="title" class="form-label">Title</label>
+              <input id="title" type="text" class="form-control" [(ngModel)]="jobForm.title" name="title" required />
+            </div>
 
-        <label for="overview">Overview</label>
-        <input
-          id="overview"
-          type="text"
-          [(ngModel)]="jobForm.description.overview"
-          name="overview"
-          placeholder="Overview"
-          required
-        />
+            <div class="col-md-6">
+              <label for="employerName" class="form-label">Employer Name</label>
+              <input id="employerName" type="text" class="form-control" [(ngModel)]="jobForm.employerName" name="employerName" required />
+            </div>
 
-        <label for="company">Company</label>
-        <input
-          id="company"
-          type="text"
-          [(ngModel)]="jobForm.company"
-          name="company"
-          placeholder="Company"
-          required
-        />
+            <div class="col-md-6">
+              <label for="domain" class="form-label">Domain</label>
+              <select id="domain" class="form-select" [(ngModel)]="jobForm.domain" name="domain" required>
+                <option value="">Select domain</option>
+                <!-- options -->
+                  <option value="Technology & IT">Technology & IT</option>
+                  <option value="Sales & Marketing">Sales & Marketing</option>
+                  <option value="Business & Management">Business & Management</option>
+                  <option value="Finance & Accounting">Finance & Accounting</option>
+                  <option value="Human Resources & Recruitment">Human Resources & Recruitment</option>
+                  <option value="Healthcare & Life Sciences">Healthcare & Life Sciences</option>
+                  <option value="Education & Training">Education & Training</option>
+                  <option va  lue="Engineering & Manufacturing">Engineering & Manufacturing</option>
+                  <option value="Creative & Design">Creative & Design</option>
+                  <option value="Legal & Compliance">Legal & Compliance</option>
+                  <option value="Media & Communication">Media & Communication</option>
+                  <option value="Logistics & Supply Chain">Logistics & Supply Chain</option>
+                  <option value="Customer Service & Support">Customer Service & Support</option>
+              </select>
+            </div>
 
-        <label for="location">Location</label>
-        <input
-          id="location"
-          type="text"
-          [(ngModel)]="jobForm.location"
-          name="location"
-          placeholder="Location"
-          required
-        />
+            <div class="col-md-6">
+              <label for="company" class="form-label">Company</label>
+              <input id="company" type="text" class="form-control" [(ngModel)]="jobForm.company" name="company" required />
+            </div>
 
-        <label for="salary">Salary (in LPA)</label>
-        <input
-          id="salary"
-          [(ngModel)]="jobForm.salary"
-          name="salary"
-          type="number"
-          min="0"
-          placeholder="Enter salary (in LPA)"
-          required
-        />
+            <div class="col-md-6">
+              <label for="location" class="form-label">Location</label>
+              <input id="location" type="text" class="form-control" [(ngModel)]="jobForm.location" name="location" required />
+            </div>
 
-        <label for="type">Job Type</label>
-        <select id="type" type="text" [(ngModel)]="jobForm.type" name="type">
-          <option value="">All</option>
-          <option value="Full-Time">Full-Time</option>
-          <option value="Part-Time">Part-Time</option>
-          <option value="Internship">Internship</option>
-          <option value="Remote">Remote</option>
-          required />
-        </select>
-        <label for="experience">Experience (in years)</label>
-        <input
-          id="experience"
-          type="number"
-          [(ngModel)]="jobForm.experience"
-          name="experience"
-          placeholder="Experience"
-          min="0"
-        />
+            <div class="col-md-6">
+              <label for="salary" class="form-label">Salary (in LPA)</label>
+              <input id="salary" type="number" class="form-control" [(ngModel)]="jobForm.salary" name="salary" min="0" required />
+            </div>
 
-        <label for="vacancies">Number of Vacancies</label>
-        <input
-          id="vacancies"
-          [(ngModel)]="jobForm.vacancies"
-          name="vacancies"
-          type="number"
-          min="0"
-          placeholder="Enter number of vacancies"
-          required
-        />
+            <div class="col-md-6">
+              <label for="type" class="form-label">Job Type</label>
+              <select id="type" class="form-select" [(ngModel)]="jobForm.type" name="type">
+                <option value="">All</option>
+                <option value="Full-Time">Full-Time</option>
+                <option value="Part-Time">Part-Time</option>
+                <option value="Internship">Internship</option>
+                <option value="Remote">Remote</option>
+              </select>
+            </div>
 
-        <label for="status">Status</label>
-        <select id="status" [(ngModel)]="jobForm.status" name="status" required>
-          <option value="open">Open</option>
-          <option value="close">Close</option>
-        </select>
+            <div class="col-md-6">
+              <label for="experience" class="form-label">Experience (in years)</label>
+              <input id="experience" type="number" class="form-control" [(ngModel)]="jobForm.experience" name="experience" min="0" />
+            </div>
 
-        <label for="responsibilities">Responsibilities</label>
-        <input
-          id="responsibilities"
-          type="text"
-          [ngModel]="fromArray(jobForm.description.responsibilities)"
-          (ngModelChange)="jobForm.description.responsibilities = toArray($event)"
-          name="responsibilities"
-          placeholder="Responsibilities (comma separated)"
-        />
+            <div class="col-md-6">
+              <label for="vacancies" class="form-label">Vacancies</label>
+              <input id="vacancies" type="number" class="form-control" [(ngModel)]="jobForm.vacancies" name="vacancies" min="0" required />
+            </div>
 
-        <label for="requiredSkills">Required Skills</label>
-        <input
-          id="requiredSkills"
-          type="text"
-          [ngModel]="fromArray(jobForm.description.requiredSkills)"
-          (ngModelChange)="jobForm.description.requiredSkills = toArray($event)"
-          name="requiredSkills"
-          placeholder="Required Skills (comma separated)"
-        />
+            <div class="col-md-6">
+              <label for="status" class="form-label">Status</label>
+              <select id="status" class="form-select" [(ngModel)]="jobForm.status" name="status" required>
+                <option value="open">Open</option>
+                <option value="close">Close</option>
+              </select>
+            </div>
 
-        <label for="preferredSkills">Preferred Skills</label>
-        <input
-          id="preferredSkills"
-          type="text"
-          [ngModel]="fromArray(jobForm.description.preferredSkills)"
-          (ngModelChange)="jobForm.description.preferredSkills = toArray($event)"
-          name="preferredSkills"
-          placeholder="Preferred Skills (comma separated)"
-        />
+            <div class="col-12">
+              <label for="overview" class="form-label">Overview</label>
+              <input id="overview" type="text" class="form-control" [(ngModel)]="jobForm.description.overview" name="overview" required />
+            </div>
 
-        <label for="whatWeOffer">What We Offer</label>
-        <input
-          id="whatWeOffer"
-          type="text"
-          [ngModel]="fromArray(jobForm.description.whatWeOffer)"
-          (ngModelChange)="jobForm.description.whatWeOffer = toArray($event)"
-          name="whatWeOffer"
-          placeholder="What We Offer (comma separated)"
-        />
+            <!-- Comma-separated lists -->
+            <div class="col-12">
+              <label class="form-label">Responsibilities</label>
+              <input type="text" class="form-control" [ngModel]="fromArray(jobForm.description.responsibilities)" (ngModelChange)="jobForm.description.responsibilities = toArray($event)" name="responsibilities" />
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Required Skills</label>
+              <input type="text" class="form-control" [ngModel]="fromArray(jobForm.description.requiredSkills)" (ngModelChange)="jobForm.description.requiredSkills = toArray($event)" name="requiredSkills" />
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Preferred Skills</label>
+              <input type="text" class="form-control" [ngModel]="fromArray(jobForm.description.preferredSkills)" (ngModelChange)="jobForm.description.preferredSkills = toArray($event)" name="preferredSkills" />
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">What We Offer</label>
+              <input type="text" class="form-control" [ngModel]="fromArray(jobForm.description.whatWeOffer)" (ngModelChange)="jobForm.description.whatWeOffer = toArray($event)" name="whatWeOffer" />
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">{{ isEditMode ? 'Update' : 'Create' }}</button>
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+        </div>
       </form>
     </div>
-    <div class="modal-actions">
-      <button
-        type="button"
-        class="submit-btn"
-        (click)="handleFormSubmit(jobFormEl)"
-      >
-        {{ isEditMode ? 'Update' : 'Create' }}
-      </button>
-      <button type="button" class="cancel-btn" (click)="closeModal()">
-        Cancel
-      </button>
+  </div>
+</div>
+
+<!-- Spinner -->
+<div class="d-flex align-items-center justify-content-center gap-3 p-3 fw-bold text-secondary" *ngIf="loading">
+  <div class="spinner-border" role="status" aria-hidden="true"></div>
+  <div>Loading job listings...</div>
+</div>
+
+<!-- Job Tiles -->
+<div class="container mt-4">
+  <div class="row g-3">
+    <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let job of jobs">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">{{ job.title }}</h5>
+          <p class="mb-1"><strong>Company:</strong> {{ job.company }}</p>
+          <p class="mb-1"><strong>Location:</strong> {{ job.location }}</p>
+          <p class="mb-1"><strong>Salary:</strong> ₹{{ job.salary }} LPA</p>
+          <p class="mb-1"><strong>Type:</strong> {{ job.type }}</p>
+          <p class="mb-3"><strong>Status:</strong> {{ job.status }}</p>
+
+          <div class="mt-auto d-flex gap-2">
+            <button class="btn btn-warning btn-sm w-50" (click)="openModal(job)">Edit</button>
+            <button class="btn btn-danger btn-sm w-50" (click)="deleteJob(job._id!)">Delete</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="spinner-container" *ngIf="loading">
-  <div class="spinner"></div>
-  <div class="loading-text">Loading job listings...</div>
-</div>
-
-<!-- Job List -->
-<div class="job-list">
-  <div class="job-tile" *ngFor="let job of jobs">
-    <h3>{{ job.title }}</h3>
-    <p><strong>Company:</strong> {{ job.company }}</p>
-    <p><strong>Location:</strong> {{ job.location }}</p>
-    <p><strong>Salary:</strong> ₹{{ job.salary }} LPA</p>
-    <p><strong>Type:</strong> {{ job.type }}</p>
-    <p><strong>Status:</strong> {{ job.status }}</p>
-    <div class="actions">
-      <button class="edit-btn" (click)="openModal(job)">Edit</button>
-      <button class="delete-btn" (click)="deleteJob(job._id!)">Delete</button>
-    </div>
-  </div>
-</div>
-
-<!-- No jobs -->
-<div *ngIf="!loading && jobs.length === 0" class="no-jobs-found">
+<!-- No jobs found -->
+<div class="text-center text-muted mt-4" *ngIf="!loading && jobs.length === 0">
   No job listings found.
 </div>

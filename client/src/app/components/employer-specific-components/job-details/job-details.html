@@ -3,99 +3,98 @@
   [show]="showConfirm"
   (confirmed)="onConfirmStatusChange()"
   (cancelled)="onCancelStatusChange()"
->
-</app-confirm>
+></app-confirm>
 
 <app-alert
   [message]="alertMessage"
   [type]="alertType"
   [show]="showAlert"
   (closed)="onAlertClosed()"
->
-</app-alert>
+></app-alert>
 
-<div *ngIf="loadingJobDetails" class="spinner-container" aria-busy="true">
-  <div class="spinner"></div>
-  <div class="loading-text">Loading job details and applicants...</div>
-  <!-- You can replace with a spinner icon or animation -->
+<!-- Spinner -->
+<div *ngIf="loadingJobDetails" class="d-flex justify-content-center align-items-center gap-3 p-3 fw-bold text-secondary">
+  <div class="spinner-border" role="status"></div>
+  <div>Loading job details and applicants...</div>
 </div>
 
-<div class="job-details-container" *ngIf="job">
-  <h1>{{ job.title }}</h1>
+<!-- Job Details -->
+<div *ngIf="job" class="container mt-5 p-4 bg-white rounded shadow">
+  <h1 class="text-primary mb-3">{{ job.title }}</h1>
   <p><strong>Company:</strong> {{ job.company }}</p>
   <p><strong>Location:</strong> {{ job.location }}</p>
   <p><strong>Type:</strong> {{ job.type }}</p>
-  <p><strong>Salary:</strong> {{ job.salary }}</p>
+  <p><strong>Salary:</strong> ₹{{ job.salary }} LPA</p>
   <p><strong>Experience Required:</strong> {{ job.experience }} years</p>
   <p><strong>Vacancies:</strong> {{ job.vacancies }}</p>
   <p><strong>Status:</strong> {{ job.status }}</p>
 
-  <section class="job-section" *ngIf="job.description">
-    <h2>Overview</h2>
-    <p>{{ job.description.overview }}</p>
+  <!-- Job Description -->
+  <div class="mt-4">
+    <h4 class="border-bottom pb-1">Overview</h4>
+    <p>{{ job.description?.overview }}</p>
 
-    <h3>Responsibilities</h3>
+    <h5 class="mt-3 text-primary">Responsibilities</h5>
     <ul>
-      <li *ngFor="let task of job.description.responsibilities">{{ task }}</li>
+      <li *ngFor="let task of job.description?.responsibilities">{{ task }}</li>
     </ul>
 
-    <h3>Required Skills</h3>
+    <h5 class="mt-3 text-primary">Required Skills</h5>
     <ul>
-      <li *ngFor="let skill of job.description.requiredSkills">{{ skill }}</li>
+      <li *ngFor="let skill of job.description?.requiredSkills">{{ skill }}</li>
     </ul>
 
-    <h3 *ngIf="job.description.preferredSkills?.length">Preferred Skills</h3>
+    <h5 *ngIf="job.description?.preferredSkills?.length" class="mt-3 text-primary">Preferred Skills</h5>
     <ul>
-      <li *ngFor="let skill of job.description.preferredSkills">{{ skill }}</li>
+      <li *ngFor="let skill of job.description?.preferredSkills">{{ skill }}</li>
     </ul>
 
-    <h3 *ngIf="job.description.whatWeOffer?.length">What We Offer</h3>
+    <h5 *ngIf="job.description?.whatWeOffer?.length" class="mt-3 text-primary">What We Offer</h5>
     <ul>
-      <li *ngFor="let offer of job.description.whatWeOffer">{{ offer }}</li>
+      <li *ngFor="let offer of job.description?.whatWeOffer">{{ offer }}</li>
     </ul>
-  </section>
+  </div>
 
-  <section class="applicant-section">
-    <div class="applicant-header">
-      <h2>Applicants ({{ applicants.length }})</h2>
-      <button (click)="downloadAcceptedApplicantsCSV()" class="download-btn">
+  <!-- Applicants Section -->
+  <div class="mt-5">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+      <h4 class="mb-0">Applicants ({{ applicants.length }})</h4>
+      <button (click)="downloadAcceptedApplicantsCSV()" class="btn btn-success">
         ⬇️ Download Accepted Applicants (CSV)
       </button>
     </div>
     <hr />
 
-    <div *ngIf="applicants.length === 0" class="no-applicants">
-      <p>No one has applied for this job yet.</p>
+    <!-- No Applicants -->
+    <div *ngIf="applicants.length === 0" class="text-muted fst-italic mt-3">
+      No one has applied for this job yet.
     </div>
 
-    <div *ngFor="let applicant of applicants" class="applicant-card">
-      <p><strong>Name:</strong> {{ applicant.userId?.name || 'N/A' }}</p>
-      <p><strong>Email:</strong> {{ applicant.userId?.email || 'N/A' }}</p>
-      <p>
-        <strong>Contact Number:</strong> {{ applicant.userId?.phone || 'N/A'}}
-      </p>
-      <p>
-        <strong>Applied At:</strong> {{ applicant.appliedAt | date:'medium' }}
-      </p>
-      <a
-        *ngIf="applicant.userId?.resume"
-        (click)="openResume(applicant._id)"
-        style="cursor: pointer"
-      >
-        View Resume
-      </a>
-      <p>
-        <strong>Status:</strong>
-        <select
-          [ngModel]="applicant.status"
-          (ngModelChange)="onStatusChange(applicant._id, $event)"
-          class="status-dropdown"
-        >
-          <option value="In Progress">In Progress</option>
-          <option value="Accepted">Accepted</option>
-          <option value="Rejected">Rejected</option>
-        </select>
-      </p>
+    <!-- Applicants List -->
+    <div *ngFor="let applicant of applicants" class="card mt-3 shadow-sm">
+      <div class="card-body">
+        <p><strong>Name:</strong> {{ applicant.userId?.name || 'N/A' }}</p>
+        <p><strong>Email:</strong> {{ applicant.userId?.email || 'N/A' }}</p>
+        <p><strong>Contact Number:</strong> {{ applicant.userId?.phone || 'N/A' }}</p>
+        <p><strong>Applied At:</strong> {{ applicant.appliedAt | date:'medium' }}</p>
+
+        <a *ngIf="applicant.userId?.resume" (click)="openResume(applicant._id)" class="link-primary" style="cursor: pointer">
+          View Resume
+        </a>
+
+        <div class="mt-3">
+          <label class="form-label fw-semibold me-2">Status:</label>
+          <select
+            class="form-select w-auto d-inline-block"
+            [ngModel]="applicant.status"
+            (ngModelChange)="onStatusChange(applicant._id, $event)"
+          >
+            <option value="In Progress">In Progress</option>
+            <option value="Accepted">Accepted</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
+      </div>
     </div>
-  </section>
+  </div>
 </div>
