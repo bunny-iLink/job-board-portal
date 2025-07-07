@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { Profile } from './profile';
+import { provideHttpClient } from '@angular/common/http';
+import { ProfileComponent } from './profile';
 
 describe('Profile', () => {
-  let component: Profile;
-  let fixture: ComponentFixture<Profile>;
+  let component: ProfileComponent;
+  let fixture: ComponentFixture<ProfileComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Profile]
-    })
-    .compileComponents();
+      imports: [ProfileComponent],
+      providers: [provideHttpClient()] // ✅ modern replacement for HttpClientTestingModule
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(Profile);
+    fixture = TestBed.createComponent(ProfileComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { provideHttpClient } from '@angular/common/http'; // Modern replacement for HttpClientTestingModule
 import { MyListingsComponent } from './my-listings';
 
 describe('MyListings', () => {
@@ -8,7 +8,8 @@ describe('MyListings', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MyListingsComponent]
+      imports: [MyListingsComponent],
+      providers: [provideHttpClient()] // ✅ modern replacement for HttpClientTestingModule
     })
     .compileComponents();
 

@@ -1,23 +1,42 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HomeComponent } from './home';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { of } from 'rxjs';
 
-import { Home } from './home';
+describe('HomeComponent', () => {
+  let component: HomeComponent;
+  let fixture: ComponentFixture<HomeComponent>;
 
-describe('Home', () => {
-  let component: Home;
-  let fixture: ComponentFixture<Home>;
+  beforeEach(() => {
+    // ✅ Mock the global AOS object
+    (globalThis as any).AOS = {
+      init: jasmine.createSpy('init')
+    };
+  });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Home]
-    })
-    .compileComponents();
+      imports: [HomeComponent],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            paramMap: of(convertToParamMap({})),
+            snapshot: {
+              paramMap: convertToParamMap({})
+            }
+          }
+        }
+      ]
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(Home);
+    fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    expect((globalThis as any).AOS.init).toHaveBeenCalled(); // ✅ optional check
   });
 });

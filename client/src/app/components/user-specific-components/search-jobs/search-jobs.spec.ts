@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { provideHttpClient } from '@angular/common/http';
 import { SearchJobsComponent } from './search-jobs';
 
 describe('SearchJobs', () => {
@@ -8,7 +8,8 @@ describe('SearchJobs', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SearchJobsComponent]
+      imports: [SearchJobsComponent],
+      providers: [provideHttpClient()] // ✅ modern replacement for HttpClientTestingModule
     })
     .compileComponents();
 
