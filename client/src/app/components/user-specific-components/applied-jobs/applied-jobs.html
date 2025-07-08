@@ -1,19 +1,10 @@
-<app-alert
-  [message]="alertMessage"
-  [type]="alertType"
-  [show]="showAlert"
-  (closed)="onAlertClosed()"
-></app-alert>
+<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()"></app-alert>
 
-<app-confirm
-  [message]="confirmMessage"
-  [show]="showConfirm"
-  (confirmed)="onConfirmRevoke()"
-  (cancelled)="onCancelConfirm()"
-></app-confirm>
+<app-confirm [message]="confirmMessage" [show]="showConfirm" (confirmed)="onConfirmRevoke()"
+  (cancelled)="onCancelConfirm()"></app-confirm>
 
 <div class="container my-5">
-  <h2 class="text-center mb-4">Your Applied Jobs</h2>
+  <h2 class="text-center mb-4 text-dark">Your Applied Jobs</h2>
 
   <div *ngIf="loading" class="d-flex align-items-center justify-content-center gap-2 text-secondary">
     <div class="spinner-border text-primary" role="status"></div>
@@ -26,17 +17,18 @@
 
   <div *ngIf="!loading && appliedJobs.length > 0" class="row">
     <div *ngFor="let job of appliedJobs" class="col-md-6 mb-4">
-      <div class="card h-100 shadow-sm" (click)="openJobModal(job)" style="cursor: pointer;">
+      <div class="card h-100 shadow-sm border-0" (click)="openJobModal(job)" style="cursor: pointer;">
         <div class="card-body">
           <h5 class="card-title text-primary">{{ job.title }}</h5>
           <p class="card-text"><strong>Company:</strong> {{ job.company }}</p>
           <p class="card-text"><strong>Location:</strong> {{ job.location }}</p>
           <p class="card-text"><strong>Status:</strong> {{ job.status || 'Under Review' }}</p>
           <p class="card-text"><strong>Applied On:</strong> {{ job.createdAt | date:'mediumDate' }}</p>
-          <p class="card-text"><strong>Description:</strong> {{ job.description?.overview || 'No description available.' }}</p>
-
-          <button class="btn btn-danger mt-3"
-            (click)="revokeApplication(job._id); $event.stopPropagation()">
+          <p class="card-text">
+            <strong>Description:</strong>
+            {{ job.description?.overview || 'No description available.' }}
+          </p>
+          <button class="btn btn-danger mt-3" (click)="revokeApplication(job._id); $event.stopPropagation()">
             Revoke Application
           </button>
         </div>
@@ -48,9 +40,9 @@
 <!-- Modal -->
 <div class="modal fade show d-block" tabindex="-1" *ngIf="showModal" style="background: rgba(0,0,0,0.45);">
   <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
+    <div class="modal-content p-4">
       <div class="modal-header">
-        <h5 class="modal-title">{{ selectedJob.title }}</h5>
+        <h5 class="modal-title text-primary">{{ selectedJob.title }}</h5>
         <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
       </div>
       <div class="modal-body">
@@ -67,14 +59,14 @@
           <p><strong>Overview:</strong> {{ selectedJob.description.overview }}</p>
 
           <p><strong>Responsibilities:</strong></p>
-          <ul class="list-group mb-3">
+          <ul class="list-group list-group-flush mb-3">
             <li class="list-group-item" *ngFor="let item of selectedJob.description.responsibilities">
               {{ item }}
             </li>
           </ul>
 
           <p><strong>Required Skills:</strong></p>
-          <ul class="list-group mb-3">
+          <ul class="list-group list-group-flush mb-3">
             <li class="list-group-item" *ngFor="let skill of selectedJob.description.requiredSkills">
               {{ skill }}
             </li>
@@ -82,7 +74,7 @@
 
           <ng-container *ngIf="selectedJob.description.preferredSkills?.length">
             <p><strong>Preferred Skills:</strong></p>
-            <ul class="list-group mb-3">
+            <ul class="list-group list-group-flush mb-3">
               <li class="list-group-item" *ngFor="let skill of selectedJob.description.preferredSkills">
                 {{ skill }}
               </li>
@@ -91,7 +83,7 @@
 
           <ng-container *ngIf="selectedJob.description.whatWeOffer?.length">
             <p><strong>What We Offer:</strong></p>
-            <ul class="list-group">
+            <ul class="list-group list-group-flush">
               <li class="list-group-item" *ngFor="let benefit of selectedJob.description.whatWeOffer">
                 {{ benefit }}
               </li>

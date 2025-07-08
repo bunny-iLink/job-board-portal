@@ -1,144 +1,123 @@
+<!-- ALERT AND CONFIRM COMPONENTS (Positioning still custom due to lack of exact Bootstrap overlay) -->
+<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()"></app-alert>
 
-  <app-alert
-    [message]="alertMessage"
-    [type]="alertType"
-    [show]="showAlert"
-    (closed)="onAlertClosed()"
-  ></app-alert>
+<app-confirm [show]="showConfirm" [message]="confirmMessage" (confirmed)="onConfirmApply()"
+  (cancelled)="onCancelConfirm()"></app-confirm>
 
+<!-- SEARCH CONTAINER -->
+<div class="container my-4 p-4 bg-light rounded shadow-sm">
 
-  <app-confirm
-    [show]="showConfirm"
-    [message]="confirmMessage"
-    (confirmed)="onConfirmApply()"
-    (cancelled)="onCancelConfirm()"
-  >
-  </app-confirm>
+  <!-- Search input -->
+  <div class="mb-3">
+    <input class="form-control" [(ngModel)]="searchTerm" (input)="searchJobs()" placeholder="Search jobs..." />
+  </div>
 
-<!-- Container for job search and filters -->
-<div class="search-container">
-  <!-- Search input for job title or keywords -->
-  <input
-    [(ngModel)]="searchTerm"
-    (input)="searchJobs()"
-    placeholder="Search jobs..."
-  />
-
-  <!-- Filter options for job type, experience, and expected salary -->
-  <div class="filters">
-    <label
-      >Type:
-      <select [(ngModel)]="filters.type" (change)="searchJobs()">
+  <!-- Filters -->
+  <div class="row g-3">
+    <div class="col-md-4">
+      <label class="form-label">Type:</label>
+      <select class="form-select" [(ngModel)]="filters.type" (change)="searchJobs()">
         <option value="">All</option>
         <option value="Full-Time">Full-Time</option>
         <option value="Part-Time">Part-Time</option>
         <option value="Internship">Internship</option>
         <option value="Remote">Remote</option>
       </select>
-    </label>
+    </div>
 
-    <label
-      >Experience (in Years):
-      <input
-        type="number"
-        [(ngModel)]="filters.experience"
-        (input)="searchJobs()"
-        placeholder="Years"
-      />
-    </label>
+    <div class="col-md-4">
+      <label class="form-label">Experience (in Years):</label>
+      <input type="number" class="form-control" [(ngModel)]="filters.experience" (input)="searchJobs()"
+        placeholder="Years" />
+    </div>
 
-    <label
-      >Expected Salary (in LPA):
-      <input
-        type="number"
-        [(ngModel)]="filters.expectedSalary"
-        (input)="searchJobs()"
-      />
-    </label>
+    <div class="col-md-4">
+      <label class="form-label">Expected Salary (in LPA):</label>
+      <input type="number" class="form-control" [(ngModel)]="filters.expectedSalary" (input)="searchJobs()" />
+    </div>
   </div>
 
-  <div *ngIf="showDomainWarning && !loadingJobs" class="warning-message">
-    <p>
+  <!-- Warning message -->
+  <div *ngIf="showDomainWarning && !loadingJobs" class="alert alert-warning mt-3">
+    <p class="mb-0">
       Please <strong>set your preferred domain</strong> in your profile, or
       <strong>use the search box or filters</strong> to find relevant jobs.
     </p>
   </div>
 
-  <!-- Loading indicator -->
-  <div *ngIf="loadingJobs" class="spinner-container">
-    <div class="spinner"></div>
-    <div>Loading jobs, please wait...</div>
+  <!-- Loading spinner -->
+  <div *ngIf="loadingJobs" class="d-flex align-items-center justify-content-center gap-3 mt-4">
+    <div class="spinner-border text-secondary" role="status"></div>
+    <div><strong>Loading jobs, please wait...</strong></div>
   </div>
 
-  <!-- Grid of filtered job cards -->
-  <div class="jobs-grid">
-    <div
-      class="job-card"
-      *ngFor="let job of filteredJobs"
-      (click)="openJobModal(job)"
-    >
-      <h4>{{ job.title }}</h4>
-      <p><strong>{{ job.company }}</strong> - {{ job.location }}</p>
-      <p>{{ job.type }} | {{ job.salary }} LPA</p>
+  <!-- Job cards -->
+  <div class="row mt-4">
+    <div class="col-sm-6 col-md-4 col-lg-3 mb-4" *ngFor="let job of filteredJobs">
+      <div class="card h-100 shadow-sm job-card" (click)="openJobModal(job)">
+        <div class="card-body">
+          <h5 class="card-title text-primary">{{ job.title }}</h5>
+          <p class="card-text"><strong>{{ job.company }}</strong> - {{ job.location }}</p>
+          <p class="card-text text-muted">{{ job.type }} | {{ job.salary }} LPA</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Modal for detailed job information -->
-<div class="modal" *ngIf="showModal">
-  <div class="modal-content">
-    <span class="close-btn" (click)="closeModal()">&times;</span>
+<!-- Modal Backdrop -->
+<div class="modal-backdrop fade show" *ngIf="showModal"></div>
 
-    <h2>{{ selectedJob.title }}</h2>
-    <p><strong>Company:</strong> {{ selectedJob.company }}</p>
-    <p><strong>Employer Name:</strong> {{ selectedJob.employerName}}</p>
-    <p><strong>Location:</strong> {{ selectedJob.location }}</p>
-    <p><strong>Type:</strong> {{ selectedJob.type }}</p>
-    <p><strong>Salary:</strong> ₹{{ selectedJob.salary }} LPA</p>
-    <p>
-      <strong>Experience Required:</strong> {{ selectedJob.experience }} Years
-    </p>
-    <p><strong>Vacancies:</strong> {{ selectedJob.vacancies }}</p>
-    <p><strong>Status:</strong> {{ selectedJob.status }}</p>
+<!-- MODAL -->
+<div class="modal d-block" tabindex="-1" *ngIf="showModal">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ selectedJob.title }}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Company:</strong> {{ selectedJob.company }}</p>
+        <p><strong>Employer Name:</strong> {{ selectedJob.employerName }}</p>
+        <p><strong>Location:</strong> {{ selectedJob.location }}</p>
+        <p><strong>Type:</strong> {{ selectedJob.type }}</p>
+        <p><strong>Salary:</strong> ₹{{ selectedJob.salary }} LPA</p>
+        <p><strong>Experience Required:</strong> {{ selectedJob.experience }} Years</p>
+        <p><strong>Vacancies:</strong> {{ selectedJob.vacancies }}</p>
+        <p><strong>Status:</strong> {{ selectedJob.status }}</p>
 
-    <!-- Job description details -->
-    <div *ngIf="selectedJob.description">
-      <p><strong>Overview:</strong></p>
-      <p>{{ selectedJob.description.overview }}</p>
+        <div *ngIf="selectedJob.description">
+          <p><strong>Overview:</strong></p>
+          <p>{{ selectedJob.description.overview }}</p>
 
-      <p><strong>Responsibilities:</strong></p>
-      <ul>
-        <li *ngFor="let item of selectedJob.description.responsibilities">
-          {{ item }}
-        </li>
-      </ul>
+          <p><strong>Responsibilities:</strong></p>
+          <ul>
+            <li *ngFor="let item of selectedJob.description.responsibilities">{{ item }}</li>
+          </ul>
 
-      <p><strong>Required Skills:</strong></p>
-      <ul>
-        <li *ngFor="let skill of selectedJob.description.requiredSkills">
-          {{ skill }}
-        </li>
-      </ul>
+          <p><strong>Required Skills:</strong></p>
+          <ul>
+            <li *ngFor="let skill of selectedJob.description.requiredSkills">{{ skill }}</li>
+          </ul>
 
-      <p *ngIf="selectedJob.description.preferredSkills?.length">
-        <strong>Preferred Skills:</strong>
-      </p>
-      <ul *ngIf="selectedJob.description.preferredSkills?.length">
-        <li *ngFor="let skill of selectedJob.description.preferredSkills">
-          {{ skill }}
-        </li>
-      </ul>
+          <ng-container *ngIf="selectedJob.description.preferredSkills?.length">
+            <p><strong>Preferred Skills:</strong></p>
+            <ul>
+              <li *ngFor="let skill of selectedJob.description.preferredSkills">{{ skill }}</li>
+            </ul>
+          </ng-container>
 
-      <p *ngIf="selectedJob.description.whatWeOffer?.length">
-        <strong>What We Offer:</strong>
-      </p>
-      <ul *ngIf="selectedJob.description.whatWeOffer?.length">
-        <li *ngFor="let benefit of selectedJob.description.whatWeOffer">
-          {{ benefit }}
-        </li>
-      </ul>
+          <ng-container *ngIf="selectedJob.description.whatWeOffer?.length">
+            <p><strong>What We Offer:</strong></p>
+            <ul>
+              <li *ngFor="let benefit of selectedJob.description.whatWeOffer">{{ benefit }}</li>
+            </ul>
+          </ng-container>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" (click)="applyToJob(selectedJob)">Apply</button>
+      </div>
     </div>
-
-    <button (click)="applyToJob(selectedJob)">Apply</button>
   </div>
 </div>
