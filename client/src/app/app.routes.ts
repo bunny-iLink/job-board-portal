@@ -35,7 +35,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import(
             './components/dashboard/dashboard'
-          ).then((m) => m.DashboardComponent),  
+          ).then((m) => m.DashboardComponent),
       },
       {
         path: 'profile',
@@ -101,6 +101,7 @@ export const routes: Routes = [
       },
     ],
   },
-
+  { path: 'not-found', loadComponent: () => import('./components/not-found/not-found').then(m => m.NotFound) },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: '**', redirectTo: '/not-found' } // Lazy load NotFoundComponent,
 ];
