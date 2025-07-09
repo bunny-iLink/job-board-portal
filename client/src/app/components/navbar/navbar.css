@@ -32,3 +32,14 @@
   /* Light hover effect */
   color: #0a66c2;
 }
+
+.notification-panel {
+  width: 280px;
+  z-index: 9999;
+}
+
+@media (min-width: 992px) {
+  .notification-panel {
+    width: 400px;
+  }
+}

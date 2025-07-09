@@ -1,7 +1,6 @@
-import { Routes, Route } from '@angular/router';
+import { Routes } from '@angular/router';
 import { authGuard } from './auth/auth-guard';
-// Import the eagerly loaded EmployerLayoutComponent since we need to use it as `component` (not lazy-loaded)
-import { LayoutComponent } from './components/layout/layout';
+import { LayoutComponent } from './components/layout/layout'; // Eagerly loaded for both employer and user
 
 export const routes: Routes = [
   {
@@ -24,25 +23,26 @@ export const routes: Routes = [
       import('./components/home/home').then((m) => m.HomeComponent),
   },
 
+  // Employer routes
   {
     path: 'employer',
     component: LayoutComponent,
-    canActivate: [authGuard],
-    data: { roles: ['employer'] }, // Use component here for layout with children
+    canActivateChild: [authGuard],
+    data: { roles: ['employer'] },
     children: [
       {
         path: 'dashboard',
         loadComponent: () =>
-          import(
-            './components/dashboard/dashboard'
-          ).then((m) => m.DashboardComponent),
+          import('./components/dashboard/dashboard').then(
+            (m) => m.DashboardComponent
+          ),
       },
       {
         path: 'profile',
         loadComponent: () =>
-          import(
-            './components/profile/profile' // Use the existing profile component
-          ).then((m) => m.ProfileComponent),
+          import('./components/profile/profile').then(
+            (m) => m.ProfileComponent
+          ),
       },
       {
         path: 'my-listings',
@@ -57,18 +57,20 @@ export const routes: Routes = [
           import('./components/employer-specific-components/job-details/job-details').then(
             (m) => m.JobDetailsComponent
           ),
-        // renderMode: 'direct'
+      },
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'dashboard',
       },
     ],
   },
 
+  // User routes
   {
     path: 'user',
-    loadComponent: () =>
-      import('./components/layout/layout').then(
-        (m) => m.LayoutComponent
-      ),
-    canActivate: [authGuard],
+    component: LayoutComponent,
+    canActivateChild: [authGuard],
     data: { roles: ['user'] },
     children: [
       {
@@ -99,9 +101,36 @@ export const routes: Routes = [
             (m) => m.AppliedJobsComponent
           ),
       },
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'dashboard',
+      },
     ],
   },
-  { path: 'not-found', loadComponent: () => import('./components/not-found/not-found').then(m => m.NotFound) },
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
-  { path: '**', redirectTo: '/not-found' } // Lazy load NotFoundComponent,
+  {
+    path: 'unauthorized',
+    loadComponent: () =>
+      import('./components/unauthorized/unauthorized').then(
+        (m) => m.Unauthorized
+      ),
+  },
+  {
+    path: 'not-found',
+    loadComponent: () =>
+      import('./components/not-found/not-found').then((m) => m.NotFound),
+  },
+
+  // Default route
+  {
+    path: '',
+    redirectTo: '/home',
+    pathMatch: 'full',
+  },
+
+  // Catch-all route (MUST be last)
+  {
+    path: '**',
+    redirectTo: '/not-found',
+  },
 ];

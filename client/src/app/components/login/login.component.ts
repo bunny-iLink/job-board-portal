@@ -90,7 +90,7 @@ export class LoginComponent {
         this.showCustomAlert('Login successful!', 'success', true);
 
         // Optional: redirect or update UI
-        this.router.navigate(['/dashboard']);
+        // this.router.navigate(['/dashboard']);
       },
       error: (error) => {
         let errorMessage = 'An unexpected error occurred. Please try again later.';
