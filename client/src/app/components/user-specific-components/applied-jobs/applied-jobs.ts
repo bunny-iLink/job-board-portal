@@ -5,8 +5,8 @@ import { AuthService } from '../../../service/auth.service';
 import { UserService } from '../../../service/user.service';
 import { JobService } from '../../../service/job.service';
 import { ApplicationService } from '../../../service/application.service';
-import { AlertComponent } from '../../alert/alert.component';
-import { ConfirmComponent } from '../../confirm/confirm.component';
+import { AlertComponent } from '../../common/alert/alert.component';
+import { ConfirmComponent } from '../../common/confirm/confirm.component';
 
 @Component({
   selector: 'app-applied-jobs',

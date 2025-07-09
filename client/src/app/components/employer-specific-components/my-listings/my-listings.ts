@@ -5,8 +5,8 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../../../service/auth.service';
 import { environment } from '../../../environments/environment';
 import { JobService } from '../../../service/job.service';
-import { ConfirmComponent } from '../../confirm/confirm.component';
-import { AlertComponent } from '../../alert/alert.component';
+import { ConfirmComponent } from '../../common/confirm/confirm.component';
+import { AlertComponent } from '../../common/alert/alert.component';
 
 interface Job {
   _id?: string;

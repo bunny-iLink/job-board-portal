@@ -1,26 +1,26 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './auth/auth-guard';
-import { LayoutComponent } from './components/layout/layout'; // Eagerly loaded for both employer and user
+import { LayoutComponent } from './components/common/layout/layout'; // Eagerly loaded for both employer and user
 
 export const routes: Routes = [
   {
     path: 'register',
     loadComponent: () =>
-      import('./components/register/register.component').then(
+      import('./components/common/register/register.component').then(
         (m) => m.RegisterComponent
       ),
   },
   {
     path: 'login',
     loadComponent: () =>
-      import('./components/login/login.component').then(
+      import('./components/common/login/login.component').then(
         (m) => m.LoginComponent
       ),
   },
   {
     path: 'home',
     loadComponent: () =>
-      import('./components/home/home').then((m) => m.HomeComponent),
+      import('./components/common/home/home').then((m) => m.HomeComponent),
   },
 
   // Employer routes
@@ -33,14 +33,14 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         loadComponent: () =>
-          import('./components/dashboard/dashboard').then(
+          import('./components/common/dashboard/dashboard').then(
             (m) => m.DashboardComponent
           ),
       },
       {
         path: 'profile',
         loadComponent: () =>
-          import('./components/profile/profile').then(
+          import('./components/common/profile/profile').then(
             (m) => m.ProfileComponent
           ),
       },
@@ -76,14 +76,14 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         loadComponent: () =>
-          import('./components/dashboard/dashboard').then(
+          import('./components/common/dashboard/dashboard').then(
             (m) => m.DashboardComponent
           ),
       },
       {
         path: 'profile',
         loadComponent: () =>
-          import('./components/profile/profile').then(
+          import('./components/common/profile/profile').then(
             (m) => m.ProfileComponent
           ),
       },
@@ -111,14 +111,14 @@ export const routes: Routes = [
   {
     path: 'unauthorized',
     loadComponent: () =>
-      import('./components/unauthorized/unauthorized').then(
+      import('./components/common/unauthorized/unauthorized').then(
         (m) => m.Unauthorized
       ),
   },
   {
     path: 'not-found',
     loadComponent: () =>
-      import('./components/not-found/not-found').then((m) => m.NotFound),
+      import('./components/common/not-found/not-found').then((m) => m.NotFound),
   },
 
   // Default route

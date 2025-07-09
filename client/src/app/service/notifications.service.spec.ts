@@ -29,7 +29,7 @@ describe('NotificationsService', () => {
 
   it('should get notifications with correct headers', () => {
     service.getNotifications(userId, token).subscribe();
-    const req = httpMock.expectOne(`${API_URL}/notifications/${userId}`);
+    const req = httpMock.expectOne(`${API_URL}/notifications/${userId}?page=1`);
     expect(req.request.method).toBe('GET');
     expect(req.request.headers.get('Authorization')).toBe(`Bearer ${token}`);
     req.flush([]);

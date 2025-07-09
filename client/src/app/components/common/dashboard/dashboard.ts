@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../service/auth.service';
-import { UserService } from '../../service/user.service';
-import { EmployerService } from '../../service/employer.service';
-import { JobService } from '../../service/job.service';
+import { AuthService } from '../../../service/auth.service';
+import { UserService } from '../../../service/user.service';
+import { EmployerService } from '../../../service/employer.service';
+import { JobService } from '../../../service/job.service';
 import { NgxEchartsModule, provideEchartsCore } from 'ngx-echarts';
 
 @Component({

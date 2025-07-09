@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AuthService } from './../../service/auth.service';
-import { ConfirmComponent } from './../confirm/confirm.component';
-import { NotificationsService } from './../../service/notifications.service';
-import { AlertComponent } from './../alert/alert.component';
+import { AuthService } from '../../../service/auth.service';
+import { ConfirmComponent } from '../confirm/confirm.component';
+import { NotificationsService } from '../../../service/notifications.service';
+import { AlertComponent } from '../alert/alert.component';
 
 @Component({
   selector: 'app-navbar',

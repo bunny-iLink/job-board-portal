@@ -4,10 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
-import { AuthService } from '../../service/auth.service';
-import { UserService } from '../../service/user.service';
-import { EmployerService } from '../../service/employer.service';
-import { AlertComponent } from '../alert/alert.component';
+import { AuthService } from '../../../service/auth.service';
+import { UserService } from '../../../service/user.service';
+import { EmployerService } from '../../../service/employer.service';
+import { AlertComponent } from '../../common/alert/alert.component';
 import { ConfirmComponent } from '../confirm/confirm.component';
 
 @Component({

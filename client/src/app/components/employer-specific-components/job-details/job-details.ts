@@ -5,8 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../service/auth.service';
 import { JobService } from '../../../service/job.service';
 import { ApplicationService } from '../../../service/application.service';
-import { ConfirmComponent } from '../../confirm/confirm.component';
-import { AlertComponent } from '../../alert/alert.component';
+import { ConfirmComponent } from '../../common/confirm/confirm.component';
+import { AlertComponent } from '../../common/alert/alert.component';
 
 @Component({
   selector: 'app-job-details',

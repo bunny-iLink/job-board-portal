@@ -9,8 +9,8 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { environment } from '../../environments/environment';
-import { RegisterService } from '../../service/register.service';
+import { environment } from '../../../environments/environment';
+import { RegisterService } from '../../../service/register.service';
 import { AlertComponent } from '../alert/alert.component';
 
 @Component({
