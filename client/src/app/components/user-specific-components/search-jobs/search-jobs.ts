@@ -6,6 +6,7 @@ import { JobService } from '../../../service/job.service';
 import { ApplicationService } from '../../../service/application.service';
 import { AlertComponent } from '../../alert/alert.component';
 import { ConfirmComponent } from '../../confirm/confirm.component';
+import { UserService } from '../../../service/user.service';
 
 @Component({
   selector: 'app-search-jobs',
@@ -23,6 +24,7 @@ export class SearchJobsComponent implements OnInit {
   showModal: boolean = false;
   showDomainWarning: boolean = false;
   loadingJobs: boolean = false;
+  userId: string | null = null;
 
   filters = {
     type: '',
@@ -42,12 +44,14 @@ export class SearchJobsComponent implements OnInit {
   constructor(
     private jobService: JobService,
     private authService: AuthService,
-    private applicationService: ApplicationService
+    private applicationService: ApplicationService,
+    private userService: UserService
   ) { }
 
   ngOnInit() {
     this.searchJobs();
     this.token = this.authService.getToken();
+    this.userId = this.authService.getUserId();
   }
 
   isBrowser(): boolean {
@@ -115,31 +119,41 @@ export class SearchJobsComponent implements OnInit {
   }
 
   applyToJob(job: any) {
-    const user = this.getStoredUser();
-    if (!user) {
+    const userId = this.authService.getUserId(); // or however you retrieve userId
+
+    if (!userId) {
       this.showCustomAlert('Please log in to apply.', 'info');
       return;
     }
 
-    if (!user?.name?.trim() || !user?.email?.trim() || !user?.resume?.data) {
-      this.showCustomAlert(
-        'Please complete your profile (name, email, and resume are required) before applying.',
-        'info'
-      );
-      return;
-    }
+    this.userService.getUserData(userId).subscribe({
+      next: (response: any) => {
+        const user = response.user || response; // depending on your API structure
 
-    const recommendedFields = ['phone', 'address', 'experience', 'preferredDomain'];
-    const missingFields = recommendedFields.filter((field) => !user[field]);
+        if (!user?.name?.trim() || !user?.email?.trim() || !user?.resume) {
+          this.showCustomAlert(
+            'Please complete your profile (name, email, and resume are required) before applying.',
+            'info'
+          );
+          return;
+        }
 
-    if (missingFields.length > 0) {
-      this.confirmMessage = `Your profile is missing recommended info (${missingFields.join(', ')}). Apply anyway?`;
-      this.pendingJobApplication = job;
-      this.showConfirm = true;
-      return;
-    }
+        const recommendedFields = ['phone', 'address', 'experience', 'preferredDomain'];
+        const missingFields = recommendedFields.filter((field) => !user[field]);
 
-    this.submitApplication(job);
+        if (missingFields.length > 0) {
+          this.confirmMessage = `Your profile is missing recommended info (${missingFields.join(', ')}). Apply anyway?`;
+          this.pendingJobApplication = job;
+          this.showConfirm = true;
+          return;
+        }
+
+        this.submitApplication(job);
+      },
+      error: () => {
+        this.showCustomAlert('Unable to fetch user profile. Please try again.', 'error');
+      }
+    });
   }
 
   onConfirmApply() {

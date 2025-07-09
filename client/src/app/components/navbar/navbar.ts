@@ -17,6 +17,9 @@ export class NavbarComponent implements OnInit {
   userName: string | null = null;
   token: string | null = null;
   role: string | null = null;
+  currentPage = 1;
+  hasMoreNotifications = false;
+
 
   // Shared states
   showMobileMenu = false;
@@ -51,20 +54,37 @@ export class NavbarComponent implements OnInit {
   toggleNotifications(): void {
     if (this.role !== 'user') return;
 
-    // If already open, close it
     if (this.showNotifications) {
       this.showNotifications = false;
       return;
     }
 
-    // Otherwise, open it and fetch notifications
     this.showNotifications = true;
     this.loadingNotifications = true;
+    this.currentPage = 1;
 
     const userId = this.authService.getUserId();
-    this.notificationService.getNotifications(userId!, this.token!).subscribe({
+    this.notificationService.getNotifications(userId!, this.token!, this.currentPage).subscribe({
       next: (data: any) => {
         this.notifications = data.notifications || [];
+        this.hasMoreNotifications = data.pagination?.totalPages > this.currentPage;
+        this.loadingNotifications = false;
+      },
+      error: () => {
+        this.loadingNotifications = false;
+      },
+    });
+  }
+
+  loadMoreNotifications(): void {
+    const userId = this.authService.getUserId();
+    this.loadingNotifications = true;
+    this.currentPage++;
+
+    this.notificationService.getNotifications(userId!, this.token!, this.currentPage).subscribe({
+      next: (data: any) => {
+        this.notifications = [...this.notifications, ...(data.notifications || [])];
+        this.hasMoreNotifications = data.pagination?.totalPages > this.currentPage;
         this.loadingNotifications = false;
       },
       error: () => {

@@ -7,12 +7,11 @@ import { environment } from '../environments/environment';
   providedIn: 'root',
 })
 export class NotificationsService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  getNotifications(userId: string, token: string): Observable<any> {
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get(`${environment.apiUrl}/notifications/${userId}`, {
-      headers,
+  getNotifications(userId: string, token: string, page: number = 1) {
+    return this.http.get(`${environment.apiUrl}/notifications/${userId}?page=${page}`, {
+      headers: { Authorization: `Bearer ${token}` },
     });
   }
 }

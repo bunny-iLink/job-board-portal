@@ -11,35 +11,34 @@ export async function loginUser(req, res) {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      console.warn("Login failed: Missing email or password");
-      return res
-        .status(400)
-        .json({ message: "Email and password are required" });
+      console.warn("Missing email or password");
+      return res.status(400).json({ message: "Email and password are required" });
     }
 
-    console.log(`Searching for account with email: ${email}`);
+    console.log(`Looking up account for: ${email}`);
 
-    const user = await User.findOne({ email });
-    const employer = !user ? await Employer.findOne({ email }) : null;
+    // Try finding the account in both collections
+    const [user, employer] = await Promise.all([
+      User.findOne({ email }),
+      Employer.findOne({ email }),
+    ]);
 
     const account = user || employer;
-    const accountType = user ? "user" : employer ? "employer" : null;
 
     if (!account) {
-      console.warn(`Login failed: No account found for email ${email}`);
-      return res.status(404).json({ message: "Account not found" });
+      console.warn(`No account found for: ${email}`);
+      return res.status(404).json({ message: "Invalid email or password" }); // unified error message
     }
 
-    console.log(`Account found. Type: ${accountType}, ID: ${account._id}`);
+    const accountType = user ? "user" : "employer";
 
     const isPasswordValid = await bcrypt.compare(password, account.password);
-
     if (!isPasswordValid) {
-      console.warn(`Login failed: Incorrect password for email ${email}`);
+      console.warn(`Invalid password attempt for: ${email}`);
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    console.log("Password validated. Creating JWT...");
+    console.log(`Authenticated ${accountType} with ID: ${account._id}`);
 
     const token = jwt.sign(
       {
@@ -51,18 +50,21 @@ export async function loginUser(req, res) {
       { expiresIn: "1h" }
     );
 
-    console.log(`JWT created for ${accountType} (${account.email})`);
-
     return res.status(200).json({
       message: "Login successful",
       token,
-      user: account,
+      user: {
+        _id: account._id,
+        email: account.email,
+        role: accountType,
+        name: account.name || null,
+      },
     });
   } catch (err) {
-    console.error("Error logging in:", err);
+    console.error("Login error:", err);
     return res.status(500).json({
       message: "Internal server error",
-      error: err.message || err,
+      error: err.message,
     });
   }
 }
