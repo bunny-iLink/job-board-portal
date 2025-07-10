@@ -26,7 +26,7 @@ import {
   getUserAppliedJobs,
   revokeApplication,
 } from "../controllers/applicationController.js";
-import { getUserNotifications } from "../controllers/notificationController.js";
+import { getUserNotifications, clearNotifications } from "../controllers/notificationsController.js";
 import { verifyToken } from "../middleware/authMiddleware.js";
 import { requireRole } from "../middleware/authMiddleware.js";
 import {
@@ -813,5 +813,60 @@ router.delete(
   requireRole("user"),
   revokeApplication
 );
+
+/**
+ * @swagger
+ * /notifications/clear/{userId}:
+ *   delete:
+ *     summary: Clear all notifications for a user
+ *     description: Deletes all notifications for the specified user. Requires authentication and the user role.
+ *     tags:
+ *       - Notifications
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user whose notifications will be cleared
+ *     responses:
+ *       200:
+ *         description: Notifications cleared successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Notifications cleared successfully
+ *                 deletedCount:
+ *                   type: number
+ *                   example: 5
+ *       400:
+ *         description: Invalid user ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Invalid user ID
+ *       401:
+ *         description: Unauthorized - missing or invalid token
+ *       403:
+ *         description: Forbidden - insufficient permissions
+ *       500:
+ *         description: Internal server error
+ */
+router.delete(
+  "/notifications/clear/:userId",
+  verifyToken,
+  requireRole("user"),
+  clearNotifications
+)
 
 export default router;

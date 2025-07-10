@@ -93,6 +93,20 @@ export class NavbarComponent implements OnInit {
     });
   }
 
+  clearNotifications(): void {
+    const userId = this.authService.getUserId();
+    this.notificationService.clearNotifications(userId!, this.token!).subscribe({
+      next: () => {
+        this.notifications = [];
+        this.showNotifications = false;
+        this.showCustomAlert('Notifications cleared successfully', 'success');
+      },
+      error: () => {
+        this.showCustomAlert('Failed to clear notifications', 'error');
+      },
+    });
+  }
+
   closeNotifications(): void {
     this.showNotifications = false;
   }

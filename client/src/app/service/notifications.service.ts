@@ -14,4 +14,10 @@ export class NotificationsService {
       headers: { Authorization: `Bearer ${token}` },
     });
   }
+
+  clearNotifications(userId: string, token: string): Observable<any> {
+    return this.http.delete(`${environment.apiUrl}/notifications/clear/${userId}`, {
+      headers: new HttpHeaders({ Authorization: `Bearer ${token}` }),
+    });
+  }
 }
