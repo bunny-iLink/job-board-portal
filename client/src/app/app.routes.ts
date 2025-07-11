@@ -9,6 +9,7 @@ export const routes: Routes = [
       import('./components/common/register/register.component').then(
         (m) => m.RegisterComponent
       ),
+      title: "Register | JobHunt Pro"
   },
   {
     path: 'login',
@@ -16,11 +17,13 @@ export const routes: Routes = [
       import('./components/common/login/login.component').then(
         (m) => m.LoginComponent
       ),
+      title: "Login | JobHunt Pro"
   },
   {
     path: 'home',
     loadComponent: () =>
       import('./components/common/home/home').then((m) => m.HomeComponent),
+      title: "Home | JobHunt Pro"
   },
 
   // Employer routes
@@ -36,6 +39,7 @@ export const routes: Routes = [
           import('./components/common/dashboard/dashboard').then(
             (m) => m.DashboardComponent
           ),
+          title: "Employer Dashboard | JobHunt Pro"
       },
       {
         path: 'profile',
@@ -43,6 +47,7 @@ export const routes: Routes = [
           import('./components/common/profile/profile').then(
             (m) => m.ProfileComponent
           ),
+          title: "Employer Profile | JobHunt Pro"
       },
       {
         path: 'my-listings',
@@ -50,6 +55,7 @@ export const routes: Routes = [
           import('./components/employer-specific-components/my-listings/my-listings').then(
             (m) => m.MyListingsComponent
           ),
+          title: "My Listings | JobHunt Pro"
       },
       {
         path: 'job-details',
@@ -57,6 +63,7 @@ export const routes: Routes = [
           import('./components/employer-specific-components/job-details/job-details').then(
             (m) => m.JobDetailsComponent
           ),
+          title: "Job Details | JobHunt Pro"
       },
       {
         path: '',
@@ -79,6 +86,7 @@ export const routes: Routes = [
           import('./components/common/dashboard/dashboard').then(
             (m) => m.DashboardComponent
           ),
+          title: "User Dashboard | JobHunt Pro"
       },
       {
         path: 'profile',
@@ -86,6 +94,7 @@ export const routes: Routes = [
           import('./components/common/profile/profile').then(
             (m) => m.ProfileComponent
           ),
+          title: "User Profile | JobHunt Pro"
       },
       {
         path: 'jobs',
@@ -93,6 +102,7 @@ export const routes: Routes = [
           import('./components/user-specific-components/search-jobs/search-jobs').then(
             (m) => m.SearchJobsComponent
           ),
+          title: "Search Jobs | JobHunt Pro"
       },
       {
         path: 'applied-jobs',
@@ -100,6 +110,7 @@ export const routes: Routes = [
           import('./components/user-specific-components/applied-jobs/applied-jobs').then(
             (m) => m.AppliedJobsComponent
           ),
+          title: "Applied Jobs | JobHunt Pro"
       },
       {
         path: '',
@@ -114,11 +125,13 @@ export const routes: Routes = [
       import('./components/common/unauthorized/unauthorized').then(
         (m) => m.Unauthorized
       ),
+      title: "Unauthorized | JobHunt Pro"
   },
   {
     path: 'not-found',
     loadComponent: () =>
       import('./components/common/not-found/not-found').then((m) => m.NotFound),
+      title: "Not Found | JobHunt Pro"
   },
 
   // Default route
