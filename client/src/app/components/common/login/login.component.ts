@@ -1,5 +1,4 @@
-// Angular component for handling user login functionality
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -11,6 +10,12 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../service/auth.service';
 import { AlertComponent } from '../../common/alert/alert.component';
 
+enum AlertType {
+  Success = 'success',
+  Error = 'error',
+  Info = 'info',
+}
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -18,97 +23,97 @@ import { AlertComponent } from '../../common/alert/alert.component';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent {
-  // Reactive form group for login
+export class LoginComponent implements OnInit {
   loginForm: FormGroup;
-  // Controls password visibility
-  showPassword: boolean = false;
+  showPassword = false;
 
-  // Variables for alert
-  alertMessage: string = '';
-  alertType: 'success' | 'error' | 'info' = 'info';
-  showAlert: boolean = false;
-  navigateAfterAlert: boolean = false;
+  // Alert state
+  alertMessage = '';
+  alertType: AlertType = AlertType.Info;
+  showAlert = false;
+  shouldNavigateAfterAlert = false;
 
-  private showCustomAlert(
-    message: string,
-    type: 'success' | 'error' | 'info',
-    navigate: boolean = false
-  ) {
-    console.log('Alert Triggered:', { message, type });
-
-    this.alertMessage = message;
-    this.alertType = type;
-    this.showAlert = true;
-    this.navigateAfterAlert = navigate;
-  }
-
-  // Called when the alert is closed by the user
-  onAlertClosed(): void {
-    this.showAlert = false;
-    if (this.navigateAfterAlert) {
-      const user = localStorage.getItem('user');
-      const role = user ? JSON.parse(user).role : null;
-      this.router.navigate([role ? `/${role}/dashboard` : '/']);
-    }
-  }
+  private user: any = null;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService,
+    private authService: AuthService
   ) {
-    // Initialize the login form with validators
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
     });
   }
 
-  // Toggle password visibility
-  togglePassword(): void {
-    this.showPassword = !this.showPassword;
+  ngOnInit(): void {
+    this.user = this.authService.getUser();
+    if (this.user) this.navigateToRoleDashboard();
   }
 
-  // Navigate to the registration page
-  goToRegister(): void {
-    this.router.navigate(['/register']);
-  }
-
-  // Handle form submission for login
   onSubmit(): void {
-    if (this.loginForm.invalid) {
-      return;
-    }
+    if (this.loginForm.invalid) return;
 
     const loginData = this.loginForm.value;
 
     this.authService.login(loginData).subscribe({
       next: (response: any) => {
-        // Optionally log or handle the response
         console.log('Login response:', response);
-        this.showCustomAlert('Login successful!', 'success', true);
-
-        // Optional: redirect or update UI
-        // this.router.navigate(['/dashboard']);
+        this.showCustomAlert('Login successful!', AlertType.Success, true);
       },
       error: (error) => {
-        let errorMessage = 'An unexpected error occurred. Please try again later.';
-        const status = error.status;
-
-        if (status === 400) {
-          errorMessage = 'Please enter both email and password.';
-        } else if (status === 404) {
-          errorMessage = 'No account found with this email.';
-        } else if (status === 401) {
-          errorMessage = 'Incorrect email or password. Please try again.';
-        } else if (status === 500) {
-          errorMessage = 'Server error. Please try again later.';
-        }
-
-        this.showCustomAlert(errorMessage, 'error');
-      }
+        const message = this.getErrorMessage(error.status);
+        this.showCustomAlert(message, AlertType.Error);
+      },
     });
   }
 
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  goToRegister(): void {
+    this.router.navigate(['/register']);
+  }
+
+  onAlertClosed(): void {
+    this.showAlert = false;
+    if (this.shouldNavigateAfterAlert) {
+      this.navigateToRoleDashboard();
+    }
+  }
+
+  private showCustomAlert(
+    message: string,
+    type: AlertType,
+    navigate: boolean = false
+  ): void {
+    console.log('Alert Triggered:', { message, type });
+
+    this.alertMessage = message;
+    this.alertType = type;
+    this.showAlert = true;
+    this.shouldNavigateAfterAlert = navigate;
+  }
+
+  private getErrorMessage(status: number): string {
+    switch (status) {
+      case 400:
+        return 'Please enter both email and password.';
+      case 404:
+        return 'No account found with this email.';
+      case 401:
+        return 'Incorrect email or password. Please try again.';
+      case 500:
+        return 'Server error. Please try again later.';
+      default:
+        return 'An unexpected error occurred. Please try again later.';
+    }
+  }
+
+  private navigateToRoleDashboard(): void {
+    const user = this.user || JSON.parse(localStorage.getItem('user') || '{}');
+    const role = user?.role;
+    this.router.navigate([role ? `/${role}/dashboard` : '/']);
+  }
 }
