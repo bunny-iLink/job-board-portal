@@ -25,6 +25,7 @@ export class SearchJobsComponent implements OnInit {
   showDomainWarning: boolean = false;
   loadingJobs: boolean = false;
   userId: string | null = null;
+  isApplying: boolean = false;
 
   filters = {
     type: '',
@@ -116,25 +117,34 @@ export class SearchJobsComponent implements OnInit {
   closeModal() {
     this.selectedJob = null;
     this.showModal = false;
+    this.isApplying = false; // Reset Apply button state
   }
 
   applyToJob(job: any) {
-    const userId = this.authService.getUserId(); // or however you retrieve userId
+    const userId = this.authService.getUserId();
 
     if (!userId) {
       this.showCustomAlert('Please log in to apply.', 'info');
       return;
     }
 
+    if (this.isApplying) {
+      this.showCustomAlert('You are already applying to a job.', 'info');
+      return;
+    }
+
+    this.isApplying = true;
+
     this.userService.getUserData(userId).subscribe({
       next: (response: any) => {
-        const user = response.user || response; // depending on your API structure
+        const user = response.user || response;
 
         if (!user?.name?.trim() || !user?.email?.trim() || !user?.resume) {
           this.showCustomAlert(
             'Please complete your profile (name, email, and resume are required) before applying.',
             'info'
           );
+          this.isApplying = false;
           return;
         }
 
@@ -145,6 +155,7 @@ export class SearchJobsComponent implements OnInit {
           this.confirmMessage = `Your profile is missing recommended info (${missingFields.join(', ')}). Apply anyway?`;
           this.pendingJobApplication = job;
           this.showConfirm = true;
+          // DO NOT reset `isApplying` here — wait for confirm action
           return;
         }
 
@@ -152,6 +163,7 @@ export class SearchJobsComponent implements OnInit {
       },
       error: () => {
         this.showCustomAlert('Unable to fetch user profile. Please try again.', 'error');
+        this.isApplying = false;
       }
     });
   }
@@ -176,7 +188,10 @@ export class SearchJobsComponent implements OnInit {
 
   private submitApplication(job: any) {
     const user = this.getStoredUser();
-    if (!user || !this.token) return;
+    if (!user || !this.token) {
+      this.isApplying = false;
+      return;
+    }
 
     const payload = {
       userId: user._id,
@@ -198,6 +213,9 @@ export class SearchJobsComponent implements OnInit {
         }
         this.closeModal();
       },
+      complete: () => {
+        this.isApplying = false; // reset after final step
+      }
     });
   }
 
