@@ -54,8 +54,8 @@ export class JobService {
     });
   }
 
-  appliedJobs(userId: string): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/appliedJobs/${userId}`);
+  appliedJobs(userId: string, page: number = 1, limit: number = 5): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/appliedJobs/${userId}?page=${page}&limit=${limit}`);
   }
 
   searchJobs(params: Record<string, any> = {}) {

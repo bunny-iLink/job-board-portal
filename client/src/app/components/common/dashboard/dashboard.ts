@@ -31,9 +31,11 @@ export class DashboardComponent implements OnInit {
   appliedJobs: any[] = [];
   userPieChartOptions: any = {};
   userBarChartOptions: any = {};
-  isUserLoading = false;
+  isUserLoading = false;  
   isUserJobsLoading = false;
 
+  totalPages: number = 1;
+  currentPage: number = 1;
   // Employer Specific
   employerId: string | null = null;
   employer: any = null;
@@ -89,14 +91,53 @@ export class DashboardComponent implements OnInit {
       complete: () => (this.isUserLoading = false),
     });
   }
+  sortByStatusOrder() {
+    const statusPriority: { [key: string]: number } = {
+      'Accepted': 1,
+      'In Progress': 2,
+      'Rejected': 3,
+      'Applied': 4
+    };
+
+    this.appliedJobs.sort((a, b) => {
+      return statusPriority[a.status] - statusPriority[b.status];
+    });
+  }
+
+
+    // loadAppliedJobs() {
+    //   this.isUserJobsLoading = true;
+    //   this.jobService.appliedJobs(this.userId!).subscribe({
+    //     next: (res) => (this.appliedJobs = res.jobs || res),
+    //     error: (err) => console.error('Applied jobs error:', err),
+    //     complete: () => (this.isUserJobsLoading = false),
+    //   });
+    // }
 
   loadAppliedJobs() {
     this.isUserJobsLoading = true;
-    this.jobService.appliedJobs(this.userId!).subscribe({
-      next: (res) => (this.appliedJobs = res.jobs || res),
+    this.jobService.appliedJobs(this.userId!, this.currentPage, 5).subscribe({
+      next: (res) => {
+        this.appliedJobs = res.jobs || res;
+        this.totalPages = res.totalPages || 1;
+      },
       error: (err) => console.error('Applied jobs error:', err),
       complete: () => (this.isUserJobsLoading = false),
     });
+  }
+
+  goToPreviousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadAppliedJobs();
+    }
+  }
+
+  goToNextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.loadAppliedJobs();
+    }
   }
 
   fetchUserStatusChart() {

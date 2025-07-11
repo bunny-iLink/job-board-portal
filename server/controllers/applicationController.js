@@ -59,18 +59,26 @@ export async function applyForJob(req, res) {
     res.status(500).json({ message: "Internal server error." });
   }
 }
-
 export async function getUserAppliedJobs(req, res) {
   const { userId } = req.params;
-  console.log("[getUserAppliedJobs] Request received for user:", userId);
+  const page = parseInt(req.query.page) || 1;  // Default: page 1
+  const limit = parseInt(req.query.limit) || 5; // Default: 5 jobs per page
+
+  console.log("[getUserAppliedJobs] Request received for user:", userId, `Page: ${page}, Limit: ${limit}`);
 
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({ message: "Invalid User ID format." });
   }
 
   try {
+    // Count total applications
+    const totalApplications = await Application.countDocuments({ userId });
+
+    // Fetch paginated applications
     const applications = await Application.find({ userId })
       .populate("jobId")
+      .skip((page - 1) * limit)
+      .limit(limit)
       .lean();
 
     const appliedJobs = applications
@@ -81,13 +89,48 @@ export async function getUserAppliedJobs(req, res) {
         status: app.status,
       }));
 
-    console.info(`[getUserAppliedJobs] Retrieved ${appliedJobs.length} applications for user ${userId}`);
-    res.status(200).json(appliedJobs);
+    console.info(`[getUserAppliedJobs] Page ${page} - Retrieved ${appliedJobs.length} applications for user ${userId}`);
+
+    res.status(200).json({
+      currentPage: page,
+      totalPages: Math.ceil(totalApplications / limit),
+      totalApplications,
+      jobs: appliedJobs
+    });
   } catch (err) {
     console.error("[getUserAppliedJobs] Error fetching applied jobs:", err);
     res.status(500).json({ message: "Internal server error" });
   }
 }
+
+// export async function getUserAppliedJobs(req, res) {
+//   const { userId } = req.params;
+//   console.log("[getUserAppliedJobs] Request received for user:", userId);
+
+//   if (!mongoose.Types.ObjectId.isValid(userId)) {
+//     return res.status(400).json({ message: "Invalid User ID format." });
+//   }
+
+//   try {
+//     const applications = await Application.find({ userId })
+//       .populate("jobId")
+//       .lean();
+
+//     const appliedJobs = applications
+//       .filter(app => app.jobId)
+//       .map(app => ({
+//         applicationId: app._id,
+//         ...app.jobId,
+//         status: app.status,
+//       }));
+
+//     console.info(`[getUserAppliedJobs] Retrieved ${appliedJobs.length} applications for user ${userId}`);
+//     res.status(200).json(appliedJobs);
+//   } catch (err) {
+//     console.error("[getUserAppliedJobs] Error fetching applied jobs:", err);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// }
 
 export const updateApplicationStatus = async (req, res) => {
   const applicationId = req.params.applicationId;
