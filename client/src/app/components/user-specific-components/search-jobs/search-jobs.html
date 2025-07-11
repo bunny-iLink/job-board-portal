@@ -117,7 +117,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-primary" (click)="applyToJob(selectedJob)">Apply</button>
+        <button class="btn btn-primary" [disabled]="isApplying" (click)="applyToJob(selectedJob)">Apply</button>
       </div>
     </div>
   </div>
