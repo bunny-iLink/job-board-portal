@@ -9,7 +9,7 @@ import {
   deleteUserData,
   deleteEmployerData,
 } from "../controllers/userController.js";
-import { loginUser } from "../controllers/loginController.js";
+import { loginUser, refreshAccessToken } from "../controllers/loginController.js";
 import {
   addJob,
   deleteJob,
@@ -244,6 +244,41 @@ router.post("/addJob", verifyToken, requireRole("employer"), addJob);
  *         description: Invalid input
  */
 router.post("/applyForJob/", verifyToken, requireRole("user"), applyForJob);
+
+/**
+ * @swagger
+ * /refreshToken:
+ *   post:
+ *     summary: Refresh access token
+ *     tags: [Auth]
+ *     description: The refresh token is used to obtain a new access token without re-logging in.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - refreshToken
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Access token refreshed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *       401:
+ *         description: Invalid or missing refresh token
+ *       500:
+ *         description: Internal server error
+ */
+router.post("/refreshToken", refreshAccessToken);
 
 // GET methods
 
