@@ -2,7 +2,7 @@ import { User } from "../models/users.js";
 import { Employer } from "../models/employer.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../config.js";
+import { JWT_SECRET_LOGIN, JWT_SECRET_REFRESH } from "../config.js";
 
 export async function loginUser(req, res) {
   try {
@@ -40,19 +40,30 @@ export async function loginUser(req, res) {
 
     console.log(`Authenticated ${accountType} with ID: ${account._id}`);
 
-    const token = jwt.sign(
+    const accessToken = jwt.sign(
       {
         id: account._id,
         email: account.email,
         role: accountType,
       },
-      JWT_SECRET,
+      JWT_SECRET_LOGIN,
       { expiresIn: "1h" }
+    );
+
+    const refreshToken = jwt.sign(
+      {
+        id: account._id,
+        email: account.email,
+        role: accountType,
+      },
+      JWT_SECRET_REFRESH,
+      { expiresIn: "7d" }
     );
 
     return res.status(200).json({
       message: "Login successful",
-      token,
+      token: accessToken,
+      refresh_token: refreshToken,
       user: {
         _id: account._id,
         email: account.email,
