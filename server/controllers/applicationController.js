@@ -17,7 +17,7 @@ export async function applyForJob(req, res) {
   if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(jobId)) {
     return res.status(400).json({ message: "Invalid User ID or Job ID format." });
   }
-
+  
   try {
     const [user, job] = await Promise.all([
       User.findById(userId),

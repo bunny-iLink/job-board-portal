@@ -320,8 +320,10 @@ export async function searchJobsForUsers(req, res) {
     }
 
     console.log("Final Query Params:", query);
-    const jobs = await Job.find(query);
-    console.log(`[searchJobsForUsers] Found ${jobs.length} matching jobs`);
+    // Set limit for number of jobs to display at a time
+    const limit = 12;
+    const jobs = await Job.find(query).limit(limit);
+    console.log(`[searchJobsForUsers] Found ${jobs.length} matching jobs (limit: ${limit})`);
     res.status(200).json(jobs);
   } catch (error) {
     console.error("[searchJobsForUsers] Error:", error.message);
