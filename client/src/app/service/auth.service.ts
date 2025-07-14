@@ -24,6 +24,13 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
+  getRefreshToken(): string | null {
+    if (!isPlatformBrowser(this.platformId)) {
+      return null; // no localStorage on server
+    }
+    return localStorage.getItem('refreshToken');
+  }
+
   getUser(): any {
     if (!isPlatformBrowser(this.platformId)) {
       return null;

@@ -250,7 +250,10 @@ export async function getJobById(req, res) {
     }
 
     const applications = await Application.find({ jobId })
-      .populate("userId")
+      .populate({
+        path: "userId",
+        select: "name email phone experience address resume profilePicture",
+      })
       .sort({ appliedAt: -1 });
 
     console.log(

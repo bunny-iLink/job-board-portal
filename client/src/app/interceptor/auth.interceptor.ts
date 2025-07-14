@@ -23,8 +23,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     return next(authReq).pipe(
         catchError((error) => {
             // 🔄 Only try refresh if token expired and refresh token is present
-            if (error.status === 401 && localStorage.getItem('refreshToken')) {
-                const refreshToken = localStorage.getItem('refreshToken')!;
+            if (error.status === 401 && authService.getRefreshToken()) {
+                const refreshToken = authService.getRefreshToken()!;
                 console.warn("🔄 Access token expired — attempting refresh...");
                 console.log("🔁 Sending refresh token to server:", refreshToken);
 
