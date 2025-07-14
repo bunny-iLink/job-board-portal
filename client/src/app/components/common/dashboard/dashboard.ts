@@ -253,4 +253,10 @@ export class DashboardComponent implements OnInit {
   viewJobDetails(jobId: string) {
     this.router.navigate(['/employer/job-details'], { queryParams: { id: jobId } });
   }
+
+  addJob(){
+    this.router.navigate(['/employer/my-listings'],{
+      state: {openAddModal: true}
+    });
+  }
 }
