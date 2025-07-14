@@ -7,6 +7,7 @@ import { environment } from '../../../environments/environment';
 import { JobService } from '../../../service/job.service';
 import { ConfirmComponent } from '../../common/confirm/confirm.component';
 import { AlertComponent } from '../../common/alert/alert.component';
+import { Router } from '@angular/router';
 
 interface Job {
   _id?: string;
@@ -76,7 +77,8 @@ export class MyListingsComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private authService: AuthService,
-    private jobService: JobService
+    private jobService: JobService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -89,6 +91,16 @@ export class MyListingsComponent implements OnInit {
     console.log('Token:', this.token);
 
     this.fetchJobs();
+
+    // ✅ Read persistent state from window.history
+    const state = window.history.state;
+    if (state?.openAddModal) {
+      // Slight delay ensures DOM is ready
+      setTimeout(() => {
+        this.openModal(); // this opens the Add Job modal
+        history.replaceState({}, document.title); // Optional: clear state so modal doesn't open again on back
+      }, 0);
+    }
   }
 
   // Returns a blank job object for form reset
