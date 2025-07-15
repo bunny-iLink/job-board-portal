@@ -13,7 +13,7 @@ const SALT_ROUNDS = 10;
 
 export async function addUser(req, res) {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, preferredDomain } = req.body;
     console.log("Attempting to add user:", { name, email });
 
     if (!name || !email || !password) {
@@ -37,7 +37,7 @@ export async function addUser(req, res) {
     }
 
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
-    const newUser = new User({ name, email, password: hashedPassword });
+    const newUser = new User({ name, email, password: hashedPassword, preferredDomain });
 
     const savedUser = await newUser.save();
     console.log("User successfully saved:", savedUser._id);
