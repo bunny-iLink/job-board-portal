@@ -267,4 +267,8 @@ export class MyListingsComponent implements OnInit {
   onCancelConfirm() {
     this.showConfirm = false;
   }
+
+  viewJobDetails(jobId: string) {
+    this.router.navigate(['/employer/job-details'], { queryParams: { id: jobId } });
+  }
 }

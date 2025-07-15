@@ -208,7 +208,7 @@
 <div class="container mt-4">
   <div class="row g-3">
     <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let job of jobs">
-      <div class="card h-100 shadow-sm">
+      <div class="card h-100 shadow-sm" (click)="viewJobDetails(job._id)" tabindex="0" style="cursor: pointer;">
         <div class="card-body d-flex flex-column">
           <h5 class="card-title">{{ job.title }}</h5>
           <p class="mb-1"><strong>Company:</strong> {{ job.company }}</p>
