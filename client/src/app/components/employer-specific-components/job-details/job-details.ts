@@ -7,6 +7,7 @@ import { JobService } from '../../../service/job.service';
 import { ApplicationService } from '../../../service/application.service';
 import { ConfirmComponent } from '../../common/confirm/confirm.component';
 import { AlertComponent } from '../../common/alert/alert.component';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-job-details',
@@ -40,6 +41,8 @@ export class JobDetailsComponent implements OnInit {
   showConfirm = false;
   selectedApplicationId = '';
   newStatusToSet = '';
+
+  readonly baseUrl = environment.apiUrl;
 
   ngOnInit(): void {
     this.token = this.authService.getToken();
@@ -215,4 +218,15 @@ export class JobDetailsComponent implements OnInit {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
   }
+
+  getProfilePicture(applicant: any): string {
+    const base64Data = applicant.userId?.profilePicture?.data;
+    if (!base64Data) {
+      return 'assets/default-profile.png'; // fallback image
+    }
+    return `data:image/png;base64,${base64Data}`;
+  }
+
+
+
 }
