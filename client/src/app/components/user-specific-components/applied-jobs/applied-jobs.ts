@@ -30,6 +30,9 @@ export class AppliedJobsComponent implements OnInit {
   showModal: boolean = false;
   loading: boolean = true;
 
+  totalPages: number = 1;
+  currentPage: number = 1;
+
   // Variables for alert
   alertMessage: string = '';
   alertType: 'success' | 'error' | 'info' = 'info';
@@ -99,22 +102,47 @@ export class AppliedJobsComponent implements OnInit {
   }
 
   // Load jobs that the user has applied to from the backend
-  loadAppliedJobs() {
-    if (!this.userId) return;
+  // loadAppliedJobs() {
+  //   if (!this.userId) return;
 
-    this.loading = true; // Start loading
+  //   this.loading = true; // Start loading
 
-    this.jobService.appliedJobs(this.userId).subscribe({
-      next: (res: any) => {
+  //   this.jobService.appliedJobs(this.userId).subscribe({
+  //     next: (res: any) => {
+  //       this.appliedJobs = res.jobs || res;
+  //       console.log('Applied jobs:', this.appliedJobs);
+  //       this.loading = false; // Stop loading on success
+  //     },
+  //     error: (err) => {
+  //       console.error('Failed to load applied jobs:', err);
+  //       this.loading = false; // Stop loading on error
+  //     },
+  //   });
+  // }
+    loadAppliedJobs() {
+    this.loading = true;
+    this.jobService.appliedJobs(this.userId!, this.currentPage, 6).subscribe({
+      next: (res) => {
         this.appliedJobs = res.jobs || res;
-        console.log('Applied jobs:', this.appliedJobs);
-        this.loading = false; // Stop loading on success
+        this.totalPages = res.totalPages || 1;
       },
-      error: (err) => {
-        console.error('Failed to load applied jobs:', err);
-        this.loading = false; // Stop loading on error
-      },
+      error: (err) => console.error('Applied jobs error:', err),
+      complete: () => (this.loading = false),
     });
+  }
+
+    goToPreviousPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+        this.loadAppliedJobs();
+      }
+    }
+
+  goToNextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.loadAppliedJobs();
+    }
   }
 
   // Open the modal to show job details

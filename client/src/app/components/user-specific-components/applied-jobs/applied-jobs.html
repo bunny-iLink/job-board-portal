@@ -24,18 +24,49 @@
           <p class="card-text"><strong>Location:</strong> {{ job.location }}</p>
           <p class="card-text"><strong>Status:</strong> {{ job.status || 'Under Review' }}</p>
           <p class="card-text"><strong>Applied On:</strong> {{ job.createdAt | date:'mediumDate' }}</p>
-          <p class="card-text">
+          <p class="card-text text-truncate" style="max-height: 4.5em; overflow: hidden;">
             <strong>Description:</strong>
             {{ job.description?.overview || 'No description available.' }}
           </p>
-          <button class="btn btn-danger mt-3" (click)="revokeApplication(job._id); $event.stopPropagation()">
-            Revoke Application
-          </button>
+
+          <a *ngIf="job.description?.overview" (click)="openJobModal(job); $event.stopPropagation()" class="text-primary" style="cursor: pointer;">
+            Show more
+          </a>
+          <div class="mt-3">
+            <button
+              class="btn btn-danger"
+              (click)="revokeApplication(job._id); $event.stopPropagation()"
+            >
+              Revoke Application
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<nav *ngIf="totalPages > 1" class="mt-3 d-flex justify-content-center">
+  <ul class="pagination mb-0">
+    <li class="page-item" [class.disabled]="currentPage === 1">
+      <button class="page-link" (click)="goToPreviousPage()" [disabled]="currentPage === 1">
+        ◀
+      </button>
+    </li>
+
+    <li class="page-item disabled">
+      <span class="page-link">
+        Page {{ currentPage }} of {{ totalPages }}
+      </span>
+    </li>
+
+    <li class="page-item" [class.disabled]="currentPage === totalPages">
+      <button class="page-link" (click)="goToNextPage()" [disabled]="currentPage === totalPages">
+        ➤
+      </button>
+    </li>
+  </ul>
+</nav>
 
 <!-- Modal -->
 <div class="modal fade show d-block" tabindex="-1" *ngIf="showModal" style="background: rgba(0,0,0,0.45);">
