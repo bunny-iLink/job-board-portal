@@ -5,6 +5,7 @@ import {
   FormGroup,
   Validators,
   ReactiveFormsModule,
+  AbstractControl
 } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -67,14 +68,24 @@ export class RegisterComponent {
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required], 
       company: [''],
       preferredDomain: [''],
-    });
+    },
+      {
+      validators: this.passwordMatchValidator
+      });
   }
 
   // Set the selected role when a button is clicked
   selectRole(role: string) {
     this.selectedRole = role;
+  }
+
+  passwordMatchValidator(form: AbstractControl) {
+    const password = form.get('password')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value;
+    return password === confirmPassword ? null : { passwordMismatch: true };
   }
 
   // Toggle password visibility

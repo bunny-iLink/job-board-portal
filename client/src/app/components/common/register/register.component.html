@@ -82,6 +82,23 @@
                 characters</span>
             </div>
           </div>
+          <!-- Confirm Password -->
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Confirm Password *</label>
+            <div class="position-relative">
+              <input id="confirmPassword" [type]="showPassword ? 'text' : 'password'" class="form-control"
+                formControlName="confirmPassword" placeholder="Re-enter your password" />
+            </div>
+            <div *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.hasError('passwordMismatch')"
+              class="text-danger small mt-1">
+              Passwords do not match
+            </div>
+            <div *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched && !registerForm.hasError('passwordMismatch')"
+              class="text-danger small mt-1">
+              Confirm Password is required
+            </div>
+          </div>
+
 
           <!-- Candidate Field -->
           <div *ngIf="selectedRole === 'candidate'" class="mb-3">
