@@ -122,3 +122,15 @@
     </div>
   </div>
 </div>
+
+<!-- Pagination Controls (outside modal, after job cards) -->
+<div class="d-flex justify-content-center align-items-center my-3" *ngIf="pagination.totalPages > 1 && !loadingJobs">
+  <button class="btn btn-outline-secondary me-2" [disabled]="pagination.page === 1" (click)="changePage(pagination.page - 1)">
+    Previous
+  </button>
+  <span class="mx-2">Page {{ pagination.page }} of {{ pagination.totalPages }}</span>
+  <button class="btn btn-outline-secondary ms-2" [disabled]="pagination.page === pagination.totalPages" (click)="changePage(pagination.page + 1)">
+    Next
+  </button>
+</div>
+<!-- </div> -->

@@ -319,12 +319,28 @@ export async function searchJobsForUsers(req, res) {
       query._id = { $nin: appliedJobIds };
     }
 
-    console.log("Final Query Params:", query);
-    // Set limit for number of jobs to display at a time
-    const limit = 12;
-    const jobs = await Job.find(query).limit(limit);
-    console.log(`[searchJobsForUsers] Found ${jobs.length} matching jobs (limit: ${limit})`);
-    res.status(200).json(jobs);
+    // Pagination logic similar to notifications
+    const { page = 1 } = req.query; // default to page 1 if not provided
+    const limit =12;
+    const skip = (Number(page) - 1) * limit;
+
+    // Fetch paginated jobs
+    const jobs = await Job.find(query)
+        .skip(skip)
+        .limit(limit)
+        .lean();
+
+    // Get total count for pagination info
+    const total = await Job.countDocuments(query);
+
+    res.status(200).json({
+        jobs,
+        pagination: {
+            total,
+            page: Number(page),
+            totalPages: Math.ceil(total / limit),
+        },
+    });
   } catch (error) {
     console.error("[searchJobsForUsers] Error:", error.message);
     res
@@ -332,3 +348,5 @@ export async function searchJobsForUsers(req, res) {
       .json({ message: "Internal server error", error: error.message });
   }
 }
+
+
