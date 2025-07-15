@@ -18,6 +18,11 @@ import { UserService } from '../../../service/user.service';
 export class SearchJobsComponent implements OnInit {
   allJobs: any[] = [];
   filteredJobs: any[] = [];
+  pagination = {
+    total: 0,
+    page: 1,
+    totalPages: 1
+  };
   searchTerm: string = '';
   selectedJob: any = null;
   token: string | null = null;
@@ -98,8 +103,41 @@ export class SearchJobsComponent implements OnInit {
 
     this.jobService.searchJobs(params).subscribe({
       next: (res: any) => {
-        this.allJobs = res;
-        this.filteredJobs = [...res];
+        this.allJobs = res.jobs || [];
+        this.filteredJobs = [...this.allJobs];
+        this.pagination = res.pagination || { total: 0, page: 1, totalPages: 1 };
+        this.loadingJobs = false;
+      },
+      error: (err) => {
+        console.error('Error fetching jobs:', err);
+        this.loadingJobs = false;
+      },
+    });
+  }
+
+  // Add method to change page
+  changePage(page: number) {
+    if (page < 1 || page > this.pagination.totalPages) return;
+    const user = this.getStoredUser();
+    if (!user) return;
+    const params: any = {
+      userId: user._id,
+      page: page
+    };
+    const search = this.searchTerm.trim();
+    if (search) params.search = search;
+    if (this.filters.type) params.type = this.filters.type;
+    if (this.filters.experience) params.experience = this.filters.experience;
+    if (this.filters.expectedSalary) params.expectedSalary = this.filters.expectedSalary;
+    if (user.preferredDomain && user.preferredDomain !== 'null') {
+      params.preferredDomain = user.preferredDomain;
+    }
+    this.loadingJobs = true;
+    this.jobService.searchJobs(params).subscribe({
+      next: (res: any) => {
+        this.allJobs = res.jobs || [];
+        this.filteredJobs = [...this.allJobs];
+        this.pagination = res.pagination || { total: 0, page: 1, totalPages: 1 };
         this.loadingJobs = false;
       },
       error: (err) => {
