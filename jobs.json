@@ -1,0 +1,500 @@
+[
+    {
+        "title": "Frontend Developer",
+        "employerId": "68636b3ff8f764b15396a315",
+        "employerName": "Test Employer 1",
+        "domain": "Technology & IT",
+        "description": {
+            "overview": "Seeking a skilled Frontend Developer to build modern and scalable web interfaces for enterprise applications.",
+            "responsibilities": [
+                "Develop responsive UI using React.js",
+                "Optimize frontend performance and accessibility",
+                "Collaborate with designers and backend developers",
+                "Write clean and testable code",
+                "Participate in code reviews"
+            ],
+            "requiredSkills": [
+                "React.js, HTML, CSS, JavaScript",
+                "Responsive and mobile-first design",
+                "Git and version control best practices"
+            ],
+            "preferredSkills": [
+                "TypeScript experience",
+                "Knowledge of UI testing frameworks"
+            ],
+            "whatWeOffer": [
+                "Flexible work schedule",
+                "Modern tech stack",
+                "Team lunches and learning sessions"
+            ]
+        },
+        "company": "iLink Systems",
+        "location": "Pune",
+        "salary": 6,
+        "type": "Full-Time",
+        "experience": 2,
+        "vacancies": 2,
+        "status": "open"
+    },
+    {
+        "title": "Backend Engineer",
+        "employerId": "68636b3ff8f764b15396a315",
+        "employerName": "Test Employer 1",
+        "domain": "Technology & IT",
+        "description": {
+            "overview": "Join our backend team to build robust, scalable APIs and microservices that support our growing user base.",
+            "responsibilities": [
+                "Develop RESTful APIs using Node.js and Express",
+                "Integrate with databases like MongoDB or PostgreSQL",
+                "Implement authentication and authorization",
+                "Optimize application performance",
+                "Write unit and integration tests"
+            ],
+            "requiredSkills": [
+                "Node.js, Express.js",
+                "MongoDB or PostgreSQL",
+                "RESTful API design",
+                "Git and CI/CD"
+            ],
+            "preferredSkills": [
+                "Docker and containerization",
+                "AWS or Azure deployment knowledge"
+            ],
+            "whatWeOffer": [
+                "Hybrid work model",
+                "Onsite opportunities",
+                "Mentorship and learning budget"
+            ]
+        },
+        "company": "iLink Systems",
+        "location": "Pune",
+        "salary": 7,
+        "type": "Full-Time",
+        "experience": 3,
+        "vacancies": 3,
+        "status": "open"
+    },
+    {
+        "title": "Full Stack Developer",
+        "employerId": "68636b3ff8f764b15396a315",
+        "employerName": "Test Employer 1",
+        "domain": "Software Development",
+        "description": {
+            "overview": "We're hiring Full Stack Developers to build scalable, end-to-end web solutions using modern frameworks.",
+            "responsibilities": [
+                "Design and develop front-to-back solutions",
+                "Ensure security and performance across stacks",
+                "Work closely with product managers and designers",
+                "Maintain and document APIs"
+            ],
+            "requiredSkills": [
+                "JavaScript, React.js, Node.js",
+                "SQL/NoSQL databases",
+                "REST API integration"
+            ],
+            "preferredSkills": [
+                "CI/CD and DevOps familiarity",
+                "Agile/Scrum experience"
+            ],
+            "whatWeOffer": [
+                "Equity options",
+                "International projects",
+                "Remote-friendly culture"
+            ]
+        },
+        "company": "iLink Systems",
+        "location": "Pune",
+        "salary": 8,
+        "type": "Full-Time",
+        "experience": 4,
+        "vacancies": 2,
+        "status": "open"
+    },
+    {
+        "title": "DevOps Engineer",
+        "employerId": "68636b3ff8f764b15396a315",
+        "employerName": "Test Employer 1",
+        "domain": "Infrastructure",
+        "description": {
+            "overview": "Looking for a DevOps Engineer to streamline our software development lifecycle using modern CI/CD practices.",
+            "responsibilities": [
+                "Manage CI/CD pipelines",
+                "Configure infrastructure using IaC tools",
+                "Automate deployments and monitoring",
+                "Ensure cloud environment security"
+            ],
+            "requiredSkills": [
+                "Docker, Kubernetes",
+                "Jenkins or GitHub Actions",
+                "AWS or Azure"
+            ],
+            "preferredSkills": [
+                "Terraform or Ansible",
+                "Monitoring tools like Prometheus"
+            ],
+            "whatWeOffer": [
+                "Cloud certifications support",
+                "Flexible work environment",
+                "Tech summits and events"
+            ]
+        },
+        "company": "iLink Systems",
+        "location": "Pune",
+        "salary": 10,
+        "type": "Full-Time",
+        "experience": 3,
+        "vacancies": 1,
+        "status": "open"
+    },
+    {
+        "title": "UI/UX Designer",
+        "employerId": "68636b3ff8f764b15396a315",
+        "employerName": "Test Employer 1",
+        "domain": "Design",
+        "description": {
+            "overview": "We're seeking a UI/UX Designer to deliver intuitive and user-friendly designs for our digital products.",
+            "responsibilities": [
+                "Create wireframes, prototypes, and mockups",
+                "Conduct user research and usability testing",
+                "Collaborate with developers for implementation",
+                "Ensure consistency in branding"
+            ],
+            "requiredSkills": [
+                "Figma, Adobe XD",
+                "User research methodologies",
+                "Basic HTML/CSS understanding"
+            ],
+            "preferredSkills": [
+                "Mobile-first design",
+                "Design system experience"
+            ],
+            "whatWeOffer": [
+                "Creative freedom",
+                "Hackathons and workshops",
+                "Inclusive team culture"
+            ]
+        },
+        "company": "iLink Systems",
+        "location": "Pune",
+        "salary": 5,
+        "type": "Full-Time",
+        "experience": 2,
+        "vacancies": 2,
+        "status": "open"
+    },
+    {
+        "title": "Mobile App Developer",
+        "employerId": "68636b3ff8f764b15396a315",
+        "employerName": "Test Employer 1",
+        "domain": "Mobile Development",
+        "description": {
+            "overview": "Join our team as a Mobile Developer to build Android and iOS apps using React Native.",
+            "responsibilities": [
+                "Build and deploy cross-platform mobile apps",
+                "Ensure app responsiveness and performance",
+                "Work with APIs and third-party libraries"
+            ],
+            "requiredSkills": [
+                "React Native, JavaScript",
+                "REST APIs",
+                "Mobile debugging tools"
+            ],
+            "preferredSkills": [
+                "Native iOS/Android experience",
+                "Firebase or AWS Amplify"
+            ],
+            "whatWeOffer": [
+                "Hybrid work model",
+                "Device allowance",
+                "Career growth plans"
+            ]
+        },
+        "company": "iLink Systems",
+        "location": "Pune",
+        "salary": 7,
+        "type": "Full-Time",
+        "experience": 3,
+        "vacancies": 1,
+        "status": "open"
+    },
+    {
+        "title": "QA Automation Engineer",
+        "employerId": "68636b3ff8f764b15396a315",
+        "employerName": "Test Employer 1",
+        "domain": "Quality Assurance",
+        "description": {
+            "overview": "Looking for a QA Automation Engineer to develop and maintain automated test suites.",
+            "responsibilities": [
+                "Write and execute automated tests",
+                "Ensure high product quality",
+                "Identify and log defects"
+            ],
+            "requiredSkills": [
+                "Selenium or Cypress",
+                "JavaScript/Python",
+                "CI/CD awareness"
+            ],
+            "preferredSkills": [
+                "Performance testing tools",
+                "Cloud test platforms"
+            ],
+            "whatWeOffer": [
+                "Testing tools license support",
+                "Bug bounty rewards",
+                "Team game nights"
+            ]
+        },
+        "company": "iLink Systems",
+        "location": "Pune",
+        "salary": 6,
+        "type": "Full-Time",
+        "experience": 2,
+        "vacancies": 2,
+        "status": "open"
+    },
+    {
+        "title": "Cloud Solutions Architect",
+        "employerId": "68636b3ff8f764b15396a315",
+        "employerName": "Test Employer 1",
+        "domain": "Cloud Engineering",
+        "description": {
+            "overview": "Seeking a Cloud Solutions Architect to design scalable and secure cloud infrastructure.",
+            "responsibilities": [
+                "Design cloud-native architectures",
+                "Ensure compliance and security",
+                "Guide DevOps teams"
+            ],
+            "requiredSkills": [
+                "AWS/GCP/Azure expertise",
+                "Architecture patterns",
+                "IaC tools"
+            ],
+            "preferredSkills": [
+                "Kubernetes experience",
+                "Cost optimization strategies"
+            ],
+            "whatWeOffer": [
+                "Architect certification reimbursement",
+                "Tech conferences",
+                "Project leadership roles"
+            ]
+        },
+        "company": "iLink Systems",
+        "location": "Pune",
+        "salary": 14,
+        "type": "Full-Time",
+        "experience": 5,
+        "vacancies": 1,
+        "status": "open"
+    },
+    {
+        "title": "Data Analyst",
+        "employerId": "68636b3ff8f764b15396a315",
+        "employerName": "Test Employer 1",
+        "domain": "Data Science",
+        "description": {
+            "overview": "Join our analytics team to derive insights from complex data and drive strategic decisions.",
+            "responsibilities": [
+                "Clean, transform and analyze data",
+                "Build reports and dashboards",
+                "Support data-driven decisions"
+            ],
+            "requiredSkills": [
+                "SQL, Excel, Power BI/Tableau",
+                "Strong analytical thinking",
+                "Python or R basics"
+            ],
+            "preferredSkills": [
+                "Machine learning fundamentals",
+                "Big data tools"
+            ],
+            "whatWeOffer": [
+                "Data learning bootcamps",
+                "Real-time data projects",
+                "Analytics certifications"
+            ]
+        },
+        "company": "iLink Systems",
+        "location": "Pune",
+        "salary": 6,
+        "type": "Full-Time",
+        "experience": 2,
+        "vacancies": 2,
+        "status": "open"
+    },
+    {
+        "title": "Machine Learning Engineer",
+        "employerId": "68636b3ff8f764b15396a315",
+        "employerName": "Test Employer 1",
+        "domain": "Artificial Intelligence",
+        "description": {
+            "overview": "We are looking for a Machine Learning Engineer to build and deploy intelligent systems across our platform.",
+            "responsibilities": [
+                "Design and train machine learning models",
+                "Process and analyze large datasets",
+                "Deploy models to production environments"
+            ],
+            "requiredSkills": [
+                "Python, Scikit-learn, TensorFlow/PyTorch",
+                "Data preprocessing and feature engineering",
+                "Model deployment using Flask or FastAPI"
+            ],
+            "preferredSkills": [
+                "NLP or Computer Vision experience",
+                "MLOps tools (MLflow, Kubeflow)"
+            ],
+            "whatWeOffer": [
+                "Dedicated GPU/compute resources",
+                "Research and innovation programs",
+                "Cross-team collaborations"
+            ]
+        },
+        "company": "iLink Systems",
+        "location": "Pune",
+        "salary": 12,
+        "type": "Full-Time",
+        "experience": 3,
+        "vacancies": 1,
+        "status": "open"
+    },
+    {
+        "title": "Technical Project Manager",
+        "employerId": "68636b3ff8f764b15396a315",
+        "employerName": "Test Employer 1",
+        "domain": "Project Management",
+        "description": {
+            "overview": "We are hiring a Technical Project Manager to lead software projects and ensure timely delivery.",
+            "responsibilities": [
+                "Manage software development lifecycle",
+                "Coordinate between clients and technical teams",
+                "Track milestones and manage risks"
+            ],
+            "requiredSkills": [
+                "Agile/Scrum methodologies",
+                "Strong communication and leadership",
+                "Jira or similar project tracking tools"
+            ],
+            "preferredSkills": [
+                "Technical background in web or mobile development",
+                "PMP or CSM certification"
+            ],
+            "whatWeOffer": [
+                "Leadership training",
+                "Performance bonuses",
+                "International client exposure"
+            ]
+        },
+        "company": "iLink Systems",
+        "location": "Pune",
+        "salary": 10,
+        "type": "Full-Time",
+        "experience": 4,
+        "vacancies": 1,
+        "status": "open"
+    },
+    {
+        "title": "Business Analyst",
+        "employerId": "68636b3ff8f764b15396a315",
+        "employerName": "Test Employer 1",
+        "domain": "Business Intelligence",
+        "description": {
+            "overview": "We're seeking a Business Analyst to gather requirements and align product development with business goals.",
+            "responsibilities": [
+                "Understand client requirements and document user stories",
+                "Collaborate with product and development teams",
+                "Analyze business processes and identify improvements"
+            ],
+            "requiredSkills": [
+                "Requirement gathering and analysis",
+                "Flowcharting and UML diagrams",
+                "Excellent communication skills"
+            ],
+            "preferredSkills": [
+                "Familiarity with Agile frameworks",
+                "Basic SQL and data analysis"
+            ],
+            "whatWeOffer": [
+                "Cross-functional collaboration",
+                "Access to business strategy workshops",
+                "Growth into product roles"
+            ]
+        },
+        "company": "iLink Systems",
+        "location": "Pune",
+        "salary": 6,
+        "type": "Full-Time",
+        "experience": 2,
+        "vacancies": 2,
+        "status": "open"
+    },
+    {
+        "title": "Security Engineer",
+        "employerId": "68636b3ff8f764b15396a315",
+        "employerName": "Test Employer 1",
+        "domain": "Cybersecurity",
+        "description": {
+            "overview": "Join our security team to ensure the safety and integrity of our applications and infrastructure.",
+            "responsibilities": [
+                "Conduct vulnerability assessments and penetration tests",
+                "Monitor security alerts and manage incidents",
+                "Enforce security policies and compliance"
+            ],
+            "requiredSkills": [
+                "Network security principles",
+                "OWASP Top 10",
+                "SIEM tools (Splunk, ELK)"
+            ],
+            "preferredSkills": [
+                "Security certifications (CEH, OSCP)",
+                "Experience with firewalls and IDS/IPS"
+            ],
+            "whatWeOffer": [
+                "Security training and certification sponsorship",
+                "Zero-trust architecture exposure",
+                "Work on high-impact systems"
+            ]
+        },
+        "company": "iLink Systems",
+        "location": "Pune",
+        "salary": 9,
+        "type": "Full-Time",
+        "experience": 3,
+        "vacancies": 1,
+        "status": "open"
+    },
+    {
+        "title": "Technical Support Engineer",
+        "employerId": "68636b3ff8f764b15396a315",
+        "employerName": "Test Employer 1",
+        "domain": "Customer Support",
+        "description": {
+            "overview": "We are looking for a Technical Support Engineer to help customers resolve technical issues and improve product usability.",
+            "responsibilities": [
+                "Respond to technical queries via email, chat, and calls",
+                "Troubleshoot software issues and escalate where necessary",
+                "Document common solutions and contribute to knowledge base"
+            ],
+            "requiredSkills": [
+                "Strong problem-solving skills",
+                "Excellent verbal and written communication",
+                "Basic knowledge of software troubleshooting"
+            ],
+            "preferredSkills": [
+                "Experience with helpdesk tools (Zendesk, Freshdesk)",
+                "Understanding of logs and error tracing"
+            ],
+            "whatWeOffer": [
+                "Customer experience training",
+                "Opportunity to grow into product or QA roles",
+                "Shift flexibility and bonus incentives"
+            ]
+        },
+        "company": "iLink Systems",
+        "location": "Pune",
+        "salary": 5,
+        "type": "Full-Time",
+        "experience": 1,
+        "vacancies": 3,
+        "status": "open"
+    }
+]
