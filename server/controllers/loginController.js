@@ -2,7 +2,7 @@ import { User } from "../models/users.js";
 import { Employer } from "../models/employer.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../config.js";
+import { JWT_SECRET_LOGIN, JWT_SECRET_REFRESH } from "../config.js";
 
 export async function loginUser(req, res) {
   try {
@@ -40,19 +40,30 @@ export async function loginUser(req, res) {
 
     console.log(`Authenticated ${accountType} with ID: ${account._id}`);
 
-    const token = jwt.sign(
+    const accessToken = jwt.sign(
       {
         id: account._id,
         email: account.email,
         role: accountType,
       },
-      JWT_SECRET,
+      JWT_SECRET_LOGIN,
       { expiresIn: "1h" }
+    );
+
+    const refreshToken = jwt.sign(
+      {
+        id: account._id,
+        email: account.email,
+        role: accountType,
+      },
+      JWT_SECRET_REFRESH,
+      { expiresIn: "7d" }
     );
 
     return res.status(200).json({
       message: "Login successful",
-      token,
+      token: accessToken,
+      refresh_token: refreshToken,
       user: {
         _id: account._id,
         email: account.email,
@@ -66,5 +77,37 @@ export async function loginUser(req, res) {
       message: "Internal server error",
       error: err.message,
     });
+  }
+}
+
+export async function refreshAccessToken(req, res) {
+  const { refreshToken } = req.body;
+
+  if (!refreshToken) {
+    console.warn("⚠️ No refresh token provided");
+    return res.status(401).json({ message: "Refresh token required" });
+  }
+
+  try {
+    console.log("🔄 Verifying refresh token:", refreshToken);
+    console.log("🔄 Attempting to verify refresh token...");
+    const payload = jwt.verify(refreshToken, JWT_SECRET_REFRESH); // ✅ use correct secret
+    const { id, email, role } = payload;
+
+    console.log(`✅ Refresh token valid for user: ${email}, issuing new access token...`);
+
+    const accessToken = jwt.sign({ id, email, role }, JWT_SECRET_LOGIN, {
+      expiresIn: "1h",
+    });
+
+    console.log(`✅ New access token issued: ${accessToken}`);
+
+    return res.status(200).json({
+      accessToken,
+      message: "Access token refreshed",
+    });
+  } catch (err) {
+    console.error("❌ Invalid or expired refresh token:", err.message);
+    return res.status(403).json({ message: "Invalid or expired refresh token" });
   }
 }
