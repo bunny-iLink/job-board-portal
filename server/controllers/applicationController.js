@@ -103,35 +103,6 @@ export async function getUserAppliedJobs(req, res) {
   }
 }
 
-// export async function getUserAppliedJobs(req, res) {
-//   const { userId } = req.params;
-//   console.log("[getUserAppliedJobs] Request received for user:", userId);
-
-//   if (!mongoose.Types.ObjectId.isValid(userId)) {
-//     return res.status(400).json({ message: "Invalid User ID format." });
-//   }
-
-//   try {
-//     const applications = await Application.find({ userId })
-//       .populate("jobId")
-//       .lean();
-
-//     const appliedJobs = applications
-//       .filter(app => app.jobId)
-//       .map(app => ({
-//         applicationId: app._id,
-//         ...app.jobId,
-//         status: app.status,
-//       }));
-
-//     console.info(`[getUserAppliedJobs] Retrieved ${appliedJobs.length} applications for user ${userId}`);
-//     res.status(200).json(appliedJobs);
-//   } catch (err) {
-//     console.error("[getUserAppliedJobs] Error fetching applied jobs:", err);
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// }
-
 export const updateApplicationStatus = async (req, res) => {
   const applicationId = req.params.applicationId;
   const { status } = req.body;
