@@ -1,16 +1,7 @@
-<app-confirm
-  [message]="confirmMessage"
-  [show]="showConfirm"
-  (confirmed)="onConfirmDelete()"
-  (cancelled)="onCancelConfirm()"
-></app-confirm>
+<app-confirm [message]="confirmMessage" [show]="showConfirm" (confirmed)="onConfirmDelete()"
+  (cancelled)="onCancelConfirm()"></app-confirm>
 
-<app-alert
-  [message]="alertMessage"
-  [type]="alertType"
-  [show]="showAlert"
-  (closed)="onAlertClosed()"
-></app-alert>
+<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()"></app-alert>
 
 <!-- Add Job Button -->
 <div class="d-flex justify-content-end p-3 bg-light border-bottom">
@@ -20,7 +11,7 @@
 <!-- Modal -->
 <div class="modal fade show d-block" tabindex="-1" *ngIf="isModalOpen" style="background: rgba(0,0,0,0.5)">
   <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content" >
+    <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">{{ isEditMode ? 'Edit Job' : 'Add New Job' }}</h5>
         <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
@@ -33,8 +24,7 @@
             <!-- Title -->
             <div class="col-md-6">
               <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
-              <input id="title" type="text" class="form-control"
-                [(ngModel)]="jobForm.title" name="title" required
+              <input id="title" type="text" class="form-control" [(ngModel)]="jobForm.title" name="title" required
                 #titleRef="ngModel" [class.is-invalid]="jobFormEl.submitted && titleRef.invalid" />
               <div *ngIf="jobFormEl.submitted && titleRef.invalid" class="text-danger small">Title is required.</div>
             </div>
@@ -42,17 +32,17 @@
             <!-- Employer Name -->
             <div class="col-md-6">
               <label for="employerName" class="form-label">Employer Name <span class="text-danger">*</span></label>
-              <input id="employerName" type="text" class="form-control"
-                [(ngModel)]="jobForm.employerName" name="employerName" required
-                #employerNameRef="ngModel" [class.is-invalid]="jobFormEl.submitted && employerNameRef.invalid" />
-              <div *ngIf="jobFormEl.submitted && employerNameRef.invalid" class="text-danger small">Employer name is required.</div>
+              <input id="employerName" type="text" class="form-control" [(ngModel)]="jobForm.employerName"
+                name="employerName" required #employerNameRef="ngModel"
+                [class.is-invalid]="jobFormEl.submitted && employerNameRef.invalid" />
+              <div *ngIf="jobFormEl.submitted && employerNameRef.invalid" class="text-danger small">Employer name is
+                required.</div>
             </div>
 
             <!-- Domain -->
             <div class="col-md-6">
               <label for="domain" class="form-label">Domain <span class="text-danger">*</span></label>
-              <select id="domain" class="form-select"
-                [(ngModel)]="jobForm.domain" name="domain" required
+              <select id="domain" class="form-select" [(ngModel)]="jobForm.domain" name="domain" required
                 #domainRef="ngModel" [class.is-invalid]="jobFormEl.submitted && domainRef.invalid">
                 <option value="">Select domain</option>
                 <option value="Technology & IT">Technology & IT</option>
@@ -75,36 +65,34 @@
             <!-- Company -->
             <div class="col-md-6">
               <label for="company" class="form-label">Company <span class="text-danger">*</span></label>
-              <input id="company" type="text" class="form-control"
-                [(ngModel)]="jobForm.company" name="company" required
+              <input id="company" type="text" class="form-control" [(ngModel)]="jobForm.company" name="company" required
                 #companyRef="ngModel" [class.is-invalid]="jobFormEl.submitted && companyRef.invalid" />
-              <div *ngIf="jobFormEl.submitted && companyRef.invalid" class="text-danger small">Company is required.</div>
+              <div *ngIf="jobFormEl.submitted && companyRef.invalid" class="text-danger small">Company is required.
+              </div>
             </div>
 
             <!-- Location -->
             <div class="col-md-6">
               <label for="location" class="form-label">Location <span class="text-danger">*</span></label>
-              <input id="location" type="text" class="form-control"
-                [(ngModel)]="jobForm.location" name="location" required
-                #locationRef="ngModel" [class.is-invalid]="jobFormEl.submitted && locationRef.invalid" />
-              <div *ngIf="jobFormEl.submitted && locationRef.invalid" class="text-danger small">Location is required.</div>
+              <input id="location" type="text" class="form-control" [(ngModel)]="jobForm.location" name="location"
+                required #locationRef="ngModel" [class.is-invalid]="jobFormEl.submitted && locationRef.invalid" />
+              <div *ngIf="jobFormEl.submitted && locationRef.invalid" class="text-danger small">Location is required.
+              </div>
             </div>
 
             <!-- Salary -->
             <div class="col-md-6">
               <label for="salary" class="form-label">Salary (in LPA) <span class="text-danger">*</span></label>
-              <input id="salary" type="number" class="form-control"
-                [(ngModel)]="jobForm.salary" name="salary" min="0" required
-                #salaryRef="ngModel" [class.is-invalid]="jobFormEl.submitted && salaryRef.invalid" />
+              <input id="salary" type="number" class="form-control" [(ngModel)]="jobForm.salary" name="salary" min="0"
+                required #salaryRef="ngModel" [class.is-invalid]="jobFormEl.submitted && salaryRef.invalid" />
               <div *ngIf="jobFormEl.submitted && salaryRef.invalid" class="text-danger small">Salary is required.</div>
             </div>
 
             <!-- Job Type -->
             <div class="col-md-6">
               <label for="type" class="form-label">Job Type <span class="text-danger">*</span></label>
-              <select id="type" class="form-select"
-                [(ngModel)]="jobForm.type" name="type" required
-                #typeRef="ngModel" [class.is-invalid]="jobFormEl.submitted && typeRef.invalid">
+              <select id="type" class="form-select" [(ngModel)]="jobForm.type" name="type" required #typeRef="ngModel"
+                [class.is-invalid]="jobFormEl.submitted && typeRef.invalid">
                 <option value="">Select job type</option>
                 <option value="Full-Time">Full-Time</option>
                 <option value="Part-Time">Part-Time</option>
@@ -116,27 +104,29 @@
 
             <!-- Experience -->
             <div class="col-md-6">
-              <label for="experience" class="form-label">Experience (in years) <span class="text-danger">*</span></label>
-              <input id="experience" type="number" class="form-control"
-                [(ngModel)]="jobForm.experience" name="experience" min="0" required
-                #experienceRef="ngModel" [class.is-invalid]="jobFormEl.submitted && experienceRef.invalid" />
-              <div *ngIf="jobFormEl.submitted && experienceRef.invalid" class="text-danger small">Experience is required.</div>
+              <label for="experience" class="form-label">Experience (in years) <span
+                  class="text-danger">*</span></label>
+              <input id="experience" type="number" class="form-control" [(ngModel)]="jobForm.experience"
+                name="experience" min="0" required #experienceRef="ngModel"
+                [class.is-invalid]="jobFormEl.submitted && experienceRef.invalid" />
+              <div *ngIf="jobFormEl.submitted && experienceRef.invalid" class="text-danger small">Experience is
+                required.</div>
             </div>
 
             <!-- Vacancies -->
             <div class="col-md-6">
               <label for="vacancies" class="form-label">Vacancies <span class="text-danger">*</span></label>
-              <input id="vacancies" type="number" class="form-control"
-                [(ngModel)]="jobForm.vacancies" name="vacancies" min="0" required
-                #vacanciesRef="ngModel" [class.is-invalid]="jobFormEl.submitted && vacanciesRef.invalid" />
-              <div *ngIf="jobFormEl.submitted && vacanciesRef.invalid" class="text-danger small">Vacancies are required.</div>
+              <input id="vacancies" type="number" class="form-control" [(ngModel)]="jobForm.vacancies" name="vacancies"
+                min="0" required #vacanciesRef="ngModel"
+                [class.is-invalid]="jobFormEl.submitted && vacanciesRef.invalid" />
+              <div *ngIf="jobFormEl.submitted && vacanciesRef.invalid" class="text-danger small">Vacancies are required.
+              </div>
             </div>
 
             <!-- Status -->
             <div class="col-md-6">
               <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
-              <select id="status" class="form-select"
-                [(ngModel)]="jobForm.status" name="status" required
+              <select id="status" class="form-select" [(ngModel)]="jobForm.status" name="status" required
                 #statusRef="ngModel" [class.is-invalid]="jobFormEl.submitted && statusRef.invalid">
                 <option value="">Select status</option>
                 <option value="open">Open</option>
@@ -148,43 +138,36 @@
             <!-- Overview -->
             <div class="col-12">
               <label for="overview" class="form-label">Overview <span class="text-danger">*</span></label>
-              <input id="overview" type="text" class="form-control"
-                [(ngModel)]="jobForm.description.overview" name="overview" required
-                #overviewRef="ngModel" [class.is-invalid]="jobFormEl.submitted && overviewRef.invalid" />
-              <div *ngIf="jobFormEl.submitted && overviewRef.invalid" class="text-danger small">Overview is required.</div>
+              <input id="overview" type="text" class="form-control" [(ngModel)]="jobForm.description.overview"
+                name="overview" required #overviewRef="ngModel"
+                [class.is-invalid]="jobFormEl.submitted && overviewRef.invalid" />
+              <div *ngIf="jobFormEl.submitted && overviewRef.invalid" class="text-danger small">Overview is required.
+              </div>
             </div>
 
             <!-- Comma-separated lists (Optional) -->
             <div class="col-12">
               <label class="form-label">Responsibilities</label>
-              <input type="text" class="form-control"
-                [ngModel]="fromArray(jobForm.description.responsibilities)"
-                (ngModelChange)="jobForm.description.responsibilities = toArray($event)"
-                name="responsibilities" />
+              <input type="text" class="form-control" [ngModel]="fromArray(jobForm.description.responsibilities)"
+                (ngModelChange)="jobForm.description.responsibilities = toArray($event)" name="responsibilities" />
             </div>
 
             <div class="col-12">
               <label class="form-label">Required Skills</label>
-              <input type="text" class="form-control"
-                [ngModel]="fromArray(jobForm.description.requiredSkills)"
-                (ngModelChange)="jobForm.description.requiredSkills = toArray($event)"
-                name="requiredSkills" />
+              <input type="text" class="form-control" [ngModel]="fromArray(jobForm.description.requiredSkills)"
+                (ngModelChange)="jobForm.description.requiredSkills = toArray($event)" name="requiredSkills" />
             </div>
 
             <div class="col-12">
               <label class="form-label">Preferred Skills</label>
-              <input type="text" class="form-control"
-                [ngModel]="fromArray(jobForm.description.preferredSkills)"
-                (ngModelChange)="jobForm.description.preferredSkills = toArray($event)"
-                name="preferredSkills" />
+              <input type="text" class="form-control" [ngModel]="fromArray(jobForm.description.preferredSkills)"
+                (ngModelChange)="jobForm.description.preferredSkills = toArray($event)" name="preferredSkills" />
             </div>
 
             <div class="col-12">
               <label class="form-label">What We Offer</label>
-              <input type="text" class="form-control"
-                [ngModel]="fromArray(jobForm.description.whatWeOffer)"
-                (ngModelChange)="jobForm.description.whatWeOffer = toArray($event)"
-                name="whatWeOffer" />
+              <input type="text" class="form-control" [ngModel]="fromArray(jobForm.description.whatWeOffer)"
+                (ngModelChange)="jobForm.description.whatWeOffer = toArray($event)" name="whatWeOffer" />
             </div>
           </div>
         </div>
@@ -218,8 +201,9 @@
           <p class="mb-3"><strong>Status:</strong> {{ job.status }}</p>
 
           <div class="mt-auto d-flex gap-2">
-            <button class="btn btn-warning btn-sm w-50" (click)="openModal(job)">Edit</button>
-            <button class="btn btn-danger btn-sm w-50" (click)="deleteJob(job._id!)">Delete</button>
+            <button class="btn btn-warning btn-sm w-50" (click)="openModal(job); $event.stopPropagation()">Edit</button>
+            <button class="btn btn-danger btn-sm w-50"
+              (click)="deleteJob(job._id!); $event.stopPropagation()">Delete</button>
           </div>
         </div>
       </div>
