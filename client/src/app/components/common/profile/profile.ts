@@ -120,6 +120,7 @@ export class ProfileComponent implements OnInit {
         this.selectedBase64 = null;
         this.selectedMimeType = null;
         this.previewImage = null;
+        this.fetchData(); 
 
         // Optional: update localStorage
         if (typeof window !== 'undefined') {

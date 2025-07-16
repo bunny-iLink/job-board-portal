@@ -4,7 +4,7 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "author": "",
   "license": "ISC",
@@ -22,5 +22,14 @@
     "path": "^0.12.7",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.28.0",
+    "babel-jest": "^30.0.4",
+    "jest": "^30.0.4",
+    "mockingoose": "^2.16.2",
+    "mongodb-memory-server": "^10.1.4",
+    "node-mocks-http": "^1.17.2",
+    "supertest": "^7.1.3"
   }
 }

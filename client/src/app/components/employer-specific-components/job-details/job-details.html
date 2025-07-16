@@ -1,19 +1,11 @@
-<app-confirm
-  [message]="confirmMessage"
-  [show]="showConfirm"
-  (confirmed)="onConfirmStatusChange()"
-  (cancelled)="onCancelStatusChange()"
-></app-confirm>
+<app-confirm [message]="confirmMessage" [show]="showConfirm" (confirmed)="onConfirmStatusChange()"
+  (cancelled)="onCancelStatusChange()"></app-confirm>
 
-<app-alert
-  [message]="alertMessage"
-  [type]="alertType"
-  [show]="showAlert"
-  (closed)="onAlertClosed()"
-></app-alert>
+<app-alert [message]="alertMessage" [type]="alertType" [show]="showAlert" (closed)="onAlertClosed()"></app-alert>
 
 <!-- Spinner -->
-<div *ngIf="loadingJobDetails" class="d-flex justify-content-center align-items-center gap-3 p-3 fw-bold text-secondary">
+<div *ngIf="loadingJobDetails"
+  class="d-flex justify-content-center align-items-center gap-3 p-3 fw-bold text-secondary">
   <div class="spinner-border" role="status"></div>
   <div>Loading job details and applicants...</div>
 </div>
@@ -73,7 +65,7 @@
     <!-- Applicants List -->
     <div *ngFor="let applicant of applicants" class="card mt-3 shadow-sm">
       <div class="card-body d-flex justify-content-between align-items-center flex-wrap">
-        
+
         <!-- Left: Applicant Info -->
         <div class="flex-grow-1 pe-3">
           <p><strong>Name:</strong> {{ applicant.userId?.name || 'N/A' }}</p>
@@ -81,17 +73,16 @@
           <p><strong>Contact Number:</strong> {{ applicant.userId?.phone || 'N/A' }}</p>
           <p><strong>Applied At:</strong> {{ applicant.appliedAt | date: 'medium' }}</p>
 
-          <a *ngIf="applicant.userId?.resume" (click)="openResume(applicant._id)" class="link-primary" style="cursor: pointer">
+          <a *ngIf="applicant.userId?.resume" (click)="openResume(applicant._id)" class="link-primary"
+            style="cursor: pointer">
             View Resume
           </a>
 
           <div class="mt-3">
             <label class="form-label fw-semibold me-2">Status:</label>
-            <select
-              class="form-select w-auto d-inline-block"
-              [ngModel]="applicant.status"
-              (ngModelChange)="onStatusChange(applicant._id, $event)"
-            >
+            <select class="form-select w-auto d-inline-block" [ngModel]="applicant.status"
+              (ngModelChange)="onStatusChange(applicant._id, $event)">
+              <option value="Applied" disabled>Applied</option>
               <option value="In Progress">In Progress</option>
               <option value="Accepted">Accepted</option>
               <option value="Rejected">Rejected</option>
@@ -101,13 +92,10 @@
 
         <!-- Right: Vertically centered Profile Picture -->
         <div class="d-flex align-items-center">
-          <img
-            *ngIf="applicant.userId?.profilePicture?.data && applicant.userId?.profilePicture?.contentType"
+          <img *ngIf="applicant.userId?.profilePicture?.data && applicant.userId?.profilePicture?.contentType"
             [src]="'data:' + applicant.userId.profilePicture.contentType + ';base64,' + applicant.userId.profilePicture.data"
-            alt="Profile Picture"
-            class="rounded-circle border border-primary"
-            style="width: 120px; height: 120px; object-fit: cover;"
-          />
+            alt="Profile Picture" class="rounded-circle border border-primary"
+            style="width: 120px; height: 120px; object-fit: cover;" />
         </div>
 
       </div>
