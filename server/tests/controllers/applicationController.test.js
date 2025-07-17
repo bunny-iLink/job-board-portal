@@ -10,37 +10,47 @@ import {
 } from '../../controllers/applicationController.js';
 
 // Mock Models
-jest.mock('../../models/applications.js', () => ({
-    Application: {
-        findById: jest.fn(),
-        findByIdAndDelete: jest.fn(),
-        find: jest.fn(),
-        countDocuments: jest.fn(),
-        prototype: {
-            save: jest.fn()
-        }
-    }
-}));
+const saveMock = jest.fn();
+
+jest.mock('../../models/applications.js', () => {
+    const ApplicationMock = jest.fn(() => ({
+        save: saveMock
+    }));
+
+    ApplicationMock.findById = jest.fn();
+    ApplicationMock.findByIdAndDelete = jest.fn();
+    ApplicationMock.find = jest.fn();
+    ApplicationMock.countDocuments = jest.fn();
+
+    return {
+        Application: ApplicationMock,
+        __esModule: true
+    };
+});
 
 jest.mock('../../models/jobs.js', () => ({
     Job: {
         findById: jest.fn()
-    }
+    },
+    __esModule: true
 }));
 
 jest.mock('../../models/users.js', () => ({
     User: {
         findById: jest.fn()
-    }
+    },
+    __esModule: true
 }));
 
 jest.mock('../../utils/jobUtilities.js', () => ({
     changeApplicantCount: jest.fn(),
-    changeVacancyCount: jest.fn()
+    changeVacancyCount: jest.fn(),
+    __esModule: true
 }));
 
 jest.mock('../../controllers/notificationsController.js', () => ({
-    addNotification: jest.fn()
+    addNotification: jest.fn(),
+    __esModule: true
 }));
 
 const { Application } = await import('../../models/applications.js');
@@ -50,7 +60,10 @@ const { changeApplicantCount, changeVacancyCount } = await import('../../utils/j
 const { addNotification } = await import('../../controllers/notificationsController.js');
 
 describe('applicationController', () => {
-    afterEach(() => jest.clearAllMocks());
+    afterEach(() => {
+        jest.clearAllMocks();
+        saveMock.mockReset();
+    });
 
     describe('applyForJob', () => {
         test('should return 400 if userId or jobId missing', async () => {
@@ -62,7 +75,12 @@ describe('applicationController', () => {
         });
 
         test('should return 404 if user or job not found', async () => {
-            const req = httpMocks.createRequest({ body: { userId: new mongoose.Types.ObjectId(), jobId: new mongoose.Types.ObjectId() } });
+            const req = httpMocks.createRequest({
+                body: {
+                    userId: new mongoose.Types.ObjectId(),
+                    jobId: new mongoose.Types.ObjectId()
+                }
+            });
             const res = httpMocks.createResponse();
 
             User.findById.mockResolvedValue(null);
@@ -74,14 +92,19 @@ describe('applicationController', () => {
 
         test('should return 409 if application already exists (duplicate key)', async () => {
             const req = httpMocks.createRequest({
-                body: { userId: new mongoose.Types.ObjectId(), jobId: new mongoose.Types.ObjectId() }
+                body: {
+                    userId: new mongoose.Types.ObjectId(),
+                    jobId: new mongoose.Types.ObjectId()
+                }
             });
             const res = httpMocks.createResponse();
 
             const mockJob = { employerName: 'ABC Inc.', employerId: 'employer123' };
+
             User.findById.mockResolvedValue({ name: 'Test User' });
             Job.findById.mockResolvedValue(mockJob);
-            Application.prototype.save = jest.fn().mockRejectedValue({ code: 11000 });
+
+            saveMock.mockRejectedValue({ code: 11000 });
 
             await applyForJob(req, res);
             expect(res.statusCode).toBe(409);
@@ -89,18 +112,23 @@ describe('applicationController', () => {
 
         test('should save application and update applicant count', async () => {
             const req = httpMocks.createRequest({
-                body: { userId: new mongoose.Types.ObjectId(), jobId: new mongoose.Types.ObjectId() }
+                body: {
+                    userId: new mongoose.Types.ObjectId(),
+                    jobId: new mongoose.Types.ObjectId()
+                }
             });
             const res = httpMocks.createResponse();
 
             const mockJob = { employerName: 'ABC Inc.', employerId: 'employer123' };
-            User.findById.mockResolvedValue({});
+
+            User.findById.mockResolvedValue({ name: 'Test User' });
             Job.findById.mockResolvedValue(mockJob);
-            Application.prototype.save = jest.fn().mockResolvedValue({});
+            saveMock.mockResolvedValue({});
 
             await applyForJob(req, res);
 
             expect(changeApplicantCount).toHaveBeenCalled();
+            expect(saveMock).toHaveBeenCalled();
             expect(res.statusCode).toBe(201);
         });
     });
@@ -116,7 +144,10 @@ describe('applicationController', () => {
 
         test('should return paginated jobs', async () => {
             const validId = new mongoose.Types.ObjectId().toString();
-            const req = httpMocks.createRequest({ params: { userId: validId }, query: { page: 1, limit: 2 } });
+            const req = httpMocks.createRequest({
+                params: { userId: validId },
+                query: { page: 1, limit: 2 }
+            });
             const res = httpMocks.createResponse();
 
             Application.countDocuments.mockResolvedValue(3);
@@ -142,7 +173,10 @@ describe('applicationController', () => {
 
     describe('updateApplicationStatus', () => {
         test('should return 400 for invalid applicationId or status', async () => {
-            const req = httpMocks.createRequest({ params: { applicationId: 'badId' }, body: { status: 'invalid' } });
+            const req = httpMocks.createRequest({
+                params: { applicationId: 'badId' },
+                body: { status: 'invalid' }
+            });
             const res = httpMocks.createResponse();
 
             await updateApplicationStatus(req, res);
@@ -151,7 +185,10 @@ describe('applicationController', () => {
 
         test('should return 404 if application not found', async () => {
             const id = new mongoose.Types.ObjectId().toString();
-            const req = httpMocks.createRequest({ params: { applicationId: id }, body: { status: 'Accepted' } });
+            const req = httpMocks.createRequest({
+                params: { applicationId: id },
+                body: { status: 'Accepted' }
+            });
             const res = httpMocks.createResponse();
 
             Application.findById.mockResolvedValue(null);
@@ -162,11 +199,19 @@ describe('applicationController', () => {
 
         test('should update application status and notify user', async () => {
             const id = new mongoose.Types.ObjectId().toString();
-            const req = httpMocks.createRequest({ params: { applicationId: id }, body: { status: 'Accepted' } });
+            const req = httpMocks.createRequest({
+                params: { applicationId: id },
+                body: { status: 'Accepted' }
+            });
             const res = httpMocks.createResponse();
 
+            const mockApp = {
+                status: 'In Progress',
+                jobId: id,
+                userId: 'user123',
+                save: jest.fn()
+            };
             const mockJob = { _id: id, title: 'Developer', vacancies: 1 };
-            const mockApp = { status: 'In Progress', jobId: id, userId: 'user123', save: jest.fn() };
 
             Application.findById.mockResolvedValue(mockApp);
             Job.findById.mockResolvedValue(mockJob);
@@ -207,6 +252,7 @@ describe('applicationController', () => {
 
             Application.findById.mockResolvedValue({ _id: id, status: 'Accepted', jobId: 'job123' });
             Application.findByIdAndDelete.mockResolvedValue({ _id: id });
+
             await revokeApplication(req, res);
 
             expect(changeVacancyCount).toHaveBeenCalledWith('job123', 'inc');
