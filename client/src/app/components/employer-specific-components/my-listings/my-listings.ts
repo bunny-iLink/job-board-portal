@@ -54,8 +54,10 @@ export class MyListingsComponent implements OnInit {
   token: string | null = null;
   // Form model for job creation/editing
   jobForm: Job = this.getEmptyJob();
-  // API base URL
-  readonly baseUrl = environment.apiUrl + '/api';
+
+  currentPage: number = 1;
+  totalPages: number = 0;
+  totalJobs: number = 0;
 
   // Variables for alert
   alertMessage: string = '';
@@ -140,7 +142,7 @@ export class MyListingsComponent implements OnInit {
   }
 
   // Fetch all jobs for the current employer from backend
-  fetchJobs() {
+  fetchJobs(page: number = 1) {
     const employerId = this.employerId;
 
     if (!employerId || !this.token) {
@@ -150,9 +152,13 @@ export class MyListingsComponent implements OnInit {
 
     this.loading = true;
 
-    this.jobService.getJobs(this.employerId, this.token!).subscribe({
+    this.jobService.getJobs(employerId, this.token!, page).subscribe({
       next: (res) => {
-        this.jobs = res;
+        this.jobs = res.jobs;
+        this.currentPage = res.currentPage;
+        this.totalPages = res.totalPages;
+        this.totalJobs = res.totalJobs;
+
         console.log('Jobs fetched:', res);
         this.loading = false;
       },
@@ -271,4 +277,30 @@ export class MyListingsComponent implements OnInit {
   viewJobDetails(jobId: string) {
     this.router.navigate(['/employer/job-details'], { queryParams: { id: jobId } });
   }
+
+  changePage(page: number) {
+    if (page < 1 || page > this.totalPages || page === this.currentPage) return;
+    this.fetchJobs(page);  // This will fetch jobs for the selected page
+  }
+
+  // Generate a pagination range (e.g., [1, 2, 3, 4])
+  paginationRange(): number[] {
+    const range: number[] = [];
+    const maxVisible = 5; // number of pages to show in pagination bar
+
+    let start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
+    let end = start + maxVisible - 1;
+
+    if (end > this.totalPages) {
+      end = this.totalPages;
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    for (let i = start; i <= end; i++) {
+      range.push(i);
+    }
+
+    return range;
+  }
+
 }

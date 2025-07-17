@@ -209,6 +209,31 @@
       </div>
     </div>
   </div>
+
+  <!-- No jobs found -->
+  <div class="text-center text-muted mt-4" *ngIf="!loading && jobs.length === 0">
+    No job listings found.
+  </div>
+
+  <!-- Pagination -->
+  <nav *ngIf="!loading && totalPages > 1" class="d-flex justify-content-center mt-4">
+    <ul class="pagination">
+      <!-- Previous -->
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <a class="page-link" (click)="changePage(currentPage - 1)" style="cursor: pointer;">Previous</a>
+      </li>
+
+      <!-- Page numbers -->
+      <li class="page-item" *ngFor="let page of paginationRange()" [class.active]="page === currentPage">
+        <a class="page-link" (click)="changePage(page)" style="cursor: pointer;">{{ page }}</a>
+      </li>
+
+      <!-- Next -->
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <a class="page-link" (click)="changePage(currentPage + 1)" style="cursor: pointer;">Next</a>
+      </li>
+    </ul>
+  </nav>
 </div>
 
 <!-- No jobs found -->

@@ -14,11 +14,13 @@ export class JobService {
     return this.http.post(`${environment.apiUrl}/addJob`, data, { headers });
   }
 
-  getJobSummaries(employerId: string, token: string) {
+  getJobSummaries(employerId: string, token: string, page: number = 1) {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const params = { page: page.toString() };
+
     return this.http.get<any>(
       `${environment.apiUrl}/employer/${employerId}/jobs-summary`,
-      { headers }
+      { headers, params }
     );
   }
 
@@ -33,10 +35,13 @@ export class JobService {
     );
   }
 
-  getJobs(employerId: string, token: string): Observable<any> {
+  getJobs(employerId: string, token: string, page: number = 1): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const params = { page: page.toString() };
+
     return this.http.get<any>(`${environment.apiUrl}/getJobs/${employerId}`, {
       headers,
+      params,
     });
   }
 

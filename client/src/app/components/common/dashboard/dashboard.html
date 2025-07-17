@@ -70,27 +70,27 @@
       </div>
 
     </section>
-<nav *ngIf="totalPages > 1" class="mt-3 d-flex justify-content-center">
-  <ul class="pagination mb-0">
-    <li class="page-item" [class.disabled]="currentPage === 1">
-      <button class="page-link" (click)="goToPreviousPage()" [disabled]="currentPage === 1">
-        ◀
-      </button>
-    </li>
+    <nav *ngIf="totalPages > 1" class="mt-3 d-flex justify-content-center">
+      <ul class="pagination mb-0">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <button class="page-link" (click)="goToPreviousPage()" [disabled]="currentPage === 1">
+            ◀
+          </button>
+        </li>
 
-    <li class="page-item disabled">
-      <span class="page-link">
-        Page {{ currentPage }} of {{ totalPages }}
-      </span>
-    </li>
+        <li class="page-item disabled">
+          <span class="page-link">
+            Page {{ currentPage }} of {{ totalPages }}
+          </span>
+        </li>
 
-    <li class="page-item" [class.disabled]="currentPage === totalPages">
-      <button class="page-link" (click)="goToNextPage()" [disabled]="currentPage === totalPages">
-        ➤
-      </button>
-    </li>
-  </ul>
-</nav>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <button class="page-link" (click)="goToNextPage()" [disabled]="currentPage === totalPages">
+            ➤
+          </button>
+        </li>
+      </ul>
+    </nav>
 
 
     <!-- Charts Section -->
@@ -125,29 +125,28 @@
 
     <!-- Job Listings -->
     <section aria-labelledby="jobListingsHeading">
-    <div class="position-relative text-center mb-4 border-bottom pb-2">
-      <h2 id="jobListingsHeading" class="fs-4 fw-semibold m-0">My Job Listings</h2>
-      
-      <button
-        class="btn btn-primary btn-sm fw-semibold position-absolute end-0"
-        style="top: 45%; transform: translateY(-53%);"
-        (click)="addJob()"
-      >
-        + Add Job
-      </button>
-    </div>
+      <div class="position-relative text-center mb-4 border-bottom pb-2">
+        <h2 id="jobListingsHeading" class="fs-4 fw-semibold m-0">My Job Listings</h2>
 
+        <button class="btn btn-primary btn-sm fw-semibold position-absolute end-0"
+          style="top: 45%; transform: translateY(-53%);" (click)="addJob()">
+          + Add Job
+        </button>
+      </div>
 
+      <!-- Loading Spinner -->
       <div *ngIf="isEmployerJobsLoading"
         class="d-flex justify-content-center align-items-center gap-3 py-3 text-secondary fw-bold">
         <div class="spinner-border text-secondary" role="status"></div>
         <div>Loading job listings...</div>
       </div>
 
+      <!-- No Jobs Message -->
       <div *ngIf="!isEmployerJobsLoading && jobs.length === 0" class="text-center text-muted fst-italic mt-5">
         <p>No jobs posted yet.</p>
       </div>
 
+      <!-- Job Cards -->
       <div *ngIf="!isEmployerJobsLoading && jobs.length > 0" class="row g-3">
         <div *ngFor="let job of jobs" class="col-md-6 col-lg-4" role="listitem" tabindex="0"
           (click)="viewJobDetails(job._id)" (keyup.enter)="viewJobDetails(job._id)"
@@ -161,6 +160,37 @@
           </div>
         </div>
       </div>
+
+      <!-- Pagination -->
+      <nav *ngIf="employerTotalPages > 1" aria-label="Employer Job Pages">
+        <ul class="pagination justify-content-center mt-4">
+
+          <!-- Previous button -->
+          <li class="page-item" [class.disabled]="employerCurrentPage === 1">
+            <button class="page-link" (click)="fetchEmployerJobs(employerCurrentPage - 1)"
+              [disabled]="employerCurrentPage === 1">
+              Previous
+            </button>
+          </li>
+
+          <!-- Page numbers -->
+          <li class="page-item" *ngFor="let page of [].constructor(employerTotalPages); let i = index"
+            [class.active]="employerCurrentPage === i + 1">
+            <button class="page-link" (click)="fetchEmployerJobs(i + 1)">
+              {{ i + 1 }}
+            </button>
+          </li>
+
+          <!-- Next button -->
+          <li class="page-item" [class.disabled]="employerCurrentPage === employerTotalPages">
+            <button class="page-link" (click)="fetchEmployerJobs(employerCurrentPage + 1)"
+              [disabled]="employerCurrentPage === employerTotalPages">
+              Next
+            </button>
+          </li>
+
+        </ul>
+      </nav>
     </section>
 
     <!-- Charts Section -->

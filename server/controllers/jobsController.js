@@ -68,28 +68,40 @@ export async function addJob(req, res) {
 
 export async function getJobsForEmployer(req, res) {
   const { employerId } = req.params;
-  console.log("[getJobsForEmployer] employerId:", employerId);
+  const page = parseInt(req.query.page) || 1; // default to page 1
+  const limit = 12;
+
+  console.log("[getJobsForEmployer] employerId:", employerId, "page:", page);
 
   try {
     if (!employerId) {
       return res.status(400).json({ message: "Employer ID is required" });
     }
 
-    const jobs = await Job.find({ employerId });
-    console.log(`[getJobsForEmployer] Found ${jobs.length} jobs`);
+    const skip = (page - 1) * limit;
+
+    const [jobs, total] = await Promise.all([
+      Job.find({ employerId }).skip(skip).limit(limit),
+      Job.countDocuments({ employerId })
+    ]);
+
+    console.log(`[getJobsForEmployer] Found ${jobs.length} jobs on page ${page}`);
 
     if (!jobs.length) {
-      return res
-        .status(404)
-        .json({ message: "No jobs found for this employer" });
+      return res.status(404).json({ message: "No jobs found for this employer" });
     }
 
-    res.status(200).json(jobs);
+    const totalPages = Math.ceil(total / limit);
+
+    res.status(200).json({
+      currentPage: page,
+      totalPages,
+      totalJobs: total,
+      jobs
+    });
   } catch (error) {
     console.error("[getJobsForEmployer] Error:", error.message);
-    res
-      .status(500)
-      .json({ message: "Internal server error", error: error.message });
+    res.status(500).json({ message: "Internal server error", error: error.message });
   }
 }
 
@@ -191,17 +203,32 @@ export async function deleteJob(req, res) {
 
 export async function getJobsSummaryForEmployer(req, res) {
   const { employerId } = req.params;
-  console.log("[getJobsSummaryForEmployer] employerId:", employerId);
+  const page = parseInt(req.query.page) || 1;
+  const limit = 9;
+  const skip = (page - 1) * limit;
+
+  console.log("[getJobsSummaryForEmployer] employerId:", employerId, "page:", page);
 
   try {
-    const jobSummaries = await Job.find({ employerId }).select(
-      "_id title vacancies applicantCount"
-    );
+    const [summaries, total] = await Promise.all([
+      Job.find({ employerId })
+        .select("_id title vacancies applicantCount")
+        .skip(skip)
+        .limit(limit),
+      Job.countDocuments({ employerId }),
+    ]);
 
-    console.log(
-      `[getJobsSummaryForEmployer] Found ${jobSummaries.length} summaries`
-    );
-    res.status(200).json(jobSummaries);
+    console.log(`[getJobsSummaryForEmployer] Found ${summaries.length} summaries on page ${page}`);
+
+    const totalPages = Math.ceil(total / limit);
+    console.log(summaries);
+    
+    res.status(200).json({
+      currentPage: page,
+      totalPages,
+      totalJobs: total,
+      jobs: summaries,
+    });
   } catch (error) {
     console.error("[getJobsSummaryForEmployer] Error:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -324,25 +351,25 @@ export async function searchJobsForUsers(req, res) {
 
     // Pagination logic similar to notifications
     const { page = 1 } = req.query; // default to page 1 if not provided
-    const limit =12;
+    const limit = 12;
     const skip = (Number(page) - 1) * limit;
 
     // Fetch paginated jobs
     const jobs = await Job.find(query)
-        .skip(skip)
-        .limit(limit)
-        .lean();
+      .skip(skip)
+      .limit(limit)
+      .lean();
 
     // Get total count for pagination info
     const total = await Job.countDocuments(query);
 
     res.status(200).json({
-        jobs,
-        pagination: {
-            total,
-            page: Number(page),
-            totalPages: Math.ceil(total / limit),
-        },
+      jobs,
+      pagination: {
+        total,
+        page: Number(page),
+        totalPages: Math.ceil(total / limit),
+      },
     });
   } catch (error) {
     console.error("[searchJobsForUsers] Error:", error.message);

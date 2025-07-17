@@ -31,7 +31,7 @@ export class DashboardComponent implements OnInit {
   appliedJobs: any[] = [];
   userPieChartOptions: any = {};
   userBarChartOptions: any = {};
-  isUserLoading = false;  
+  isUserLoading = false;
   isUserJobsLoading = false;
 
   totalPages: number = 1;
@@ -44,6 +44,9 @@ export class DashboardComponent implements OnInit {
   employerBarChartOptions: any = {};
   isEmployerLoading = false;
   isEmployerJobsLoading = false;
+  employerCurrentPage: number = 1;
+  employerTotalPages: number = 0;
+  totalJobs: number = 0;
 
   constructor(
     private authService: AuthService,
@@ -51,7 +54,7 @@ export class DashboardComponent implements OnInit {
     private employerService: EmployerService,
     private jobService: JobService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.token = this.authService.getToken();
@@ -105,14 +108,14 @@ export class DashboardComponent implements OnInit {
   }
 
 
-    // loadAppliedJobs() {
-    //   this.isUserJobsLoading = true;
-    //   this.jobService.appliedJobs(this.userId!).subscribe({
-    //     next: (res) => (this.appliedJobs = res.jobs || res),
-    //     error: (err) => console.error('Applied jobs error:', err),
-    //     complete: () => (this.isUserJobsLoading = false),
-    //   });
-    // }
+  // loadAppliedJobs() {
+  //   this.isUserJobsLoading = true;
+  //   this.jobService.appliedJobs(this.userId!).subscribe({
+  //     next: (res) => (this.appliedJobs = res.jobs || res),
+  //     error: (err) => console.error('Applied jobs error:', err),
+  //     complete: () => (this.isUserJobsLoading = false),
+  //   });
+  // }
 
   loadAppliedJobs() {
     this.isUserJobsLoading = true;
@@ -198,10 +201,16 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  fetchEmployerJobs() {
+
+  fetchEmployerJobs(page: number = 1) {
     this.isEmployerJobsLoading = true;
-    this.jobService.getJobSummaries(this.employerId!, this.token!).subscribe({
-      next: (res) => (this.jobs = res),
+    this.jobService.getJobSummaries(this.employerId!, this.token!, page).subscribe({
+      next: (res) => {
+        this.jobs = res.jobs;
+        this.employerCurrentPage = res.currentPage;
+        this.employerTotalPages = res.totalPages;
+        this.totalJobs = res.totalJobs;
+      },
       error: (err) => console.error('Jobs error:', err),
       complete: () => (this.isEmployerJobsLoading = false),
     });
@@ -254,9 +263,33 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['/employer/job-details'], { queryParams: { id: jobId } });
   }
 
-  addJob(){
-    this.router.navigate(['/employer/my-listings'],{
-      state: {openAddModal: true}
+  addJob() {
+    this.router.navigate(['/employer/my-listings'], {
+      state: { openAddModal: true }
     });
+  }
+
+  changePage(page: number) {
+    if (page < 1 || page > this.employerTotalPages || page === this.employerCurrentPage) return;
+    this.fetchEmployerJobs(page);
+  }
+
+
+  paginationRange(): number[] {
+    const range: number[] = [];
+    const maxVisible = 5;
+    let start = Math.max(1, this.employerCurrentPage - Math.floor(maxVisible / 2));
+    let end = start + maxVisible - 1;
+
+    if (end > this.employerTotalPages) {
+      end = this.employerTotalPages;
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    for (let i = start; i <= end; i++) {
+      range.push(i);
+    }
+
+    return range;
   }
 }
