@@ -70,7 +70,7 @@ ng serve
 ```
 cd server
 npm install
-touch .env (add two fields as JWT_SECRET and ATLAS_URI)
+touch .env (add three fields as JWT_SECRET_LOGIN, JWT_SECRET_REFRESH and ATLAS_URI)
 node server.js
 ```
 
